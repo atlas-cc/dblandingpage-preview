@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title">
+  <title id="title">Mock Revive MD lifecycle and product board</title>
+  <rect width="900" height="620" fill="#10120e"/>
+  <rect x="64" y="74" width="300" height="454" rx="8" fill="#b7f3c7"/>
+  <rect x="112" y="126" width="204" height="310" rx="15" fill="#070806"/>
+  <rect x="146" y="168" width="136" height="18" fill="#f2f5ea"/>
+  <rect x="146" y="206" width="96" height="10" fill="#b7f3c7"/>
+  <rect x="146" y="364" width="136" height="18" fill="#f2f5ea"/>
+  <circle cx="214" cy="484" r="25" fill="#070806"/>
+  <rect x="422" y="88" width="354" height="68" rx="8" fill="#f2f5ea"/>
+  <rect x="454" y="114" width="162" height="14" fill="#070806"/>
+  <rect x="422" y="202" width="354" height="68" rx="8" fill="#1b1e17"/>
+  <rect x="454" y="229" width="218" height="12" fill="#b7f3c7"/>
+  <rect x="422" y="316" width="354" height="68" rx="8" fill="#1b1e17"/>
+  <rect x="454" y="343" width="244" height="12" fill="#f2f5ea"/>
+  <path d="M599 156 L599 202" stroke="#b7f3c7" stroke-width="8"/>
+  <path d="M599 270 L599 316" stroke="#b7f3c7" stroke-width="8"/>
+  <rect x="422" y="430" width="160" height="74" rx="8" fill="#b7f3c7"/>
+  <rect x="616" y="430" width="160" height="74" rx="8" fill="#f2f5ea"/>
+</svg>

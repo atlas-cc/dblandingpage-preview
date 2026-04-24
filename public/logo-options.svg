@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Disruptive Brands logo options</title>
+  <desc id="desc">Three vector logo concepts for Disruptive Brands.</desc>
+  <rect width="1600" height="900" fill="#070806"/>
+  <defs>
+    <style>
+      .label { font: 700 18px Arial, sans-serif; letter-spacing: 4px; fill: #d8ff57; }
+      .name { font: 900 34px Arial, sans-serif; letter-spacing: 1px; fill: #f2f5ea; }
+      .copy { font: 400 18px Arial, sans-serif; fill: #8d9287; }
+      .word { font: 900 28px Arial, sans-serif; letter-spacing: 7px; fill: #f2f5ea; }
+      .mono { font: 700 16px Consolas, monospace; letter-spacing: 2px; fill: #8d9287; }
+    </style>
+  </defs>
+
+  <text x="88" y="92" class="label">DISRUPTIVE BRANDS</text>
+  <text x="88" y="142" style="font:900 64px Arial,sans-serif;fill:#f2f5ea;letter-spacing:-1px">Logo directions</text>
+  <text x="88" y="184" class="copy">Three mock vector marks. All are built to work in the landing page nav, favicon, case studies, and ATLAS OS later.</text>
+
+  <g transform="translate(88 260)">
+    <rect width="430" height="520" rx="8" fill="#10120e" stroke="rgba(242,245,234,.16)"/>
+    <text x="34" y="58" class="label">OPTION 01</text>
+    <g transform="translate(120 124)">
+      <rect x="0" y="0" width="28" height="150" fill="#d8ff57"/>
+      <path d="M28 0H104C152 0 184 31 184 75C184 119 152 150 104 150H28V117H98C126 117 146 100 146 75C146 50 126 33 98 33H28Z" fill="#f2f5ea"/>
+      <path d="M216 0H298C336 0 360 22 360 55C360 77 348 93 329 101C353 109 368 127 368 154C368 191 340 216 296 216H216V0ZM254 34V87H290C311 87 323 77 323 60C323 44 311 34 290 34H254ZM254 121V182H294C318 182 331 171 331 151C331 131 318 121 294 121H254Z" fill="#f2f5ea" transform="translate(-18 -33) scale(.85)"/>
+    </g>
+    <text x="34" y="334" class="name">DB Spine</text>
+    <text x="34" y="374" class="copy">Shared vertical spine. Feels</text>
+    <text x="34" y="402" class="copy">operator-led, technical, compact.</text>
+    <text x="34" y="462" class="word">DISRUPTIVE</text>
+    <text x="34" y="498" class="word">BRANDS</text>
+  </g>
+
+  <g transform="translate(585 260)">
+    <rect width="430" height="520" rx="8" fill="#10120e" stroke="rgba(242,245,234,.16)"/>
+    <text x="34" y="58" class="label">OPTION 02</text>
+    <g transform="translate(124 122)">
+      <rect x="0" y="0" width="184" height="184" fill="none" stroke="#f2f5ea" stroke-width="18"/>
+      <rect x="42" y="42" width="100" height="28" fill="#d8ff57"/>
+      <rect x="42" y="78" width="100" height="28" fill="#f2f5ea"/>
+      <rect x="42" y="114" width="100" height="28" fill="#f2f5ea"/>
+      <rect x="218" y="0" width="28" height="184" fill="#d8ff57"/>
+      <rect x="262" y="0" width="28" height="132" fill="#f2f5ea"/>
+      <rect x="306" y="0" width="28" height="84" fill="#8d9287"/>
+    </g>
+    <text x="34" y="334" class="name">Signal Stack</text>
+    <text x="34" y="374" class="copy">A dashboard-native mark.</text>
+    <text x="34" y="402" class="copy">Less literal, more system-driven.</text>
+    <text x="34" y="462" class="word">DISRUPTIVE BRANDS</text>
+    <text x="34" y="498" class="mono">GROWTH SYSTEMS / DTC OPERATORS</text>
+  </g>
+
+  <g transform="translate(1082 260)">
+    <rect width="430" height="520" rx="8" fill="#10120e" stroke="rgba(242,245,234,.16)"/>
+    <text x="34" y="58" class="label">OPTION 03</text>
+    <g transform="translate(74 122)">
+      <rect x="0" y="0" width="280" height="96" fill="#f2f5ea"/>
+      <rect x="18" y="18" width="45" height="60" fill="#070806"/>
+      <rect x="78" y="18" width="84" height="60" fill="#070806"/>
+      <rect x="181" y="18" width="81" height="60" fill="#070806"/>
+      <rect x="181" y="42" width="81" height="12" fill="#f2f5ea"/>
+      <rect x="304" y="0" width="18" height="96" fill="#d8ff57"/>
+      <rect x="334" y="0" width="18" height="96" fill="#d8ff57"/>
+    </g>
+    <text x="34" y="334" class="name">Engine Bar</text>
+    <text x="34" y="374" class="copy">Bold wordmark-first identity.</text>
+    <text x="34" y="402" class="copy">Best for a premium, simple site.</text>
+    <text x="34" y="462" class="word">DB</text>
+    <text x="92" y="462" class="word">DISRUPTIVE BRANDS</text>
+    <rect x="34" y="484" width="224" height="4" fill="#d8ff57"/>
+  </g>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title">
+  <title id="title">Mock BUM apparel creative board</title>
+  <rect width="900" height="620" fill="#10120e"/>
+  <rect x="74" y="78" width="252" height="464" rx="8" fill="#d77b55"/>
+  <path d="M160 178 L200 126 L242 178 L286 202 L260 264 L244 244 L244 458 L156 458 L156 244 L140 264 L114 202 Z" fill="#070806"/>
+  <rect x="172" y="296" width="56" height="16" fill="#f2f5ea"/>
+  <rect x="386" y="84" width="176" height="212" rx="8" fill="#f2f5ea"/>
+  <rect x="594" y="84" width="176" height="212" rx="8" fill="#1b1e17"/>
+  <rect x="386" y="328" width="176" height="212" rx="8" fill="#1b1e17"/>
+  <rect x="594" y="328" width="176" height="212" rx="8" fill="#d77b55"/>
+  <rect x="420" y="128" width="96" height="18" fill="#070806"/>
+  <rect x="628" y="128" width="96" height="18" fill="#d77b55"/>
+  <rect x="420" y="372" width="96" height="18" fill="#f2f5ea"/>
+  <rect x="628" y="372" width="96" height="18" fill="#070806"/>
+  <path d="M424 246 L516 180" stroke="#d77b55" stroke-width="10"/>
+  <path d="M632 246 L724 180" stroke="#f2f5ea" stroke-width="10"/>
+  <path d="M424 490 L516 424" stroke="#d77b55" stroke-width="10"/>
+  <path d="M632 490 L724 424" stroke="#070806" stroke-width="10"/>
+</svg>
