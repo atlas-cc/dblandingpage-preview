@@ -1,0 +1,1590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATLAS OS — The North Star of Enterprise AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --bg-1:#05070F;
+    --bg-2:#0A0E27;
+    --bg-3:#0B0B1F;
+    --ink:#F5F8FF;
+    --ink-dim:#AEB4C2;
+    --ink-muted:#6B7184;
+    --ink-faint:#3A3F4E;
+    --star:#E8F4FF;
+    --star-blue:#7CB8FF;
+    --hair:rgba(255,255,255,0.08);
+    --hair-2:rgba(255,255,255,0.14);
+    --sans:"Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --serif:"Instrument Serif", ui-serif, Georgia, serif;
+    --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"ss01","cv11";}
+  html{scroll-behavior:smooth}
+  body{overflow-x:hidden;cursor:none}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:none}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--star);color:#000}
+
+  /* ---------- GLOBAL LAYERS ---------- */
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:80;opacity:.10;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .vignette{
+    position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(0,0,0,.65) 100%);
+  }
+  /* persistent north star glow top-right */
+  .polaris{
+    position:fixed;top:8vh;right:10vw;width:520px;height:520px;pointer-events:none;z-index:2;
+    background:radial-gradient(circle at 50% 50%, rgba(232,244,255,0.28) 0%, rgba(124,184,255,0.10) 18%, rgba(10,14,39,0) 55%);
+    filter:blur(6px);animation:pulse 7s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+
+  /* starfield canvas layers */
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .stars canvas{display:block;width:100%;height:100%}
+
+  /* custom cursor */
+  .reticle{position:fixed;top:0;left:0;width:22px;height:22px;pointer-events:none;z-index:200;transform:translate(-50%,-50%);mix-blend-mode:difference}
+  .reticle::before,.reticle::after{content:"";position:absolute;background:#fff}
+  .reticle::before{top:50%;left:0;right:0;height:1px;transform:translateY(-50%)}
+  .reticle::after{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%)}
+  .reticle i{position:absolute;inset:5px;border:1px solid rgba(255,255,255,.85);border-radius:50%}
+  .reticle.hot i{inset:2px;background:rgba(232,244,255,.2)}
+
+  /* ---------- STATUS BAR ---------- */
+  .statusbar{
+    position:fixed;top:0;left:0;right:0;z-index:70;height:32px;
+    display:flex;align-items:center;justify-content:center;gap:28px;
+    padding:0 24px;border-bottom:1px solid var(--hair);
+    background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-muted);
+    white-space:nowrap;overflow:hidden;
+  }
+  .statusbar .sep{color:var(--ink-faint)}
+  .statusbar .live{display:inline-flex;align-items:center;gap:8px;color:var(--ink-dim)}
+  .statusbar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 10px var(--star);animation:pulse 1.6s ease-in-out infinite}
+  .statusbar .ok{color:var(--star)}
+
+  /* persistent HUD bottom-left */
+  .hud{
+    position:fixed;bottom:18px;left:18px;z-index:60;
+    display:inline-flex;align-items:center;gap:10px;
+    padding:8px 12px;border:1px solid var(--hair);border-radius:4px;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase;
+    opacity:.7;
+  }
+  .hud .bolt{width:5px;height:5px;border-radius:50%;background:var(--star);box-shadow:0 0 8px var(--star);animation:pulse 2s infinite}
+  .hud b{color:var(--ink-dim);font-weight:400}
+
+  /* ---------- NAV ---------- */
+  nav.top{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    padding:18px 32px;
+    backdrop-filter:blur(14px) saturate(120%);
+    -webkit-backdrop-filter:blur(14px) saturate(120%);
+    background:linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15));
+    border-bottom:1px solid var(--hair);
+  }
+  .brand{display:flex;align-items:baseline;gap:10px}
+  .brand .mark{font-family:var(--serif);font-size:22px;letter-spacing:.18em;font-weight:400}
+  .brand .star{color:var(--star);text-shadow:0 0 8px rgba(232,244,255,.7);font-size:12px;transform:translateY(-6px);display:inline-block;animation:twinkle 3s infinite}
+  .brand .by{font-family:var(--mono);font-size:10px;color:var(--ink-muted);letter-spacing:.22em;text-transform:uppercase}
+  @keyframes twinkle{0%,100%{opacity:.6}50%{opacity:1}}
+  .navlinks{display:flex;gap:34px;font-size:13px;color:var(--ink-dim);letter-spacing:.02em}
+  .navlinks a{position:relative;padding:6px 0;transition:color .2s}
+  .navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a:hover::after{transform:scaleX(1)}
+  .navright{display:flex;justify-content:flex-end;align-items:center;gap:22px}
+  .signin{font-size:13px;color:var(--ink-dim)}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;letter-spacing:.01em;font-weight:500;
+    padding:9px 16px;border-radius:999px;
+    background:var(--ink);color:#000;
+    box-shadow:0 0 0 1px rgba(255,255,255,.6), 0 0 24px rgba(232,244,255,.35);
+    transition:transform .3s, box-shadow .3s;
+  }
+  .pill:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(255,255,255,.8), 0 0 40px rgba(232,244,255,.55)}
+  .pill .arw{display:inline-block;transition:transform .3s}
+  .pill:hover .arw{transform:translateX(3px)}
+
+  /* ---------- GENERIC ---------- */
+  section{position:relative;z-index:3}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 48px}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-dim);
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:6px;height:6px;background:var(--star);border-radius:50%;box-shadow:0 0 10px var(--star)}
+  .eyebrow .bar{width:28px;height:1px;background:var(--hair-2)}
+  .rule{height:1px;background:var(--hair);width:100%}
+  .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;padding:160px 0 120px;position:relative;overflow:hidden;
+  }
+  .intro{padding:40px 0 140px;position:relative}
+  .intro-inner{max-width:820px;margin:0 auto;text-align:center}
+  .intro p{font-family:var(--serif);font-size:clamp(22px,2.4vw,32px);line-height:1.4;color:var(--ink-dim);letter-spacing:-.01em}
+  .intro p em{color:var(--ink);font-style:italic}
+  .intro .built{margin-top:28px;font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase}
+  .intro .built em{font-style:normal;color:var(--star)}
+  .hero .beam{
+    position:absolute;left:50%;top:-10%;width:1400px;height:1400px;transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 18%, rgba(232,244,255,.22) 0%, rgba(124,184,255,.08) 14%, rgba(11,11,31,0) 42%);
+    pointer-events:none;
+  }
+  .hero .north{
+    position:absolute;left:50%;top:14vh;transform:translateX(-50%);
+    width:6px;height:6px;background:#fff;border-radius:50%;
+    box-shadow:0 0 16px 4px rgba(232,244,255,.9), 0 0 60px 18px rgba(124,184,255,.35);
+    animation:starBreathe 4s ease-in-out infinite;
+  }
+  @keyframes starBreathe{0%,100%{transform:translateX(-50%) scale(1);opacity:.95}50%{transform:translateX(-50%) scale(1.35);opacity:1}}
+  .hero .north::before,.hero .north::after{
+    content:"";position:absolute;left:50%;top:50%;background:linear-gradient(to right, transparent, rgba(255,255,255,.9), transparent);
+  }
+  .hero .north::before{width:180px;height:1px;transform:translate(-50%,-50%)}
+  .hero .north::after{width:1px;height:180px;transform:translate(-50%,-50%)}
+
+  .hero-inner{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;text-align:center;padding-top:80px}
+  .hero .eyebrow{margin-bottom:44px}
+  .hero h1{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(64px, 10.2vw, 168px);
+    line-height:.92;letter-spacing:-.025em;
+    max-width:1200px;
+  }
+  .hero h1 .l2{display:block;color:var(--ink-muted);font-style:italic}
+  .hero h1 .l2 em{font-style:italic;background:linear-gradient(180deg,#fff,#B9C5DB);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero h1 .nth{font-style:italic;background:linear-gradient(180deg,#fff,#B9C5DB 55%,#7CB8FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{
+    margin-top:36px;max-width:640px;font-size:18px;line-height:1.55;color:var(--ink-dim);font-weight:400;letter-spacing:-.005em;
+  }
+  .cta-row{display:flex;gap:14px;margin-top:44px;align-items:center}
+  .cta-solid{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;
+    padding:14px 22px;border-radius:999px;background:var(--ink);color:#000;
+    box-shadow:0 0 0 1px rgba(255,255,255,.6), 0 10px 40px rgba(232,244,255,.25);
+    transition:all .3s;
+  }
+  .cta-solid:hover{box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 14px 60px rgba(232,244,255,.5)}
+  .cta-ghost{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;
+    padding:14px 20px;border-radius:999px;border:1px solid var(--hair-2);color:var(--ink);
+    transition:all .3s;
+  }
+  .cta-ghost:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.03)}
+  .play{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.5);display:grid;place-items:center}
+  .play::before{content:"";border-left:5px solid #fff;border-top:3px solid transparent;border-bottom:3px solid transparent;margin-left:2px}
+
+  .scrollhint{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:4}
+  .scrollhint .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--ink-muted)}
+  .scrollhint .line{width:1px;height:80px;background:linear-gradient(to bottom, transparent, var(--ink-dim), transparent);position:relative;overflow:hidden}
+  .scrollhint .line::after{content:"";position:absolute;top:-40%;left:0;width:100%;height:40%;background:linear-gradient(to bottom, transparent, #fff);animation:trace 2.6s linear infinite}
+  @keyframes trace{0%{top:-40%}100%{top:100%}}
+
+  /* Hero stat badges in corners */
+  .corner{position:absolute;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;z-index:4}
+  .corner.tl{top:100px;left:48px}
+  .corner.tr{top:100px;right:48px;text-align:right}
+  .corner.bl{bottom:48px;left:48px}
+  .corner.br{bottom:48px;right:48px;text-align:right}
+  .corner b{color:var(--ink-dim);font-weight:400}
+
+  /* ---------- COORDINATES TICKER ---------- */
+  .coords{
+    border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    overflow:hidden;white-space:nowrap;padding:16px 0;position:relative;z-index:4;
+    background:rgba(0,0,0,.4);
+  }
+  .coords-track{display:inline-flex;gap:48px;animation:slide 60s linear infinite;padding-left:48px}
+  .coords-track span{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-dim);text-transform:uppercase;display:inline-flex;align-items:center;gap:48px}
+  .coords-track span::after{content:"◆";color:var(--ink-faint);font-size:8px}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- WHY ATLAS / FOG ---------- */
+  .why{padding:180px 0 160px;position:relative}
+  .fog-fig{position:relative}
+  .fog-fig .fig-lbl{position:absolute;top:-28px;right:0;font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+  #fogSvg .vnode circle{transition:transform 1.4s cubic-bezier(.6,.1,.2,1), opacity .9s}
+  #fogSvg .vnode text{transition:opacity .6s ease}
+  #fogSvg.collapsed .vnode{opacity:0}
+  #fogSvg #fogLines path{transition:opacity 1.2s ease, stroke-dashoffset 1.6s cubic-bezier(.6,.1,.2,1)}
+  #fogSvg.collapsed #fogLines path{opacity:0}
+
+  /* ---------- ATLAS STANDARD ---------- */
+  .standard{padding:160px 0 160px;position:relative;border-top:1px solid var(--hair)}
+  .std-head{margin-bottom:80px}
+  .std-head h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.4vw,72px);line-height:1.02;letter-spacing:-.02em}
+  .std-head h2 em{font-style:italic;color:var(--ink-muted)}
+  .std-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--hair)}
+  .std-card{
+    position:relative;padding:36px 32px 30px;min-height:320px;
+    display:flex;flex-direction:column;
+    border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    background:#000;transition:background .4s, box-shadow .4s;
+  }
+  .std-card:nth-child(3n){border-right:none}
+  .std-card:nth-last-child(-n+3){border-bottom:none}
+  .std-card::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;
+    background:radial-gradient(400px 220px at 50% 20%, rgba(124,184,255,.08), transparent 60%);
+  }
+  .std-card:hover::before{opacity:1}
+  .std-card:hover{box-shadow:inset 0 0 0 1px rgba(232,244,255,.1)}
+  .std-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}
+  .std-top .idx{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--star)}
+  .std-top .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+  .std-card h3{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-.01em;line-height:1.1;margin-bottom:14px}
+  .std-card p{font-size:13.5px;line-height:1.55;color:var(--ink-dim);flex:1}
+  .tele{margin-top:22px;padding-top:14px;border-top:1px dashed var(--hair);
+    display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-muted);text-transform:uppercase}
+  .tele .sep{color:var(--ink-faint)}
+  .tele .ok{color:var(--star)}
+
+  /* ---------- DASHBOARD ROW ---------- */
+  .dashrow{margin-top:120px}
+  .dashrow .head{margin-bottom:40px;max-width:780px}
+  .dashrow .head h3{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3.2vw,48px);line-height:1.04;letter-spacing:-.02em;margin-top:14px}
+  .dashrow .head p{color:var(--ink-dim);font-size:14.5px;line-height:1.6;margin-top:18px;max-width:560px}
+  .dashgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .dash{
+    border:1px solid var(--hair);border-radius:10px;background:linear-gradient(180deg, rgba(10,14,28,.55), rgba(5,7,15,.7));
+    padding:18px 18px 20px;min-height:360px;display:flex;flex-direction:column;
+    transition:border-color .3s;
+  }
+  .dash:hover{border-color:var(--hair-2)}
+  .dash .dtop{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:14px}
+  .dash .dtop .nm{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink);text-transform:uppercase}
+  .dash .dtop .nm b{color:var(--star)}
+  .dash .dtop .sub{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* FLEET */
+  .agent{display:grid;grid-template-columns:10px 72px 1fr auto;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px dashed rgba(255,255,255,.05)}
+  .agent:last-child{border-bottom:none}
+  .agent .s{width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 8px var(--star)}
+  .agent.idle .s{background:#3A3F4E;box-shadow:none}
+  .agent.warn .s{background:#FFD37A;box-shadow:0 0 6px #FFD37A}
+  .agent .nm{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink)}
+  .agent .task{font-size:11.5px;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .agent .spark{width:52px;height:14px}
+
+  /* COMPASS */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+  .kpi{border:1px solid var(--hair);border-radius:6px;padding:10px 10px}
+  .kpi .l{font-family:var(--mono);font-size:9px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  .kpi .v{font-family:var(--mono);font-size:20px;color:var(--ink);margin-top:6px}
+  .kpi .t{font-family:var(--mono);font-size:10px;color:var(--star);margin-top:2px}
+  .kpi .t.down{color:#FFD37A}
+  .radarwrap{flex:1;display:flex;align-items:center;justify-content:center;padding:10px 0}
+
+  /* LOGBOOK */
+  .logtable{flex:1;display:flex;flex-direction:column;gap:0}
+  .logrow{display:grid;grid-template-columns:72px 44px 1fr auto;gap:10px;align-items:center;padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.05);font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--ink-dim)}
+  .logrow:last-child{border-bottom:none}
+  .logrow .ts{color:var(--ink-muted)}
+  .logrow .act{color:var(--ink)}
+  .logrow .pill-v{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;background:rgba(232,244,255,.06);border:1px solid rgba(232,244,255,.2);color:var(--star);font-size:9px;letter-spacing:.22em;text-transform:uppercase}
+  .logrow .pill-v::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--star);box-shadow:0 0 6px var(--star)}
+
+  .why .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:80px;align-items:center}
+  .why .kicker-row{display:flex;gap:16px;align-items:center;margin-bottom:36px}
+  .why h2{
+    font-family:var(--serif);font-weight:400;font-size:clamp(40px, 4.4vw, 72px);line-height:1.02;letter-spacing:-.02em;
+  }
+  .why h2 .dim{color:var(--ink-muted);font-style:italic}
+  .why h2 em{font-style:italic;color:var(--star)}
+  .why .stats{display:flex;gap:48px;margin-top:60px;padding-top:40px;border-top:1px solid var(--hair)}
+  .stat .num{font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:500;letter-spacing:-.01em}
+  .stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;margin-top:6px}
+
+  /* constellation SVG */
+  .constellation{position:relative;aspect-ratio:1;width:100%;max-width:520px;margin-left:auto}
+  .constellation svg{width:100%;height:100%;overflow:visible}
+  .constellation .nodeLabel{font-family:var(--mono);font-size:9px;letter-spacing:.2em;fill:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- PLATFORM SHOWCASE ---------- */
+  .platform{padding:120px 0 200px;position:relative}
+  .platform .head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:72px;gap:40px}
+  .platform h2{font-family:var(--serif);font-weight:400;font-size:clamp(36px,3.8vw,60px);line-height:1.04;letter-spacing:-.02em;max-width:760px}
+  .platform .meta{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;text-align:right;line-height:1.9}
+
+  .deck{
+    position:relative;border:1px solid var(--hair-2);border-radius:12px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(10,14,39,.6), rgba(5,7,15,.9));
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.04) inset,
+      0 0 80px rgba(124,184,255,.08),
+      0 60px 140px rgba(0,0,0,.8);
+  }
+  .deck::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 60% at 50% -10%, rgba(232,244,255,.1), transparent 55%);
+  }
+  .deck-top{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--hair)}
+  .tl-dots{display:flex;gap:6px}
+  .tl-dots i{width:9px;height:9px;border-radius:50%;background:#2A2F3F;display:inline-block}
+  .tl-path{font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.1em}
+  .tl-path b{color:var(--ink-dim);font-weight:400}
+  .tl-right{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .tl-right .on{color:var(--star)}
+
+  .deck-body{display:grid;grid-template-columns:220px 1fr 280px;min-height:560px}
+  .side{border-right:1px solid var(--hair);padding:22px 20px;display:flex;flex-direction:column;gap:22px}
+  .side .group-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+  .side ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+  .side li{font-size:12.5px;color:var(--ink-dim);padding:7px 10px;border-radius:6px;display:flex;align-items:center;gap:10px}
+  .side li.sel{background:rgba(255,255,255,.05);color:var(--ink);border:1px solid var(--hair)}
+  .side li .bullet{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.6}
+  .side li.sel .bullet{background:var(--star);box-shadow:0 0 8px var(--star);opacity:1}
+
+  .stage{position:relative;border-right:1px solid var(--hair);padding:26px 30px;display:flex;flex-direction:column}
+  .palette{
+    position:absolute;top:26px;left:30px;right:30px;z-index:3;
+    background:rgba(5,7,15,.92);backdrop-filter:blur(10px);
+    border:1px solid var(--hair-2);border-radius:10px;
+    box-shadow:0 20px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(232,244,255,.06);
+  }
+  .palette .q{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--hair)}
+  .palette .q .prm{color:var(--star);font-family:var(--mono);font-size:13px}
+  .palette .q input{flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--mono);font-size:13px;outline:none}
+  .palette .q .caret{width:7px;height:14px;background:var(--star);animation:blink 1s step-end infinite;box-shadow:0 0 6px var(--star)}
+  @keyframes blink{50%{opacity:0}}
+  .palette .q .kbd{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-muted);border:1px solid var(--hair);padding:3px 6px;border-radius:4px}
+  .palette .results{padding:6px 8px 10px}
+  .palette .row{display:grid;grid-template-columns:16px 1fr auto auto;gap:14px;align-items:center;padding:9px 10px;border-radius:6px}
+  .palette .row:hover,.palette .row.act{background:rgba(255,255,255,.04)}
+  .palette .row .ic{font-family:var(--mono);color:var(--ink-muted);font-size:11px}
+  .palette .row .nm{font-size:12.5px;color:var(--ink-dim)}
+  .palette .row.act .nm{color:var(--ink)}
+  .palette .row .tag{font-family:var(--mono);font-size:10px;color:var(--ink-muted);letter-spacing:.18em;text-transform:uppercase}
+  .palette .row .ms{font-family:var(--mono);font-size:10px;color:var(--star);letter-spacing:.08em}
+
+  .stage-graph{margin-top:230px;flex:1;position:relative}
+  .stage-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:10px}
+  .stage-meta .live{color:var(--star);display:flex;align-items:center;gap:8px}
+  .stage-meta .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--star);box-shadow:0 0 10px var(--star);animation:pulse 1.6s infinite}
+
+  .right{padding:22px 22px;display:flex;flex-direction:column;gap:20px}
+  .right .block{border:1px solid var(--hair);border-radius:8px;padding:14px 14px;background:rgba(255,255,255,.015)}
+  .right .block h5{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:10px;font-weight:500}
+  .metric{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--hair)}
+  .metric:last-child{border-bottom:none}
+  .metric .k{font-size:12px;color:var(--ink-dim)}
+  .metric .v{font-family:var(--mono);font-size:12px;color:var(--ink)}
+  .metric .v.g{color:var(--star)}
+  .bars{display:flex;align-items:flex-end;gap:3px;height:48px;margin-top:8px}
+  .bars i{flex:1;background:linear-gradient(to top, rgba(232,244,255,.1), rgba(232,244,255,.6));border-radius:1px}
+
+  .deck-base{
+    height:4px;margin:0 10%;
+    background:radial-gradient(ellipse at 50% 50%, rgba(232,244,255,.35), transparent 70%);
+    filter:blur(8px);
+  }
+  .deck-reflect{
+    height:120px;margin:0 8%;transform:scaleY(-1);opacity:.15;
+    background:linear-gradient(180deg, rgba(10,14,39,.8), transparent);
+    -webkit-mask:linear-gradient(to bottom, #000, transparent);
+    mask:linear-gradient(to bottom, #000, transparent);
+  }
+
+  /* ---------- CAPABILITIES BENTO ---------- */
+  .caps{padding:160px 0 160px;position:relative}
+  .caps .head{margin-bottom:80px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+  .caps h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.2vw,68px);line-height:1.02;letter-spacing:-.02em;max-width:760px}
+  .caps h2 em{font-style:italic;color:var(--ink-muted)}
+  .caps .sub-col{max-width:320px;color:var(--ink-dim);font-size:14.5px;line-height:1.55}
+
+  .bento{
+    display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:260px;gap:20px;
+  }
+  .card{
+    position:relative;border:1px solid var(--hair);border-radius:14px;padding:28px;
+    background:linear-gradient(180deg, rgba(12,14,28,.55), rgba(5,7,15,.6));
+    overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
+    transition:border-color .3s, transform .4s;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;
+    background:radial-gradient(400px 220px at var(--mx,50%) var(--my,50%), rgba(232,244,255,.08), transparent 60%);
+  }
+  .card:hover{border-color:var(--hair-2);transform:translateY(-2px)}
+  .card:hover::before{opacity:1}
+  .card .ic{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--hair);border-radius:8px;color:var(--star)}
+  .card .ic svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.2}
+  .card h3{font-family:var(--serif);font-size:26px;font-weight:400;letter-spacing:-.01em;line-height:1.15;margin-top:18px}
+  .card p{font-size:13.5px;color:var(--ink-dim);line-height:1.55;margin-top:10px;max-width:340px}
+  .card .idx{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);position:absolute;top:22px;right:24px}
+
+  .c-a{grid-column:span 3;grid-row:span 2}
+  .c-b{grid-column:span 3}
+  .c-c{grid-column:span 2}
+  .c-d{grid-column:span 2}
+  .c-e{grid-column:span 2}
+  .c-f{grid-column:span 3}
+  .c-g{grid-column:span 3}
+
+  /* Routing graphic inside c-a */
+  .c-a .gfx{position:absolute;right:24px;bottom:24px;left:auto;top:auto;width:62%;height:62%;pointer-events:none;opacity:.85}
+
+  /* ---------- JOURNEY ---------- */
+  .journey{padding:160px 0;position:relative}
+  .journey .head{margin-bottom:80px;max-width:820px}
+  .journey h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.2vw,68px);line-height:1.02;letter-spacing:-.02em}
+  .journey h2 em{font-style:italic;color:var(--star)}
+  .journey .sub{margin-top:24px;color:var(--ink-dim);font-size:16px;line-height:1.55;max-width:560px}
+
+  .phases{display:grid;grid-template-columns:60px 1fr 1fr 1fr;grid-auto-rows:auto;gap:0;position:relative;border-top:1px solid var(--hair)}
+  .phase{
+    display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:0;align-items:start;
+    border-bottom:1px solid var(--hair);padding:40px 0;position:relative;
+  }
+  .phase .n{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);padding-top:6px}
+  .phase .t{font-family:var(--serif);font-size:36px;letter-spacing:-.02em;line-height:1.05;position:relative;padding-left:28px}
+  .phase .t::before{
+    content:"";position:absolute;left:0;top:18px;width:10px;height:10px;border-radius:50%;
+    border:1px solid var(--hair-2);background:#000;
+  }
+  .phase.active .t::before{background:var(--star);border-color:var(--star);box-shadow:0 0 14px var(--star)}
+  .phase .d{font-size:14px;color:var(--ink-dim);line-height:1.6;padding:6px 24px 0 0}
+  .phase .g{padding-top:6px}
+  .phase .g svg{width:100%;height:80px}
+  .phase .line{position:absolute;left:calc(60px + 4px);top:54px;bottom:-1px;width:1px;background:var(--hair)}
+  .phase:last-child .line{display:none}
+
+  /* ---------- NUMBERS ---------- */
+  .numbers{padding:180px 0;position:relative;overflow:hidden}
+  .numbers::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(60% 50% at 50% 50%, rgba(11,11,31,.6), transparent 70%);
+    pointer-events:none;
+  }
+  .numbers .head{margin-bottom:80px;display:flex;justify-content:space-between;align-items:flex-end}
+  .numbers h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3vw,48px);letter-spacing:-.02em;max-width:560px;line-height:1.06}
+  .numgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)}
+  .numcell{background:#000;padding:48px 44px;position:relative;min-height:280px;display:flex;flex-direction:column;justify-content:space-between}
+  .numcell .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  .numcell .big{font-family:var(--mono);font-weight:400;font-size:clamp(48px,6vw,104px);line-height:.95;letter-spacing:-.03em;color:var(--ink);margin-top:20px}
+  .numcell .big .unit{color:var(--ink-muted);font-size:.4em;margin-left:6px;letter-spacing:.1em}
+  .numcell .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink-muted);text-transform:uppercase}
+  .numcell .spark{height:38px;opacity:.6}
+
+  /* ---------- CUSTOMERS ---------- */
+  .customers{padding:120px 0 120px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  .customers h4{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--ink-muted);text-transform:uppercase;text-align:center;margin-bottom:60px}
+  .logos{display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:center}
+  .logo{
+    display:flex;align-items:center;justify-content:center;padding:26px 0;
+    color:var(--ink-muted);font-family:var(--serif);font-size:22px;letter-spacing:.04em;
+    border-left:1px solid var(--hair);opacity:.6;transition:opacity .3s,color .3s;
+    font-weight:500;
+  }
+  .logo:first-child{border-left:none}
+  .logo:hover{opacity:1;color:var(--ink)}
+  .logo.mono{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---------- TESTIMONIAL ---------- */
+  .quote{padding:180px 0;text-align:center;position:relative}
+  .quote .mark{font-family:var(--serif);font-style:italic;color:var(--ink-faint);font-size:120px;line-height:1;height:0}
+  .quote blockquote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(34px,3.8vw,60px);line-height:1.12;letter-spacing:-.015em;
+    max-width:1100px;margin:0 auto;
+  }
+  .quote blockquote em{font-style:italic;color:var(--star)}
+  .quote .attr{margin-top:48px;font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+  .quote .attr b{color:var(--ink-dim);font-weight:400}
+
+  /* ---------- MISSION ---------- */
+  .mission{padding:180px 0;position:relative;border-top:1px solid var(--hair)}
+  .mission .inner{max-width:820px;margin:0 auto;text-align:left}
+  .mission .k{margin-bottom:40px}
+  .mission p{font-family:var(--serif);font-size:clamp(24px,2.3vw,34px);line-height:1.35;color:var(--ink-dim);letter-spacing:-.01em}
+  .mission p em{color:var(--ink);font-style:italic}
+  .mission .sig{margin-top:48px;display:flex;flex-direction:column;gap:4px}
+  .mission .sig svg{width:180px;height:52px;color:var(--ink)}
+  .mission .sig .name{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;margin-top:8px}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{padding:200px 0 160px;position:relative;overflow:hidden;text-align:center}
+  .final .bignorth{
+    position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);
+    width:10px;height:10px;border-radius:50%;background:#fff;
+    box-shadow:0 0 30px 10px rgba(232,244,255,1), 0 0 120px 40px rgba(124,184,255,.5);
+    animation:starBreathe 4s ease-in-out infinite;
+  }
+  .final h2{
+    position:relative;z-index:4;
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(64px,10vw,180px);line-height:.94;letter-spacing:-.03em;
+  }
+  .final h2 em{font-style:italic;color:var(--star)}
+  .final .sub{position:relative;z-index:4;margin-top:34px;font-size:16px;color:var(--ink-dim)}
+  .final .form{
+    position:relative;z-index:4;margin:48px auto 0;max-width:520px;
+    display:flex;gap:8px;padding:8px;border:1px solid var(--hair-2);border-radius:999px;
+    background:rgba(5,7,15,.7);backdrop-filter:blur(10px);
+  }
+  .final .form input{
+    flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--sans);
+    font-size:14px;padding:10px 18px;outline:none;
+  }
+  .final .form input::placeholder{color:var(--ink-muted)}
+  .final .form button{
+    background:var(--ink);color:#000;padding:10px 20px;border-radius:999px;font-size:13.5px;font-weight:500;
+    box-shadow:0 0 24px rgba(232,244,255,.35);
+  }
+  .final .fine{position:relative;z-index:4;margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- FOOTER ---------- */
+  footer{position:relative;z-index:4;border-top:1px solid var(--hair);padding:80px 0 40px;background:#000}
+  footer .mega{
+    font-family:var(--serif);font-size:clamp(80px,14vw,220px);line-height:.9;letter-spacing:-.03em;
+    color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);padding:20px 0 40px;
+    display:flex;align-items:baseline;gap:20px;
+  }
+  footer .mega .star{color:var(--star);-webkit-text-stroke:0;font-size:.5em;transform:translateY(-.5em);display:inline-block}
+  footer .cols{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:40px;padding:60px 0 40px;border-top:1px solid var(--hair)}
+  footer .col h6{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:18px;font-weight:500}
+  footer .col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  footer .col a{color:var(--ink-dim);font-size:13.5px;transition:color .2s}
+  footer .col a:hover{color:var(--ink)}
+  footer .col.first p{color:var(--ink-dim);font-size:13px;line-height:1.6;max-width:280px}
+  footer .bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid var(--hair)}
+  footer .bottom .l,footer .bottom .r{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  footer .bottom .r{display:flex;gap:24px}
+  footer .bottom .r .ok{color:var(--star)}
+
+  /* scroll-reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}.reveal.d4{transition-delay:.4s}
+
+  @media (max-width: 900px){
+    nav.top{grid-template-columns:1fr auto;padding:14px 20px}
+    .navlinks{display:none}
+    .wrap{padding:0 20px}
+    .why .grid{grid-template-columns:1fr;gap:60px}
+    .deck-body{grid-template-columns:1fr}
+    .side,.stage,.right{border-right:none;border-bottom:1px solid var(--hair)}
+    .bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:240px}
+    .c-a,.c-b,.c-c,.c-d,.c-e,.c-f,.c-g{grid-column:span 2;grid-row:span 1}
+    .phase{grid-template-columns:60px 1fr;gap:10px}
+    .phase .d,.phase .g{grid-column:2;padding-left:28px}
+    .logos{grid-template-columns:repeat(2,1fr)}
+    .logo{border-left:none;border-top:1px solid var(--hair)}
+    footer .cols{grid-template-columns:1fr 1fr;gap:30px}
+    .numgrid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="reticle" id="reticle"><i></i></div>
+
+<!-- Minimal corner chip only -->
+<div class="hud">
+  <span class="bolt"></span>
+  <span><b>ATLAS</b> · V1.0</span>
+</div>
+
+<!-- Global layers -->
+<div class="stars" id="stars"><canvas id="starsA"></canvas></div>
+<div class="polaris"></div>
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="brand">
+    <span class="mark">ATLAS</span>
+    <span class="star">★</span>
+    <span class="by">by Disruptive</span>
+  </div>
+  <div class="navlinks"></div>
+  <div class="navright">
+    <a class="pill" href="#final">Request Access <span class="arw">→</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="beam"></div>
+  <div class="north"></div>
+
+
+  <div class="wrap hero-inner">
+    <div class="eyebrow reveal in">
+      <span class="dot"></span>
+      ◆ ATLAS OS &nbsp;/&nbsp; v1.0 &nbsp;/&nbsp; NOW DEPLOYING
+      <span class="bar"></span>
+    </div>
+    <h1 class="reveal in d1">
+      Find your <em class="nth">north.</em>
+    </h1>
+    <p class="sub reveal in d2">
+      Every model. Every vendor. Every decision.<br/>
+      One operating system.
+    </p>
+    <div class="cta-row reveal in d3">
+      <a class="cta-solid" href="#final">Request Access <span>→</span></a>
+    </div>
+  </div>
+
+</section>
+
+<!-- WHAT ATLAS IS -->
+<section class="intro" id="intro">
+  <div class="wrap">
+    <div class="intro-inner reveal">
+      <p>
+        Atlas is the operating system for brands that run on AI.
+        Not a tool. Not an integration. A layer that sits beneath everything,
+        routing decisions, agents, data, and ops through one coordinated system.
+      </p>
+      <p class="built">
+        Built by the team behind <em>Raw Nutrition</em>, <em>BUM Energy</em>, and <em>3D Energy</em>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOG -->
+<section class="why fog" id="fog">
+  <div class="wrap">
+    <div class="grid">
+      <div class="left reveal">
+        <div class="kicker-row">
+          <span class="kicker">§ 01</span>
+          <span class="rule" style="width:80px"></span>
+          <span class="kicker">The Fog</span>
+        </div>
+        <h2>
+          Every brand is <span class="dim">lost in a fog</span> of models, vendors, and data silos.
+          <br/><br/>
+          Atlas is the <em>fixed point</em>.<br/>
+          The one system your business orients around.
+        </h2>
+        <div class="stats">
+          <div class="stat"><div class="num">312</div><div class="lbl">Models unified</div></div>
+          <div class="stat"><div class="num">47ms</div><div class="lbl">Global P99</div></div>
+          <div class="stat"><div class="num">1</div><div class="lbl">Interface</div></div>
+        </div>
+      </div>
+      <div class="constellation fog-fig reveal d2">
+        <div class="fig-lbl">FIG. 01 &mdash; CONSOLIDATION</div>
+        <svg viewBox="0 0 520 520" id="fogSvg">
+          <defs>
+            <radialGradient id="atlasCore" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="40%" stop-color="#E8F4FF" stop-opacity=".75"/>
+              <stop offset="100%" stop-color="#7CB8FF" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- tangled lines between vendor nodes (scramble → collapse) -->
+          <g id="fogLines" stroke="rgba(255,255,255,.22)" stroke-width=".8" fill="none"></g>
+
+          <!-- vendor nodes -->
+          <g id="fogNodes" font-family="JetBrains Mono" font-size="9" letter-spacing="1.5" fill="#6B7184"></g>
+
+          <!-- central Atlas core (fades in) -->
+          <g id="fogCore" opacity="0" style="transition:opacity .9s ease">
+            <circle cx="260" cy="260" r="58" fill="url(#atlasCore)"/>
+            <circle cx="260" cy="260" r="5" fill="#fff"/>
+            <circle cx="260" cy="260" r="14" fill="none" stroke="rgba(232,244,255,.4)"/>
+            <text x="260" y="336" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#E8F4FF">★ ATLAS</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE ATLAS STANDARD -->
+<section class="standard" id="standard">
+  <div class="wrap">
+    <div class="std-head reveal">
+      <div class="kicker" style="margin-bottom:18px">§ 02 &nbsp;·&nbsp; THE ATLAS STANDARD</div>
+      <h2>Six principles.<br/><em>One fixed point.</em></h2>
+    </div>
+    <div class="std-grid">
+      <div class="std-card reveal">
+        <div class="std-top"><span class="idx">01</span><span class="tag">PRINCIPLE</span></div>
+        <h3>Unified Models</h3>
+        <p>Every frontier model, one interface. Atlas routes to the right brain for the job &mdash; automatically.</p>
+        <div class="tele"><span>ROUTING.ENGINE</span><span class="sep">·</span><span>v4.2</span><span class="sep">·</span><span class="ok">312 MODELS</span></div>
+      </div>
+      <div class="std-card reveal d1">
+        <div class="std-top"><span class="idx">02</span><span class="tag">PRINCIPLE</span></div>
+        <h3>Zero-Latency Routing</h3>
+        <p>Sub-50ms global edge. Your prompts hit the nearest isolated region and return before your cursor blinks.</p>
+        <div class="tele"><span>GLOBAL.P99</span><span class="sep">·</span><span class="ok">47MS</span><span class="sep">·</span><span>7 REGIONS</span></div>
+      </div>
+      <div class="std-card reveal d2">
+        <div class="std-top"><span class="idx">03</span><span class="tag">PRINCIPLE</span></div>
+        <h3>End-to-End Encrypted</h3>
+        <p>Zero-trust architecture. Customer-managed keys. Nothing touches shared infrastructure. Ever.</p>
+        <div class="tele"><span>AES-256-GCM</span><span class="sep">·</span><span>CMK</span><span class="sep">·</span><span>TLS 1.3</span></div>
+      </div>
+      <div class="std-card reveal">
+        <div class="std-top"><span class="idx">04</span><span class="tag">PRINCIPLE</span></div>
+        <h3>Isolated Servers</h3>
+        <p>Single-tenant by default. Air-gapped deployments available for regulated and sovereign workloads.</p>
+        <div class="tele"><span>TENANCY</span><span class="sep">·</span><span class="ok">SINGLE</span><span class="sep">·</span><span>AIR-GAP READY</span></div>
+      </div>
+      <div class="std-card reveal d1">
+        <div class="std-top"><span class="idx">05</span><span class="tag">PRINCIPLE</span></div>
+        <h3>99.998% Uptime SLA</h3>
+        <p>Backed, monitored, and paid out in service credits. You can see the status page from your dashboard.</p>
+        <div class="tele"><span>SLA.TIER</span><span class="sep">·</span><span class="ok">MISSION-CRITICAL</span></div>
+      </div>
+      <div class="std-card reveal d2">
+        <div class="std-top"><span class="idx">06</span><span class="tag">PRINCIPLE</span></div>
+        <h3>Continuously Learning</h3>
+        <p>Atlas gets more valuable every day it&rsquo;s deployed. Your institutional memory, compounding.</p>
+        <div class="tele"><span>LEARNING.RATE</span><span class="sep">·</span><span class="ok">+3.1% / WEEK</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="platform" id="platform">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 03 &nbsp;·&nbsp; THE CONTROL DECK</div>
+        <h2>A single surface for every model,<br/>every agent, every decision.</h2>
+      </div>
+      <div class="meta">
+        <div>RELEASE / 1.0.0</div>
+        <div>REGION / NYC-1 · FRA-2 · SYD-3</div>
+        <div>LAYERS / DATA · ROUTING · AGENT · GOV</div>
+      </div>
+    </div>
+
+    <div class="deck reveal d1">
+      <!-- top bar -->
+      <div class="deck-top">
+        <div class="tl-dots"><i></i><i></i><i></i></div>
+        <div class="tl-path">atlas / <b>production</b> / acme-capital</div>
+        <div class="tl-right">
+          <span>LIVE</span>
+          <span>REGION NYC-1</span>
+          <span class="on">● NOMINAL</span>
+        </div>
+      </div>
+
+      <div class="deck-body">
+        <!-- side -->
+        <aside class="side">
+          <div>
+            <div class="group-lbl">Orientation</div>
+            <ul style="margin-top:10px">
+              <li class="sel"><span class="bullet"></span>Overview</li>
+              <li><span class="bullet"></span>Model Registry</li>
+              <li><span class="bullet"></span>Routing</li>
+              <li><span class="bullet"></span>Agents</li>
+            </ul>
+          </div>
+          <div>
+            <div class="group-lbl">Governance</div>
+            <ul style="margin-top:10px">
+              <li><span class="bullet"></span>Policies</li>
+              <li><span class="bullet"></span>Audit Log</li>
+              <li><span class="bullet"></span>Evals</li>
+            </ul>
+          </div>
+          <div>
+            <div class="group-lbl">Infrastructure</div>
+            <ul style="margin-top:10px">
+              <li><span class="bullet"></span>Compute</li>
+              <li><span class="bullet"></span>Data Planes</li>
+              <li><span class="bullet"></span>Keys &amp; Secrets</li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- stage -->
+        <div class="stage">
+          <div class="palette">
+            <div class="q">
+              <span class="prm">&gt;_</span>
+              <input value="route fraud-signal to safest model, < 80ms" disabled />
+              <span class="caret"></span>
+              <span class="kbd">⌘ K</span>
+            </div>
+            <div class="results">
+              <div class="row act">
+                <span class="ic">⎋</span><span class="nm">Route via claude-opus-4.5 · private-vpc</span><span class="tag">POLICY · FINANCE</span><span class="ms">42 ms</span>
+              </div>
+              <div class="row">
+                <span class="ic">⎋</span><span class="nm">Fallback via gpt-5-turbo · on-prem</span><span class="tag">POLICY · FINANCE</span><span class="ms">67 ms</span>
+              </div>
+              <div class="row">
+                <span class="ic">⎋</span><span class="nm">Evaluate against ACME-FRAUD-V3 (1,240 cases)</span><span class="tag">EVAL SUITE</span><span class="ms">—</span>
+              </div>
+              <div class="row">
+                <span class="ic">⎋</span><span class="nm">Open audit trail for request #8A-2041</span><span class="tag">AUDIT</span><span class="ms">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-graph">
+            <div class="stage-meta">
+              <span>ROUTING GRAPH / T+0.00s</span>
+              <span class="live">LIVE</span>
+            </div>
+            <svg viewBox="0 0 760 360" style="width:100%;height:320px">
+              <defs>
+                <radialGradient id="nStar" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+                  <stop offset="40%" stop-color="#E8F4FF" stop-opacity=".7"/>
+                  <stop offset="100%" stop-color="#7CB8FF" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <!-- edges -->
+              <g stroke="rgba(232,244,255,.35)" stroke-width="1" fill="none">
+                <path d="M 380 180 C 260 120 160 120 100 100" />
+                <path d="M 380 180 C 260 160 180 200 100 220" />
+                <path d="M 380 180 C 300 260 180 300 90 320" />
+                <path d="M 380 180 C 500 120 600 120 660 100" stroke-dasharray="2 4"/>
+                <path d="M 380 180 C 520 200 620 220 680 220" />
+                <path d="M 380 180 C 520 260 600 300 680 320" stroke-dasharray="2 4"/>
+              </g>
+              <!-- traveling packet -->
+              <circle r="3" fill="#fff" filter="url(#glowP)">
+                <animateMotion dur="3.2s" repeatCount="indefinite" path="M 380 180 C 260 120 160 120 100 100"/>
+              </circle>
+              <circle r="2.5" fill="#fff">
+                <animateMotion dur="4s" repeatCount="indefinite" path="M 380 180 C 520 200 620 220 680 220"/>
+              </circle>
+              <!-- center hub -->
+              <circle cx="380" cy="180" r="28" fill="url(#nStar)"/>
+              <circle cx="380" cy="180" r="5" fill="#fff"/>
+              <text x="380" y="222" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#AEB4C2" letter-spacing="2">ATLAS ROUTER</text>
+
+              <!-- nodes -->
+              <g font-family="JetBrains Mono" font-size="10" fill="#AEB4C2" letter-spacing="1">
+                <g transform="translate(100 100)">
+                  <circle r="5" fill="#E8F4FF"/>
+                  <circle r="10" fill="none" stroke="rgba(255,255,255,.25)"/>
+                  <text x="-18" y="-14">CLAUDE · OPUS 4.5</text>
+                </g>
+                <g transform="translate(100 220)">
+                  <circle r="4" fill="#fff"/>
+                  <circle r="9" fill="none" stroke="rgba(255,255,255,.2)"/>
+                  <text x="-16" y="-12">GPT-5 · TURBO</text>
+                </g>
+                <g transform="translate(90 320)">
+                  <circle r="3.5" fill="#fff" opacity=".8"/>
+                  <text x="-14" y="-10">LLAMA-4 · 405B</text>
+                </g>
+                <g transform="translate(660 100)">
+                  <circle r="4" fill="#fff"/>
+                  <text x="-18" y="-12">GEMINI · ULTRA</text>
+                </g>
+                <g transform="translate(680 220)">
+                  <circle r="5" fill="#E8F4FF"/>
+                  <circle r="10" fill="none" stroke="rgba(255,255,255,.25)"/>
+                  <text x="-22" y="-14">INTERNAL · ACME-V3</text>
+                </g>
+                <g transform="translate(680 320)">
+                  <circle r="3.5" fill="#fff" opacity=".8"/>
+                  <text x="-16" y="-10">MISTRAL · LARGE</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- right rail -->
+        <aside class="right">
+          <div class="block">
+            <h5>Routing / 24h</h5>
+            <div class="metric"><span class="k">Requests</span><span class="v">12,402,811</span></div>
+            <div class="metric"><span class="k">P50 latency</span><span class="v g">42 ms</span></div>
+            <div class="metric"><span class="k">P99 latency</span><span class="v">118 ms</span></div>
+            <div class="metric"><span class="k">Cost / 1M tok</span><span class="v">$0.084</span></div>
+          </div>
+          <div class="block">
+            <h5>Throughput</h5>
+            <div class="bars">
+              <i style="height:30%"></i><i style="height:48%"></i><i style="height:42%"></i><i style="height:58%"></i>
+              <i style="height:72%"></i><i style="height:62%"></i><i style="height:84%"></i><i style="height:70%"></i>
+              <i style="height:92%"></i><i style="height:80%"></i><i style="height:100%"></i><i style="height:88%"></i>
+              <i style="height:76%"></i><i style="height:94%"></i><i style="height:70%"></i><i style="height:86%"></i>
+            </div>
+          </div>
+          <div class="block">
+            <h5>Policy · live</h5>
+            <div class="metric"><span class="k">PII scrub</span><span class="v g">ON</span></div>
+            <div class="metric"><span class="k">VPC egress</span><span class="v g">ON</span></div>
+            <div class="metric"><span class="k">Evals / hr</span><span class="v">48</span></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="deck-base"></div>
+
+    <!-- Dashboard row -->
+    <div class="dashrow reveal">
+      <div class="head">
+        <div class="kicker">FIG. 02 &mdash; PROPRIETARY DASHBOARDS</div>
+        <h3>Built with your dev team. Tuned to your business.</h3>
+        <p>Atlas ships with the control surfaces your operators expect. Our team extends them into the workflows you actually run.</p>
+      </div>
+
+      <div class="dashgrid">
+        <!-- FLEET -->
+        <div class="dash">
+          <div class="dtop">
+            <span class="nm"><b>FLEET</b> &mdash; Agent Orchestration</span>
+            <span class="sub">6 ACTIVE</span>
+          </div>
+          <div class="agent"><span class="s"></span><span class="nm">ORION</span><span class="task">Reconciling Q3 invoice ledger &middot; 48,201 rows</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 10 L8 7 L16 9 L24 5 L32 8 L40 3 L48 6 L52 2" fill="none" stroke="#E8F4FF" stroke-width=".8"/></svg>
+          </div>
+          <div class="agent"><span class="s"></span><span class="nm">VEGA</span><span class="task">Drafting board briefing for 04.28 meeting</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 8 L8 9 L16 6 L24 7 L32 4 L40 5 L48 3 L52 4" fill="none" stroke="#E8F4FF" stroke-width=".8"/></svg>
+          </div>
+          <div class="agent warn"><span class="s"></span><span class="nm">RIGEL</span><span class="task">Awaiting human approval &middot; $1.2M spend</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 6 L8 6 L16 6 L24 6 L32 6 L40 6 L48 6 L52 6" fill="none" stroke="rgba(255,211,122,.6)" stroke-width=".8"/></svg>
+          </div>
+          <div class="agent"><span class="s"></span><span class="nm">SIRIUS</span><span class="task">Monitoring fraud signal &middot; 2,401 req/min</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 7 L8 3 L16 8 L24 4 L32 9 L40 2 L48 7 L52 4" fill="none" stroke="#E8F4FF" stroke-width=".8"/></svg>
+          </div>
+          <div class="agent"><span class="s"></span><span class="nm">CAPELLA</span><span class="task">Summarizing 142 CS tickets &middot; priority P1</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 11 L8 10 L16 7 L24 8 L32 5 L40 6 L48 3 L52 4" fill="none" stroke="#E8F4FF" stroke-width=".8"/></svg>
+          </div>
+          <div class="agent idle"><span class="s"></span><span class="nm">ALTAIR</span><span class="task">Standby &middot; next run 04:00 UTC</span>
+            <svg class="spark" viewBox="0 0 52 14" preserveAspectRatio="none"><path d="M0 7 L52 7" fill="none" stroke="#3A3F4E" stroke-width=".8"/></svg>
+          </div>
+        </div>
+
+        <!-- COMPASS -->
+        <div class="dash">
+          <div class="dtop">
+            <span class="nm"><b>COMPASS</b> &mdash; Decision Intelligence</span>
+            <span class="sub">BOARD BRIEFING &middot; Q4</span>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><div class="l">ARR</div><div class="v">$128M</div><div class="t">↗ +18%</div></div>
+            <div class="kpi"><div class="l">NET MARGIN</div><div class="v">32.4%</div><div class="t">↗ +2.1</div></div>
+            <div class="kpi"><div class="l">CHURN</div><div class="v">1.8%</div><div class="t down">↘ &minus;0.4</div></div>
+          </div>
+          <div class="radarwrap">
+            <svg viewBox="0 0 240 200" style="width:100%;max-width:240px">
+              <g stroke="rgba(255,255,255,.1)" fill="none">
+                <polygon points="120,20 210,75 180,170 60,170 30,75"/>
+                <polygon points="120,50 180,85 165,145 75,145 60,85"/>
+                <polygon points="120,80 150,95 145,125 95,125 90,95"/>
+              </g>
+              <g stroke="rgba(255,255,255,.08)"><line x1="120" y1="20" x2="120" y2="170"/><line x1="30" y1="75" x2="210" y2="75"/><line x1="60" y1="170" x2="210" y2="75"/><line x1="180" y1="170" x2="30" y2="75"/></g>
+              <polygon points="120,40 190,80 160,155 75,150 55,90" fill="rgba(232,244,255,.12)" stroke="#E8F4FF" stroke-width="1"/>
+              <g fill="#E8F4FF"><circle cx="120" cy="40" r="2.5"/><circle cx="190" cy="80" r="2.5"/><circle cx="160" cy="155" r="2.5"/><circle cx="75" cy="150" r="2.5"/><circle cx="55" cy="90" r="2.5"/></g>
+              <g font-family="JetBrains Mono" font-size="8" fill="#6B7184" letter-spacing="1.5" text-anchor="middle">
+                <text x="120" y="14">GROWTH</text>
+                <text x="220" y="76">MARGIN</text>
+                <text x="186" y="186">RISK</text>
+                <text x="54" y="186">VELOCITY</text>
+                <text x="20" y="76">RETENTION</text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- LOGBOOK -->
+        <div class="dash">
+          <div class="dtop">
+            <span class="nm"><b>LOGBOOK</b> &mdash; Audit &amp; Compliance</span>
+            <span class="sub">LIVE &middot; SOC 2 II</span>
+          </div>
+          <div class="logtable">
+            <div class="logrow"><span class="ts">14:02:11</span><span>m.chen</span><span class="act">route.apply &middot; fraud-v3 &rarr; opus-4.5</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">14:01:47</span><span>atlas</span><span class="act">eval.run &middot; acme-fraud-v3 &middot; 1,240 cases</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">14:00:52</span><span>j.patel</span><span class="act">policy.update &middot; pii.scrub=ON</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">13:58:19</span><span>atlas</span><span class="act">key.rotate &middot; cmk-prod-nyc1</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">13:55:03</span><span>s.oren</span><span class="act">agent.approve &middot; RIGEL &middot; $1.2M</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">13:51:40</span><span>atlas</span><span class="act">region.failover &middot; fra-2 &rarr; fra-3</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">13:48:22</span><span>r.kim</span><span class="act">export.audit &middot; 30d &middot; 412k events</span><span class="pill-v">VERIFIED</span></div>
+            <div class="logrow"><span class="ts">13:44:08</span><span>atlas</span><span class="act">model.register &middot; claude-opus-4.5</span><span class="pill-v">VERIFIED</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="caps" id="capabilities">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 03 &nbsp;·&nbsp; CAPABILITIES</div>
+        <h2>Seven disciplines.<br/><em>One aligned system.</em></h2>
+      </div>
+      <p class="sub-col">
+        ATLAS is built as a continuous substrate — every capability composes. Swap a model,
+        reroute a workload, change a policy; the system realigns around your new true north.
+      </p>
+    </div>
+
+    <div class="bento" id="bento">
+      <!-- A: big feature -->
+      <div class="card c-a">
+        <span class="idx">01</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="4" cy="6" r="1.5"/><circle cx="4" cy="18" r="1.5"/><circle cx="20" cy="6" r="1.5"/><circle cx="20" cy="18" r="1.5"/><path d="M5.5 6.8 L10 10.8 M5.5 17.2 L10 13.2 M18.5 6.8 L14 10.8 M18.5 17.2 L14 13.2"/></svg>
+        </div>
+        <div>
+          <h3>Universal Model Routing</h3>
+          <p>Any model, any task, optimal path. ATLAS routes across frontier and on-prem models with per-request policy, latency, and cost targets.</p>
+        </div>
+        <svg class="gfx" viewBox="0 0 300 180">
+          <g stroke="rgba(232,244,255,.35)" fill="none">
+            <path d="M 150 90 C 80 50 40 50 20 30"/>
+            <path d="M 150 90 C 80 120 40 130 20 150"/>
+            <path d="M 150 90 C 220 50 260 50 280 30"/>
+            <path d="M 150 90 C 220 120 260 130 280 150"/>
+          </g>
+          <circle cx="150" cy="90" r="18" fill="url(#nStar)" opacity=".6"/>
+          <circle cx="150" cy="90" r="4" fill="#fff"/>
+          <g fill="#fff">
+            <circle cx="20" cy="30" r="2.5"/><circle cx="20" cy="150" r="2.5"/>
+            <circle cx="280" cy="30" r="2.5"/><circle cx="280" cy="150" r="2.5"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- B -->
+      <div class="card c-b">
+        <span class="idx">02</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><path d="M12 2 L20 6 V12 C20 17 16 21 12 22 C8 21 4 17 4 12 V6 Z"/><path d="M9 12 L11 14 L15 10"/></svg>
+        </div>
+        <div>
+          <h3>Zero-Trust Data Plane</h3>
+          <p>Your data never leaves your perimeter. VPC-native, private peering, sovereign regions, customer-managed keys end-to-end.</p>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="card c-c">
+        <span class="idx">03</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.8 7.2 L11 16 M16.2 7.2 L13 16 M8.5 6 L15.5 6"/></svg>
+        </div>
+        <div>
+          <h3>Agent Orchestration</h3>
+          <p>Autonomous workflows with human checkpoints. Deterministic handoffs, replayable runs.</p>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="card c-d">
+        <span class="idx">04</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 3 V6 M12 18 V21 M3 12 H6 M18 12 H21"/></svg>
+        </div>
+        <div>
+          <h3>Observability</h3>
+          <p>Every token, every decision, fully auditable. OpenTelemetry-native, forever retention.</p>
+        </div>
+      </div>
+
+      <!-- E -->
+      <div class="card c-e">
+        <span class="idx">05</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><path d="M3 20 V10 M9 20 V6 M15 20 V14 M21 20 V4"/><path d="M3 20 H21"/></svg>
+        </div>
+        <div>
+          <h3>Fine-Tune &amp; Evaluate</h3>
+          <p>Train on your knowledge. Measure what matters, with eval sets that evolve with you.</p>
+        </div>
+      </div>
+
+      <!-- F: bigger row -->
+      <div class="card c-f">
+        <span class="idx">06</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><path d="M3 10 H21 M3 14 H21"/><path d="M5 6 H19 L21 10 H3 Z"/><path d="M5 18 H19 L21 14 H3 Z"/></svg>
+        </div>
+        <div>
+          <h3>On-Prem · VPC · Hybrid</h3>
+          <p>Deploy anywhere. Stay sovereign. The same ATLAS runs in your datacenter, in your cloud, or fully managed — identical API, identical policy.</p>
+        </div>
+      </div>
+
+      <!-- G -->
+      <div class="card c-g">
+        <span class="idx">07</span>
+        <div class="ic">
+          <svg viewBox="0 0 24 24"><path d="M4 4 H20 V20 H4 Z"/><path d="M4 9 H20 M9 4 V20"/><circle cx="14.5" cy="14.5" r="1.8" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div>
+          <h3>Governance &amp; Policy</h3>
+          <p>Declarative policy-as-code. One rule, enforced across every model, agent, and region.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="journey" id="journey">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="kicker" style="margin-bottom:18px">§ 04 &nbsp;·&nbsp; THE JOURNEY</div>
+      <h2>From first signal to <em>full orbit</em>.</h2>
+      <p class="sub">Five phases. Weeks, not quarters. Every enterprise charts the same course — ATLAS is designed so each step is a straight line to the next.</p>
+    </div>
+
+    <div class="phases">
+      <div class="phase active reveal">
+        <div class="n">01</div>
+        <div class="t">Discover</div>
+        <div class="d">Inventory your models, data sources, and workflows. ATLAS builds a live map of your AI surface in under 72 hours.</div>
+        <div class="g">
+          <svg viewBox="0 0 200 80">
+            <g stroke="rgba(255,255,255,.2)" fill="none"><path d="M10 60 L60 40 L110 50 L160 20 L190 30"/></g>
+            <g fill="#E8F4FF"><circle cx="10" cy="60" r="2"/><circle cx="60" cy="40" r="2"/><circle cx="110" cy="50" r="2"/><circle cx="160" cy="20" r="3"/><circle cx="190" cy="30" r="2"/></g>
+          </svg>
+        </div>
+        <div class="line"></div>
+      </div>
+      <div class="phase reveal d1">
+        <div class="n">02</div>
+        <div class="t">Deploy</div>
+        <div class="d">One command lands ATLAS in your VPC, on-prem, or managed cloud. No new hardware; no new headcount.</div>
+        <div class="g">
+          <svg viewBox="0 0 200 80">
+            <rect x="10" y="20" width="40" height="40" fill="none" stroke="rgba(255,255,255,.2)"/>
+            <rect x="80" y="20" width="40" height="40" fill="none" stroke="rgba(255,255,255,.2)"/>
+            <rect x="150" y="20" width="40" height="40" fill="none" stroke="rgba(232,244,255,.9)"/>
+            <path d="M50 40 H80 M120 40 H150" stroke="rgba(255,255,255,.3)" stroke-dasharray="2 3"/>
+          </svg>
+        </div>
+        <div class="line"></div>
+      </div>
+      <div class="phase reveal d2">
+        <div class="n">03</div>
+        <div class="t">Integrate</div>
+        <div class="d">Single SDK, 18 lines of code. ATLAS ingests prompts from every team and routes with a policy you control.</div>
+        <div class="g">
+          <svg viewBox="0 0 200 80">
+            <g stroke="rgba(255,255,255,.2)" fill="none">
+              <path d="M20 20 H80 M20 40 H100 M20 60 H70"/>
+              <path d="M140 40 L180 40" stroke="rgba(232,244,255,.9)"/>
+            </g>
+            <circle cx="120" cy="40" r="8" fill="none" stroke="rgba(232,244,255,.6)"/>
+            <circle cx="120" cy="40" r="2" fill="#fff"/>
+          </svg>
+        </div>
+        <div class="line"></div>
+      </div>
+      <div class="phase reveal d3">
+        <div class="n">04</div>
+        <div class="t">Scale</div>
+        <div class="d">From pilot to planet-scale. Autoscaling compute, multi-region failover, predictable unit cost at every volume.</div>
+        <div class="g">
+          <svg viewBox="0 0 200 80">
+            <g fill="none" stroke="rgba(255,255,255,.2)">
+              <circle cx="40" cy="40" r="8"/>
+              <circle cx="100" cy="40" r="14"/>
+              <circle cx="170" cy="40" r="22" stroke="rgba(232,244,255,.6)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="line"></div>
+      </div>
+      <div class="phase reveal d4">
+        <div class="n">05</div>
+        <div class="t">Govern</div>
+        <div class="d">Every decision traceable to a human, a policy, and a model version. Audit-ready by default.</div>
+        <div class="g">
+          <svg viewBox="0 0 200 80">
+            <g stroke="rgba(255,255,255,.25)" fill="none">
+              <rect x="20" y="18" width="160" height="44"/>
+              <path d="M20 32 H180 M20 46 H180"/>
+              <circle cx="170" cy="25" r="3" fill="#E8F4FF" stroke="none"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="kicker">§ 05 · BY THE NUMBERS</div>
+      <h2>Measured in <em style="color:var(--star);font-style:italic">light-seconds</em>,<br/>not quarters.</h2>
+    </div>
+    <div class="numgrid reveal d1">
+      <div class="numcell">
+        <div class="lbl">Tokens routed / day</div>
+        <div class="big">10,000,000,000<span class="unit">+</span></div>
+        <svg class="spark" viewBox="0 0 300 38" preserveAspectRatio="none">
+          <path d="M0 30 L30 24 L60 26 L90 18 L120 22 L150 12 L180 16 L210 8 L240 14 L270 4 L300 10" fill="none" stroke="rgba(232,244,255,.7)" stroke-width="1"/>
+        </svg>
+        <div class="note">↗ +42% QOQ</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Inference routing</div>
+        <div class="big">&lt; 50<span class="unit">MS</span></div>
+        <svg class="spark" viewBox="0 0 300 38" preserveAspectRatio="none">
+          <path d="M0 20 L30 22 L60 18 L90 20 L120 16 L150 18 L180 14 L210 16 L240 12 L270 14 L300 10" fill="none" stroke="rgba(232,244,255,.7)" stroke-width="1"/>
+        </svg>
+        <div class="note">P50 / GLOBAL / 24H</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Platform uptime</div>
+        <div class="big">99.999<span class="unit">%</span></div>
+        <svg class="spark" viewBox="0 0 300 38" preserveAspectRatio="none">
+          <path d="M0 10 L300 10" stroke="rgba(232,244,255,.7)" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="note">5 NINES · TRAILING 12 MO</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Data exfiltration events</div>
+        <div class="big">0</div>
+        <svg class="spark" viewBox="0 0 300 38" preserveAspectRatio="none">
+          <path d="M0 30 L300 30" stroke="rgba(232,244,255,.3)" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="note">EVER. BY DESIGN.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMERS -->
+<section class="customers" id="customers">
+  <div class="wrap">
+    <h4 class="reveal">Trusted by the Fortune 500's most ambitious teams</h4>
+    <div class="logos reveal d1">
+      <div class="logo">NORTHSTAR</div>
+      <div class="logo mono">VANTA CAP</div>
+      <div class="logo">Helion</div>
+      <div class="logo mono">ORRE / NYC</div>
+      <div class="logo">Meridian</div>
+      <div class="logo mono">PLXR · GOV</div>
+    </div>
+    <div class="logos reveal d2" style="margin-top:-1px">
+      <div class="logo">Obsidian</div>
+      <div class="logo mono">SAGEWORKS</div>
+      <div class="logo">Hemisphere</div>
+      <div class="logo mono">ASTRAL · DEF</div>
+      <div class="logo">Cormorant</div>
+      <div class="logo mono">KILO / HEALTH</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="quote">
+  <div class="wrap reveal">
+    <div class="mark">“</div>
+    <blockquote>
+      ATLAS didn't just modernize our AI stack.<br/>
+      It gave us <em>a star to steer by.</em>
+    </blockquote>
+    <div class="attr">
+      <b>— Chief Technology Officer</b> &nbsp;·&nbsp; Global Bank &nbsp;·&nbsp; Fortune 10
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission">
+  <div class="wrap">
+    <div class="inner reveal">
+      <div class="k kicker">§ 06 &nbsp;·&nbsp; FROM DISRUPTIVE</div>
+      <p>
+        We built ATLAS because the enterprise AI era needs more than <em>tools</em>.<br/>
+        It needs <em>orientation</em>.
+        <br/><br/>
+        Every model, every vendor, every framework is a star in a growing sky.
+        ATLAS is the instrument that makes them navigable — a single true north for
+        the teams building the next century of work.
+      </p>
+      <div class="sig">
+        <svg viewBox="0 0 200 60" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <path d="M6 40 C 20 10, 40 50, 60 30 C 72 18, 86 32, 96 22 S 120 10, 140 36 C 150 48, 168 22, 190 32" />
+          <path d="M30 48 L 180 48" stroke-width=".5" opacity=".3"/>
+        </svg>
+        <span class="name">DISRUPTIVE · FOUNDING TEAM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="final">
+  <div class="bignorth"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <h2>Find your <em>north.</em></h2>
+      <p class="sub">Request early access to ATLAS OS.</p>
+      <form class="form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Requested ✓'">
+        <input type="email" placeholder="you@company.com" required />
+        <button type="submit">Request Access →</button>
+      </form>
+      <p class="fine">Enterprise only. We&rsquo;ll reach out within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="docs">
+  <div class="wrap">
+    <div class="mega">ATLAS <span class="star">★</span> BY DISRUPTIVE</div>
+    <div class="cols">
+      <div class="col first">
+        <h6>Disruptive Labs, Inc.</h6>
+        <p>The operating system for enterprise AI infrastructure. Headquartered on Earth. Oriented toward intelligence.</p>
+      </div>
+      <div class="col">
+        <h6>Platform</h6>
+        <ul>
+          <li><a href="#">Routing</a></li>
+          <li><a href="#">Agents</a></li>
+          <li><a href="#">Evals</a></li>
+          <li><a href="#">Governance</a></li>
+          <li><a href="#">Infrastructure</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Manifesto</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Resources</h6>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Legal</h6>
+        <ul>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">DPA</a></li>
+          <li><a href="#">Compliance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="l">© 2026 Disruptive Labs, Inc. · All systems nominal · Made on Earth.</div>
+      <div class="r">
+        <span>LAT 40.7484° N</span>
+        <span>LONG 73.9857° W</span>
+        <span class="ok">● TRUE NORTH</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SVG filters global -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="glowP" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="2" />
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blurGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+</svg>
+
+<script>
+/* -------- custom cursor -------- */
+(function(){
+  const r = document.getElementById('reticle');
+  let tx=0,ty=0,x=0,y=0;
+  window.addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
+  function loop(){ x+=(tx-x)*.3; y+=(ty-y)*.3; r.style.transform=`translate(${x}px,${y}px) translate(-50%,-50%)`; requestAnimationFrame(loop); }
+  loop();
+  document.querySelectorAll('a,button,input,.card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>r.classList.add('hot'));
+    el.addEventListener('mouseleave',()=>r.classList.remove('hot'));
+  });
+})();
+
+/* -------- starfield -------- */
+(function(){
+  const c = document.getElementById('starsA');
+  const ctx = c.getContext('2d');
+  let w,h,dpr=Math.min(window.devicePixelRatio||1,2);
+  const layers = [
+    {n:140, speed:0.03, size:[.3,.8], alpha:[.3,.7]},
+    {n:90,  speed:0.08, size:[.6,1.4], alpha:[.5,.95]},
+    {n:40,  speed:0.16, size:[1.0,2.0], alpha:[.7,1]},
+  ];
+  let stars = [];
+  function resize(){
+    w = c.width = innerWidth*dpr; h = c.height = innerHeight*dpr;
+    c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    stars = [];
+    layers.forEach(L=>{
+      for(let i=0;i<L.n;i++){
+        stars.push({
+          x: Math.random()*w,
+          y: Math.random()*h*2,
+          r: (L.size[0]+Math.random()*(L.size[1]-L.size[0]))*dpr,
+          a: L.alpha[0]+Math.random()*(L.alpha[1]-L.alpha[0]),
+          s: L.speed,
+          tw: Math.random()*Math.PI*2
+        });
+      }
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const sy = window.scrollY;
+    for(const st of stars){
+      const y = (st.y - sy*st.s*dpr) % (h*2);
+      const yy = y<0 ? y + h*2 : y;
+      st.tw += 0.01;
+      const tw = 0.7 + 0.3*Math.sin(st.tw + st.x*0.01);
+      ctx.beginPath();
+      ctx.arc(st.x, yy, st.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(232,244,255,${st.a*tw})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize); resize(); draw();
+})();
+
+/* -------- reveal on scroll -------- */
+(function(){
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+/* -------- card glow follow -------- */
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', (e.clientX-r.left)+'px');
+    card.style.setProperty('--my', (e.clientY-r.top)+'px');
+  });
+});
+
+/* -------- nav shade on scroll -------- */
+(function(){
+  const n = document.querySelector('nav.top');
+  window.addEventListener('scroll',()=>{
+    if(window.scrollY>40) n.style.background='linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.5))';
+    else n.style.background='linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15))';
+  });
+})();
+
+/* -------- FOG diagram: tangled nodes collapse to Atlas core -------- */
+(function(){
+  const svg = document.getElementById('fogSvg');
+  if(!svg) return;
+  const linesG = document.getElementById('fogLines');
+  const nodesG = document.getElementById('fogNodes');
+  const core = document.getElementById('fogCore');
+  const vendors = ['OPENAI','ANTHROPIC','GOOGLE','META','COHERE','MISTRAL','AWS','AZURE','SNOWFLAKE','DATABRICKS'];
+  // positions around a ring
+  const cx=260, cy=260, R=200;
+  const pts = vendors.map((v,i)=>{
+    const a = (i/vendors.length)*Math.PI*2 - Math.PI/2;
+    return {x: cx + Math.cos(a)*R, y: cy + Math.sin(a)*R, v};
+  });
+  // tangled lines: connect most pairs
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      if((i+j)%2===0 || Math.abs(i-j)===3){
+        const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+        const mx = (pts[i].x+pts[j].x)/2 + (Math.random()-.5)*80;
+        const my = (pts[i].y+pts[j].y)/2 + (Math.random()-.5)*80;
+        p.setAttribute('d', `M ${pts[i].x} ${pts[i].y} Q ${mx} ${my} ${pts[j].x} ${pts[j].y}`);
+        linesG.appendChild(p);
+      }
+    }
+  }
+  // nodes
+  pts.forEach(p=>{
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','vnode');
+    g.setAttribute('transform',`translate(${p.x} ${p.y})`);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r','3.5'); c.setAttribute('fill','#fff'); c.setAttribute('opacity','.85');
+    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('r','8'); ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(255,255,255,.2)');
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('y',(p.y<cy?-14:20)); t.setAttribute('text-anchor','middle');
+    t.textContent = p.v;
+    g.appendChild(ring); g.appendChild(c); g.appendChild(t);
+    g.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    g.style.transition = 'transform 1.6s cubic-bezier(.6,.1,.2,1), opacity 1s ease';
+    g.setAttribute('transform','');
+    nodesG.appendChild(g);
+  });
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        // collapse: move every node to center
+        nodesG.querySelectorAll('.vnode').forEach(g=>{
+          g.style.transform = `translate(${cx}px, ${cy}px)`;
+          g.style.opacity = '0';
+        });
+        svg.classList.add('collapsed');
+        setTimeout(()=>{ core.setAttribute('opacity','1'); }, 900);
+        io.disconnect();
+      }
+    });
+  },{threshold:.35});
+  io.observe(svg);
+})();
+
+/* -------- journey active highlight as user scrolls -------- */
+(function(){
+  const phases = document.querySelectorAll('.phase');
+  const obs = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ phases.forEach(p=>p.classList.remove('active')); e.target.classList.add('active'); } });
+  },{threshold:.6});
+  phases.forEach(p=>obs.observe(p));
+})();
+</script>
+</body>
+</html>

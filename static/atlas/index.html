@@ -1,0 +1,1426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATLAS — A bespoke operating layer for the founder-CEO.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Backgrounds — deep cosmic ink. Cool, not warm. Space at midnight. */
+    --bg:        #0B0D14;
+    --bg-1:      #0F1119;
+    --bg-2:      #14172040;
+    --paper:     #ECE7DD;
+    --paper-ink: #1B1A17;
+
+    --ink:       #F2EEE3;
+    --ink-dim:   #BAB4A4;
+    --ink-muted: #7C7669;
+    --ink-faint: #3F3D38;
+
+    --gold:      #D4B176;
+    --gold-deep: #9A7A45;
+    --gold-pale: #E8CFA0;
+
+    --hair:      rgba(232,228,216,0.07);
+    --hair-2:    rgba(232,228,216,0.16);
+    --hair-gold: rgba(212,177,118,0.14);
+
+    --sans:"Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --serif:"Instrument Serif", ui-serif, Georgia, serif;
+    --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-weight:400;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  html{scroll-behavior:smooth}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--gold);color:#0B0B0E}
+
+  /* ---------- AMBIENT BACKGROUND ---------- */
+  /* Deep cosmic sky. Cool ink with a single warm focal point up top. */
+  .bg-base{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(50% 40% at 78% -8%, rgba(212,177,118,0.10), transparent 60%),
+      radial-gradient(40% 35% at 18% 12%, rgba(180,200,240,0.05), transparent 60%),
+      radial-gradient(70% 60% at 50% 110%, rgba(120,140,180,0.06), transparent 55%),
+      linear-gradient(180deg, #0E1018 0%, #0B0D14 40%, #08090E 100%);
+  }
+  /* Real starfield — dense, slightly twinkling, like a clear night */
+  .bg-stars{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    opacity:.75;
+    background-image:
+      /* large bright stars */
+      radial-gradient(1.6px 1.6px at 8% 14%, rgba(244,239,227,.85), transparent 50%),
+      radial-gradient(1.8px 1.8px at 84% 22%, rgba(232,207,160,.75), transparent 50%),
+      radial-gradient(2px 2px at 36% 76%, rgba(244,239,227,.7), transparent 50%),
+      radial-gradient(1.6px 1.6px at 64% 48%, rgba(244,239,227,.65), transparent 50%),
+      /* mid stars */
+      radial-gradient(1.2px 1.2px at 22% 38%, rgba(244,239,227,.5), transparent 50%),
+      radial-gradient(1px 1px at 48% 18%, rgba(244,239,227,.6), transparent 50%),
+      radial-gradient(1.2px 1.2px at 72% 64%, rgba(244,239,227,.5), transparent 50%),
+      radial-gradient(1.4px 1.4px at 14% 88%, rgba(244,239,227,.55), transparent 50%),
+      radial-gradient(1px 1px at 92% 84%, rgba(244,239,227,.5), transparent 50%),
+      radial-gradient(1.2px 1.2px at 56% 92%, rgba(244,239,227,.5), transparent 50%),
+      radial-gradient(1px 1px at 30% 6%, rgba(244,239,227,.55), transparent 50%),
+      radial-gradient(1.2px 1.2px at 88% 50%, rgba(232,207,160,.5), transparent 50%),
+      /* faint dust */
+      radial-gradient(.8px .8px at 4% 56%, rgba(244,239,227,.35), transparent 50%),
+      radial-gradient(.8px .8px at 18% 64%, rgba(244,239,227,.3), transparent 50%),
+      radial-gradient(.8px .8px at 42% 44%, rgba(244,239,227,.3), transparent 50%),
+      radial-gradient(.8px .8px at 60% 24%, rgba(244,239,227,.3), transparent 50%),
+      radial-gradient(.8px .8px at 78% 14%, rgba(244,239,227,.35), transparent 50%),
+      radial-gradient(.8px .8px at 96% 66%, rgba(244,239,227,.3), transparent 50%),
+      radial-gradient(.8px .8px at 26% 24%, rgba(244,239,227,.25), transparent 50%),
+      radial-gradient(.8px .8px at 68% 86%, rgba(244,239,227,.3), transparent 50%);
+    background-size:1600px 1600px;
+    animation:twinkle 9s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{opacity:.7}
+    50%{opacity:.85}
+  }
+  .bg-grain{
+    position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .bg-vignette{
+    position:fixed;inset:0;z-index:3;pointer-events:none;
+    background:radial-gradient(140% 90% at 50% 30%, transparent 50%, rgba(0,0,0,.55) 100%);
+  }
+
+  /* ---------- LAYOUT ---------- */
+  section, header, footer{position:relative;z-index:5}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 56px}
+  .wrap-narrow{max-width:1040px;margin:0 auto;padding:0 56px}
+  .rule{height:1px;background:var(--hair);width:100%}
+
+  /* ---------- TYPE ATOMS ---------- */
+  .kicker{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .kicker .gold{color:var(--gold)}
+  .section-mark{
+    display:flex;align-items:center;gap:14px;margin-bottom:36px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .section-mark .num{color:var(--gold)}
+  .section-mark .bar{flex:0 0 56px;height:1px;background:var(--hair-2)}
+
+  h1,h2,h3,h4{font-weight:400;font-family:var(--serif);letter-spacing:-.02em;line-height:1.04}
+  h1 em, h2 em, h3 em, h4 em{font-style:italic}
+
+  /* ---------- TOP MARGINALIA (no nav, just brand and one CTA) ---------- */
+  .pagefra{
+    position:absolute;top:0;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:30px 56px;z-index:30;
+  }
+  .brand{display:flex;align-items:baseline;gap:14px}
+  .brand .mark{
+    font-family:var(--serif);font-size:22px;letter-spacing:.16em;
+    color:var(--ink);
+  }
+  .brand .star{
+    color:var(--gold);font-size:11px;
+    transform:translateY(-7px);display:inline-block;
+    text-shadow:0 0 12px rgba(212,177,118,0.7);
+  }
+  .brand .by{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--ink-muted);
+    padding-left:14px;border-left:1px solid var(--hair);
+  }
+  .invite{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--ink-dim);
+    display:inline-flex;align-items:center;gap:10px;
+    padding:8px 0;border-bottom:1px solid var(--gold);
+    transition:color .25s, border-color .25s;
+  }
+  .invite:hover{color:var(--ink)}
+  .invite .arw{transition:transform .3s}
+  .invite:hover .arw{transform:translateX(4px)}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:160px 0 96px;min-height:100vh;display:flex;align-items:center;position:relative}
+  .hero-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%;
+    position:relative;z-index:6;
+  }
+  .hero-copy .opening{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--ink-muted);margin-bottom:36px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .hero-copy .opening .dot{
+    width:6px;height:6px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 10px rgba(200,169,122,.6);
+  }
+  .hero h1{
+    font-size:clamp(58px, 6.6vw, 104px);
+    letter-spacing:-.028em;line-height:.96;
+  }
+  .hero h1 em{
+    color:var(--gold);font-style:italic;
+  }
+  .hero .lede{
+    margin-top:32px;max-width:520px;
+    font-size:17.5px;line-height:1.55;color:var(--ink-dim);
+    font-weight:300;
+  }
+  .hero .lede b{color:var(--ink);font-weight:400}
+  .hero .ctas{
+    margin-top:44px;display:flex;align-items:center;gap:32px;flex-wrap:wrap;
+  }
+  .cta-primary{
+    display:inline-flex;align-items:center;gap:14px;
+    font-size:13.5px;letter-spacing:.04em;color:var(--ink);
+    padding:14px 0;border-bottom:1px solid var(--gold);
+    transition:color .25s, gap .25s;
+  }
+  .cta-primary:hover{color:#fff;gap:18px}
+  .cta-primary .arrow{
+    width:24px;height:1px;background:var(--gold);position:relative;
+  }
+  .cta-primary .arrow::after{
+    content:"";position:absolute;right:0;top:-3px;
+    width:7px;height:7px;border-top:1px solid var(--gold);border-right:1px solid var(--gold);
+    transform:rotate(45deg);
+  }
+  .cta-meta{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--ink-muted);
+    max-width:240px;line-height:1.7;
+  }
+
+  /* Hero dashboard mock */
+  .hdash{
+    border:1px solid var(--hair-2);border-radius:6px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(20,20,26,0.92), rgba(11,11,14,0.96));
+    box-shadow:
+      0 0 0 1px rgba(244,241,234,0.03) inset,
+      0 60px 120px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(200,169,122,0.04);
+    position:relative;
+  }
+  .hdash::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(80% 50% at 90% -10%, rgba(200,169,122,0.05), transparent 55%);
+  }
+  .hdash-top{
+    display:flex;align-items:center;gap:16px;
+    padding:14px 18px;border-bottom:1px solid var(--hair);
+    font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .hdash-top .crest{font-family:var(--serif);font-size:13px;color:var(--ink);letter-spacing:.14em;text-transform:none}
+  .hdash-top .crest .star{color:var(--gold)}
+  .hdash-top .right{margin-left:auto;display:flex;align-items:center;gap:18px}
+  .hdash-top .live{display:inline-flex;align-items:center;gap:8px;color:var(--gold)}
+  .hdash-top .live .pulse{
+    width:6px;height:6px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 10px var(--gold);
+    animation:gold-pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes gold-pulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+  .hdash-body{padding:30px 30px 28px;display:flex;flex-direction:column;gap:24px}
+
+  .hgreet{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    padding-bottom:22px;border-bottom:1px dashed var(--hair);
+  }
+  .hgreet .hi{
+    font-family:var(--serif);font-size:30px;line-height:1.08;
+    letter-spacing:-.012em;color:var(--ink);max-width:380px;
+  }
+  .hgreet .hi em{font-style:italic;color:var(--gold)}
+  .hgreet .meta{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;
+    color:var(--ink-muted);text-transform:uppercase;text-align:right;line-height:1.9;
+  }
+  .hgreet .meta b{color:var(--ink-dim);font-weight:400}
+
+  .hkpis{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .hkpi{
+    padding:6px 18px 4px;border-left:1px solid var(--hair);
+  }
+  .hkpi:first-child{padding-left:0;border-left:none}
+  .hkpi .l{
+    font-family:var(--mono);font-size:9px;letter-spacing:.24em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  .hkpi .v{
+    font-family:var(--serif);font-size:34px;line-height:1.05;
+    color:var(--ink);margin-top:8px;letter-spacing:-.014em;
+  }
+  .hkpi .v em{color:var(--gold);font-style:normal}
+  .hkpi .t{
+    margin-top:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .hkpi .t.gold{color:var(--gold)}
+
+  .hfeed{
+    border-top:1px solid var(--hair);padding-top:18px;
+    display:flex;flex-direction:column;gap:0;
+  }
+  .hfeed .head{
+    display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;
+    color:var(--ink-muted);text-transform:uppercase;margin-bottom:10px;
+  }
+  .hfeed .head .lbl{display:inline-flex;align-items:center;gap:8px;color:var(--ink-dim)}
+  .hfeed .head .lbl::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 8px var(--gold);
+    animation:gold-pulse 2s ease-in-out infinite;
+  }
+  .hfeed-list{height:160px;overflow:hidden;position:relative}
+  .feed-row{
+    display:grid;grid-template-columns:54px 1fr auto;gap:14px;align-items:baseline;
+    padding:9px 0;border-top:1px dashed rgba(244,241,234,0.05);
+    animation:feedIn .55s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .feed-row:first-child{border-top:none}
+  .feed-row .ts{
+    font-family:var(--mono);font-size:10px;color:var(--ink-muted);
+    letter-spacing:.04em;
+  }
+  .feed-row .act{
+    font-size:13px;color:var(--ink);line-height:1.45;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .feed-row .act b{color:var(--gold);font-weight:400}
+  .feed-row .tag{
+    font-family:var(--mono);font-size:9px;letter-spacing:.22em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  @keyframes feedIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+  /* ---------- DIVIDER WORD ---------- */
+  .word-divider{
+    padding:60px 0;text-align:center;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.4em;
+    text-transform:uppercase;color:var(--ink-muted);
+    position:relative;
+  }
+  .word-divider::before, .word-divider::after{
+    content:"";position:absolute;top:50%;width:32%;height:1px;
+    background:var(--hair);
+  }
+  .word-divider::before{left:8%}
+  .word-divider::after{right:8%}
+
+  /* ---------- §01 PREMISE ---------- */
+  .premise{padding:120px 0 140px;border-top:1px solid var(--hair)}
+  .premise-grid{display:grid;grid-template-columns:240px 1fr;gap:80px;align-items:start}
+  .premise-side .kicker{display:block;margin-bottom:18px}
+  .premise-side h6{
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+    color:var(--ink-muted);text-transform:uppercase;margin-bottom:12px;font-weight:400;
+  }
+  .premise-side p{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+    color:var(--ink-muted);line-height:1.85;
+  }
+  .premise-body p.lead{
+    font-family:var(--serif);font-size:clamp(34px, 3.4vw, 52px);
+    line-height:1.18;letter-spacing:-.018em;color:var(--ink);
+    text-wrap:pretty;
+  }
+  .premise-body p.lead em{color:var(--gold);font-style:italic}
+  .premise-body p.lead .dim{color:var(--ink-muted)}
+  .premise-figures{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    margin-top:64px;padding-top:32px;border-top:1px solid var(--hair);
+  }
+  .pfig{padding-right:32px;border-right:1px solid var(--hair)}
+  .pfig:last-child{border-right:none;padding-right:0;padding-left:32px}
+  .pfig:nth-child(2){padding-left:32px}
+  .pfig .v{
+    font-family:var(--serif);font-size:48px;line-height:1;
+    letter-spacing:-.018em;color:var(--ink);
+  }
+  .pfig .v em{color:var(--gold);font-style:italic}
+  .pfig .v .small{font-size:.55em;color:var(--ink-muted);letter-spacing:.04em;font-family:var(--mono);font-style:normal;margin-left:4px}
+  .pfig .l{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;
+    color:var(--ink-muted);text-transform:uppercase;margin-top:14px;line-height:1.7;
+  }
+
+  /* ---------- §02 SPECIALISTS ---------- */
+  .specialists{padding:140px 0 140px;border-top:1px solid var(--hair)}
+  .spec-head{
+    display:grid;grid-template-columns:240px 1fr;gap:80px;align-items:end;margin-bottom:64px;
+  }
+  .spec-head h2{
+    font-size:clamp(40px,4vw,68px);max-width:760px;
+  }
+  .spec-head h2 em{color:var(--gold)}
+  .speclist{
+    border-top:1px solid var(--hair-2);
+  }
+  .specrow{
+    display:grid;grid-template-columns:80px 220px 1fr 1fr;gap:32px;
+    padding:36px 0;border-bottom:1px solid var(--hair);
+    align-items:start;transition:background .4s;
+  }
+  .specrow:hover{background:rgba(232,228,216,0.025)}
+  .specrow .num{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;
+    color:var(--gold);padding-top:6px;
+  }
+  .specrow .name{
+    font-family:var(--serif);font-size:30px;line-height:1.1;
+    letter-spacing:-.012em;color:var(--ink);
+  }
+  .specrow .name em{color:var(--ink-muted);font-style:italic;font-size:.55em;display:block;margin-top:8px;letter-spacing:.04em}
+  .specrow .scope{
+    font-size:14.5px;line-height:1.6;color:var(--ink-dim);max-width:420px;
+  }
+  .specrow .artifact{
+    border-left:1px solid var(--hair-2);padding-left:24px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;
+    color:var(--ink-muted);line-height:1.7;
+  }
+  .specrow .artifact .h{
+    font-size:9px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .specrow .artifact .h::before{
+    content:"";width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);
+  }
+  .specrow .artifact p{
+    font-family:var(--sans);font-size:13px;color:var(--ink-dim);
+    letter-spacing:0;line-height:1.55;
+  }
+
+  /* ---------- §03 A DAY ---------- */
+  .day{padding:140px 0;border-top:1px solid var(--hair)}
+  .day-head{display:grid;grid-template-columns:240px 1fr;gap:80px;margin-bottom:60px}
+  .day-head h2{
+    font-size:clamp(40px,4vw,64px);max-width:680px;
+  }
+  .day-head h2 em{color:var(--gold)}
+  .day-head .sub{
+    margin-top:24px;color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:520px;
+  }
+  .timeline{
+    border-top:1px solid var(--hair);
+  }
+  .tlrow{
+    display:grid;grid-template-columns:240px 1fr;gap:80px;
+    padding:28px 0;border-bottom:1px solid var(--hair);
+    align-items:baseline;
+  }
+  .tlrow .left{
+    display:flex;flex-direction:column;gap:6px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  .tlrow .left .time{
+    font-family:var(--serif);font-size:30px;color:var(--ink);
+    letter-spacing:-.01em;text-transform:none;line-height:1;
+  }
+  .tlrow .left .time em{font-style:italic;color:var(--gold)}
+  .tlrow .left .agent{color:var(--gold)}
+  .tlrow .body .what{
+    font-family:var(--serif);font-size:24px;line-height:1.2;letter-spacing:-.01em;
+    color:var(--ink);
+  }
+  .tlrow .body .what em{font-style:italic;color:var(--gold)}
+  .tlrow .body .det{
+    margin-top:10px;color:var(--ink-dim);font-size:14.5px;line-height:1.6;max-width:680px;
+  }
+  .tlrow .body .meta{
+    margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .tlrow .body .meta b{color:var(--gold);font-weight:400;letter-spacing:.04em;font-family:var(--sans);font-size:13px;text-transform:none}
+
+  /* ---------- §04 ENGAGEMENT ---------- */
+  .engagement{
+    padding:140px 0;border-top:1px solid var(--hair);
+  }
+  .eng-head{display:grid;grid-template-columns:240px 1fr;gap:80px;margin-bottom:72px;align-items:end}
+  .eng-head h2{font-size:clamp(40px,4vw,64px);max-width:760px}
+  .eng-head h2 em{color:var(--gold)}
+  .eng-head .sub{margin-top:24px;color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:480px}
+  .eng-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    border-top:1px solid var(--hair-2);border-bottom:1px solid var(--hair-2);
+    position:relative;
+  }
+  .eng-mvt{
+    padding:48px 36px 56px;border-left:1px solid var(--hair);position:relative;
+    display:flex;flex-direction:column;gap:24px;min-height:420px;
+  }
+  .eng-mvt:first-child{border-left:none}
+  .eng-mvt .roman{
+    font-family:var(--serif);font-size:14px;letter-spacing:.32em;
+    color:var(--gold);text-transform:uppercase;
+  }
+  .eng-mvt h3{
+    font-family:var(--serif);font-size:36px;line-height:1.05;letter-spacing:-.014em;
+  }
+  .eng-mvt h3 em{
+    color:var(--gold);font-style:italic;
+  }
+  .eng-mvt .body{color:var(--ink-dim);font-size:14.5px;line-height:1.62;max-width:340px}
+  .eng-mvt .timing{
+    margin-top:auto;padding-top:20px;border-top:1px dashed var(--hair-2);
+    font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  .eng-mvt .timing b{color:var(--gold);font-weight:400}
+
+  /* ---------- §04b EXPANSIONS / UPSELLS ---------- */
+  .expansions{padding:140px 0;border-top:1px solid var(--hair)}
+  .exp-head{display:grid;grid-template-columns:240px 1fr;gap:80px;margin-bottom:64px;align-items:end}
+  .exp-head h2{font-size:clamp(40px,4vw,64px);max-width:760px}
+  .exp-head h2 em{color:var(--gold);font-style:italic}
+  .exp-head .sub{margin-top:24px;color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:520px}
+  .exp-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+    border-top:1px solid var(--hair-2);
+  }
+  .exp-card{
+    padding:40px 40px 44px;border-bottom:1px solid var(--hair);
+    border-right:1px solid var(--hair);
+    display:flex;flex-direction:column;gap:18px;min-height:260px;
+    transition:background .35s;
+  }
+  .exp-card:nth-child(2n){border-right:none}
+  .exp-card:hover{background:rgba(232,228,216,0.018)}
+  .exp-card .tag{
+    display:flex;align-items:center;gap:14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .exp-card .tag .gold{color:var(--gold)}
+  .exp-card .tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(212,177,118,0.5)}
+  .exp-card h4{
+    font-family:var(--serif);font-size:30px;line-height:1.1;letter-spacing:-.012em;color:var(--ink);
+  }
+  .exp-card h4 em{color:var(--gold);font-style:italic}
+  .exp-card p{
+    color:var(--ink-dim);font-size:14.5px;line-height:1.6;max-width:460px;
+  }
+  .exp-card .price{
+    margin-top:auto;padding-top:18px;border-top:1px dashed var(--hair);
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:var(--mono);font-size:10px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .exp-card .price b{color:var(--gold);font-weight:400;letter-spacing:.04em;font-family:var(--sans);font-size:13.5px;text-transform:none}
+
+  /* ---------- §05 PARTNERS ---------- */
+  .partners{
+    padding:140px 0;border-top:1px solid var(--hair);text-align:center;
+  }
+  .partners .kicker{margin-bottom:36px;display:inline-block}
+  .partners h3{
+    font-size:clamp(28px,2.4vw,40px);max-width:680px;margin:0 auto 56px;line-height:1.18;
+    color:var(--ink-dim);
+  }
+  .partners h3 em{color:var(--gold);font-style:italic}
+  .partners .names{
+    font-family:var(--serif);font-size:clamp(22px,2vw,30px);
+    letter-spacing:.06em;color:var(--ink);
+    line-height:1.55;
+  }
+  .partners .names span{display:inline-block;margin:0 8px;white-space:nowrap}
+  .partners .names .sep{
+    color:var(--ink-faint);font-family:var(--mono);font-size:.7em;
+    margin:0 14px;letter-spacing:0;vertical-align:middle;
+  }
+  .partners .footnote{
+    margin-top:48px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+
+  /* ---------- §06 TESTIMONIAL ---------- */
+  .testimonial{
+    padding:160px 0;border-top:1px solid var(--hair);
+    position:relative;overflow:hidden;
+  }
+  .testimonial-grid{
+    display:grid;grid-template-columns:1.45fr 1fr;gap:96px;align-items:center;
+    position:relative;z-index:2;
+  }
+  .test-quote .qmark{
+    font-family:var(--serif);font-style:italic;color:var(--gold);
+    font-size:180px;line-height:0.4;opacity:.55;display:block;height:42px;
+    text-shadow:0 0 40px rgba(212,177,118,0.4);
+  }
+  .test-quote blockquote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(28px,3vw,44px);line-height:1.22;letter-spacing:-.012em;
+    color:var(--ink);text-wrap:pretty;
+  }
+  .test-quote blockquote em{color:var(--gold)}
+  .test-attr{
+    margin-top:48px;padding-top:28px;border-top:1px solid var(--hair);
+    display:flex;align-items:center;gap:20px;
+  }
+  .portrait-frame{
+    width:64px;height:64px;border-radius:50%;
+    background:
+      repeating-linear-gradient(135deg, rgba(200,169,122,0.18) 0 6px, rgba(200,169,122,0.05) 6px 12px),
+      linear-gradient(180deg,#2A2620,#161310);
+    border:1px solid var(--hair-2);
+    flex:0 0 64px;
+    display:grid;place-items:center;
+    font-family:var(--serif);font-size:20px;color:var(--gold);font-style:italic;
+  }
+  .test-attr .who .name{
+    font-family:var(--serif);font-size:22px;color:var(--ink);letter-spacing:-.01em;line-height:1.2;
+  }
+  .test-attr .who .role{
+    margin-top:6px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.26em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  .test-outcomes{
+    border-left:1px solid var(--hair);padding-left:48px;
+    display:flex;flex-direction:column;gap:32px;
+  }
+  .test-outcome .v{
+    font-family:var(--serif);font-size:64px;line-height:1;letter-spacing:-.02em;color:var(--ink);
+  }
+  .test-outcome .v em{color:var(--gold);font-style:italic}
+  .test-outcome .l{
+    margin-top:10px;font-family:var(--mono);font-size:10px;letter-spacing:.26em;
+    color:var(--ink-muted);text-transform:uppercase;line-height:1.7;
+  }
+
+  /* ---------- §07 COMMAND PALETTE ---------- */
+  .palette-section{padding:140px 0;border-top:1px solid var(--hair)}
+  .pal-head{display:grid;grid-template-columns:240px 1fr;gap:80px;margin-bottom:48px;align-items:end}
+  .pal-head h2{font-size:clamp(34px,3.2vw,52px);max-width:720px}
+  .pal-head h2 em{color:var(--ink-muted);font-style:italic}
+  .pal-head .meta{
+    font-family:var(--mono);font-size:10px;letter-spacing:.26em;
+    color:var(--ink-muted);text-transform:uppercase;line-height:1.9;text-align:right;
+  }
+  .palwrap{
+    border:1px solid var(--hair-2);border-radius:6px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(20,20,26,0.8), rgba(11,11,14,0.94));
+    box-shadow:0 0 0 1px rgba(244,241,234,0.03) inset, 0 60px 140px rgba(0,0,0,0.7);
+  }
+  .palwrap .top{display:flex;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--hair)}
+  .palwrap .top .url{font-family:var(--mono);font-size:10.5px;color:var(--ink-muted);letter-spacing:.08em}
+  .palwrap .top .url b{color:var(--ink-dim);font-weight:400}
+  .palwrap .top .right{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.22em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .palwrap .top .right::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:gold-pulse 2s infinite}
+  .palette{padding:32px}
+  .palette .q{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--hair);border-radius:4px;background:rgba(0,0,0,0.4)}
+  .palette .q .prm{color:var(--gold);font-family:var(--mono);font-size:13px}
+  .palette .q .qtxt{flex:1;color:var(--ink);font-family:var(--mono);font-size:13.5px}
+  .palette .q .caret{width:7px;height:14px;background:var(--gold);animation:blink 1s step-end infinite}
+  .palette .q .kbd{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-muted);border:1px solid var(--hair);padding:3px 6px;border-radius:3px}
+  @keyframes blink{50%{opacity:0}}
+  .palette .results{margin-top:14px;display:flex;flex-direction:column;gap:0}
+  .palette .row{display:grid;grid-template-columns:18px 1fr auto auto;gap:16px;align-items:center;padding:11px 14px;border-radius:3px;border:1px solid transparent;transition:background .25s, border-color .25s}
+  .palette .row.act{background:rgba(244,241,234,0.025);border-color:var(--hair)}
+  .palette .row .ic{font-family:var(--mono);color:var(--ink-muted);font-size:11px}
+  .palette .row .nm{font-size:13px;color:var(--ink-dim);font-family:var(--sans)}
+  .palette .row.act .nm{color:var(--ink)}
+  .palette .row .tag{font-family:var(--mono);font-size:9.5px;color:var(--ink-muted);letter-spacing:.22em;text-transform:uppercase}
+  .palette .row .ms{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.06em}
+
+  /* ---------- §08 TRUST STRIP ---------- */
+  .trust{padding:64px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  .trust-row{
+    display:grid;grid-template-columns:repeat(6,1fr);
+  }
+  .trust-row .badge{
+    padding:8px 24px;border-left:1px solid var(--hair);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .trust-row .badge:first-child{border-left:none}
+  .trust-row .badge .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase}
+  .trust-row .badge .val{font-family:var(--serif);font-size:20px;letter-spacing:-.005em;color:var(--ink);line-height:1.1}
+  .trust-row .badge .val em{color:var(--gold);font-style:italic;font-size:.78em;margin-left:2px}
+
+  /* ---------- §09 CLOSING — the North Star moment ---------- */
+  .closing{
+    padding:240px 0 180px;border-top:1px solid var(--hair);
+    text-align:center;position:relative;overflow:hidden;
+  }
+  /* The star itself — bright, with layered halo */
+  .closing::before{
+    content:"";position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);
+    width:6px;height:6px;border-radius:50%;background:#FFFAF0;
+    box-shadow:
+      0 0 16px 6px rgba(255,250,240,0.95),
+      0 0 60px 18px rgba(244,239,227,0.55),
+      0 0 140px 50px rgba(212,177,118,0.30),
+      0 0 280px 100px rgba(180,200,240,0.10);
+    animation:northstar 4s ease-in-out infinite;
+  }
+  @keyframes northstar{
+    0%,100%{opacity:.85;transform:translate(-50%,-50%) scale(1)}
+    50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+  }
+  /* Faint orbital rings */
+  .closing::after{
+    content:"";position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);
+    width:480px;height:480px;border-radius:50%;
+    border:1px solid rgba(232,228,216,0.05);
+    box-shadow:
+      0 0 0 80px transparent,
+      inset 0 0 0 80px transparent;
+    pointer-events:none;
+  }
+  .closing h2{
+    position:relative;z-index:4;
+    font-size:clamp(72px,11vw,180px);letter-spacing:-.03em;line-height:.94;
+  }
+  .closing h2 em{
+    color:var(--gold);font-style:italic;
+  }
+  .closing .sub{
+    position:relative;z-index:4;
+    margin-top:36px;font-size:16px;color:var(--ink-dim);max-width:560px;
+    margin-left:auto;margin-right:auto;line-height:1.6;
+  }
+  .closing .form{
+    position:relative;z-index:4;margin:48px auto 0;max-width:520px;
+    display:flex;gap:0;border:1px solid var(--hair-2);border-radius:0;
+    background:rgba(11,11,14,0.6);
+  }
+  .closing .form input{
+    flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--sans);
+    font-size:14px;padding:18px 20px;outline:none;letter-spacing:.01em;
+  }
+  .closing .form input::placeholder{color:var(--ink-muted)}
+  .closing .form button{
+    background:var(--gold);color:#0B0B0E;padding:18px 24px;
+    font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+    transition:background .25s;
+  }
+  .closing .form button:hover{background:#D8B985}
+  .closing .fine{
+    position:relative;z-index:4;margin-top:28px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:96px 0 48px;background:var(--bg-1);border-top:1px solid var(--hair)}
+  footer .colophon{
+    display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:64px;padding-bottom:64px;border-bottom:1px solid var(--hair);
+  }
+  footer .col p{color:var(--ink-dim);font-size:13px;line-height:1.65;max-width:380px}
+  footer .col p b{color:var(--ink);font-weight:400}
+  footer .col h6{
+    font-family:var(--mono);font-size:10px;letter-spacing:.28em;
+    color:var(--ink-muted);text-transform:uppercase;font-weight:400;margin-bottom:18px;
+  }
+  footer .col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+  footer .col a{color:var(--ink-dim);font-size:13.5px;transition:color .2s}
+  footer .col a:hover{color:var(--ink)}
+  footer .bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:36px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.26em;
+    color:var(--ink-muted);text-transform:uppercase;
+  }
+  footer .bottom .right{display:flex;gap:32px}
+  footer .bottom .gold{color:var(--gold)}
+  footer .megamark{
+    font-family:var(--serif);font-size:clamp(60px,11vw,160px);
+    line-height:.9;letter-spacing:-.03em;
+    color:transparent;-webkit-text-stroke:1px rgba(244,241,234,.12);
+    padding-bottom:48px;display:flex;align-items:baseline;gap:18px;
+  }
+  footer .megamark .star{
+    color:var(--gold);-webkit-text-stroke:0;font-size:.45em;transform:translateY(-.5em);display:inline-block;
+  }
+
+  /* reveal — disabled. Content is visible by default; subtle motion handled via CSS only where needed. */
+  .reveal{opacity:1;transform:none}
+
+  @media (max-width:1100px){
+    .specrow{grid-template-columns:60px 200px 1fr;gap:24px}
+    .specrow .artifact{display:none}
+    .eng-grid{grid-template-columns:1fr;border:none}
+    .eng-mvt{border-left:none;border-top:1px solid var(--hair);min-height:auto;padding:48px 0}
+    .eng-mvt:first-child{border-top:none;padding-top:0}
+    .testimonial-grid{grid-template-columns:1fr;gap:64px}
+    .test-outcomes{flex-direction:row;border-left:none;border-top:1px solid var(--hair);padding:48px 0 0;gap:64px}
+  }
+  @media (max-width:900px){
+    .pagefra{padding:24px 24px}
+    .wrap,.wrap-narrow{padding:0 24px}
+    .hero-grid{grid-template-columns:1fr;gap:64px}
+    .premise-grid,.spec-head,.day-head,.eng-head,.pal-head{grid-template-columns:1fr;gap:32px}
+    .specrow{grid-template-columns:1fr;gap:14px;padding:28px 0}
+    .tlrow{grid-template-columns:1fr;gap:16px}
+    .premise-figures,.trust-row{grid-template-columns:1fr 1fr}
+    .pfig{padding:0 16px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding-bottom:24px;margin-bottom:24px}
+    .pfig:nth-child(2){padding-left:16px}
+    .pfig:last-child{padding-left:16px;border-right:none;grid-column:1 / -1}
+    .trust-row .badge{border-left:none;border-top:1px solid var(--hair);padding:18px 16px}
+    .trust-row .badge:first-child{border-top:none}
+    footer .colophon{grid-template-columns:1fr;gap:48px}
+    .test-outcomes{flex-direction:column;gap:32px}
+  }
+</style>
+
+<template id="__bundler_thumbnail" data-bg-color="#0B0D14">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="#1A1F30"/>
+        <stop offset="100%" stop-color="#08090E"/>
+      </radialGradient>
+      <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFFAF0" stop-opacity="1"/>
+        <stop offset="20%" stop-color="#F4EFE3" stop-opacity=".7"/>
+        <stop offset="55%" stop-color="#D4B176" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="#D4B176" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="400" height="400" fill="url(#bg)"/>
+    <!-- starfield -->
+    <g fill="#F4EFE3">
+      <circle cx="80" cy="90"  r="1.4" opacity=".7"/>
+      <circle cx="320" cy="120" r="1.6" opacity=".75"/>
+      <circle cx="60" cy="280" r="1.2" opacity=".55"/>
+      <circle cx="340" cy="310" r="1.4" opacity=".6"/>
+      <circle cx="140" cy="60"  r="1"   opacity=".5"/>
+      <circle cx="280" cy="350" r="1"   opacity=".5"/>
+      <circle cx="100" cy="340" r="1"   opacity=".4"/>
+      <circle cx="240" cy="60"  r=".8"  opacity=".45"/>
+    </g>
+    <!-- north star halo -->
+    <circle cx="200" cy="170" r="120" fill="url(#halo)"/>
+    <circle cx="200" cy="170" r="3.5" fill="#FFFAF0"/>
+    <!-- wordmark -->
+    <text x="200" y="290" text-anchor="middle"
+          font-family="Georgia, serif" font-size="28"
+          letter-spacing="6" fill="#F2EEE3">ATLAS</text>
+    <text x="200" y="316" text-anchor="middle"
+          font-family="ui-monospace, Menlo, monospace" font-size="9"
+          letter-spacing="3" fill="#7C7669">BY DISRUPTIVE</text>
+  </svg>
+</template>
+
+</head>
+<body>
+
+<!-- ambient layers -->
+<div class="bg-base"></div>
+<div class="bg-stars"></div>
+<div class="bg-grain"></div>
+<div class="bg-vignette"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <header class="pagefra">
+    <div class="brand">
+      <span class="mark">ATLAS</span>
+      <span class="star">★</span>
+      <span class="by">by Disruptive</span>
+    </div>
+    <a class="invite" href="#closing">Request invitation <span class="arw">→</span></a>
+  </header>
+
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="opening reveal"><span class="dot"></span>By invitation only · A limited number of partners each quarter</div>
+      <h1 class="reveal d1">The work you<br/>shouldn't be doing,<br/><em>now handled.</em></h1>
+      <p class="lede reveal d2">Atlas is a <b>bespoke operating layer</b>, commissioned for one company at a time. We embed for two weeks, build a private team of agents around your business, then run them with you. <b>Agents replace $500K+ in operations spend.</b></p>
+      <div class="ctas reveal d3">
+        <a class="cta-primary" href="#closing">Request a private demo <span class="arrow"></span></a>
+        <div class="cta-meta">By application. We accept a limited number of partners each quarter.</div>
+      </div>
+    </div>
+
+    <div class="hdash reveal d2">
+      <div class="hdash-top">
+        <span class="crest">ATLAS <span class="star">★</span></span>
+        <span>private deployment</span>
+        <span class="right">
+          <span class="live"><span class="pulse"></span>LIVE</span>
+          <span>06:42 EDT</span>
+        </span>
+      </div>
+      <div class="hdash-body">
+        <div class="hgreet">
+          <div class="hi">Good morning.<br/>Atlas handled <em>312 things</em> while you slept.</div>
+          <div class="meta">
+            <div><b>Wed</b> · Apr 24</div>
+            <div>5 inboxes · clean</div>
+            <div>3 calls · booked</div>
+          </div>
+        </div>
+
+        <div class="hkpis">
+          <div class="hkpi">
+            <div class="l">Decisions resolved</div>
+            <div class="v" data-count="312">312</div>
+            <div class="t gold">↗ +24 vs. yesterday</div>
+          </div>
+          <div class="hkpi">
+            <div class="l">Hours reclaimed</div>
+            <div class="v"><em data-count="14">14</em><span style="font-size:.4em;color:var(--ink-muted);font-family:var(--mono);letter-spacing:.06em;margin-left:6px">/ wk</span></div>
+            <div class="t">across leadership</div>
+          </div>
+          <div class="hkpi">
+            <div class="l">Ops spend replaced</div>
+            <div class="v" data-count="540" data-prefix="$" data-suffix="K">$540K</div>
+            <div class="t">annualized</div>
+          </div>
+        </div>
+
+        <div class="hfeed">
+          <div class="head">
+            <span class="lbl">Atlas, this morning</span>
+            <span>SEE FULL LEDGER →</span>
+          </div>
+          <div class="hfeed-list" id="feedList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="word-divider">A fixed point &nbsp;·&nbsp; A team on staff &nbsp;·&nbsp; A bespoke build</div>
+
+<!-- §01 PREMISE -->
+<section class="premise">
+  <div class="wrap">
+    <div class="premise-grid">
+      <aside class="premise-side reveal">
+        <span class="kicker"><span class="num">§ 01</span> &nbsp;·&nbsp; The premise</span>
+      </aside>
+
+      <div class="premise-body reveal d1">
+        <p class="lead">Most operators run on <span class="dim">fourteen tabs, three inboxes, and a list that never ends.</span> Atlas replaces that surface area with <em>a single operating layer</em> — a private team of agents, configured to your business, your tools, your taxonomy, your voice. Not software you adopt. <em>Software written for you.</em></p>
+
+        <div class="premise-figures">
+          <div class="pfig">
+            <div class="v"><em data-count="14">14</em><span class="small">HRS / WK</span></div>
+            <div class="l">Reclaimed in the C-suite, on average, by week six.</div>
+          </div>
+          <div class="pfig">
+            <div class="v" data-count="312">312</div>
+            <div class="l">Daily decisions Atlas resolves without an executive in the loop.</div>
+          </div>
+          <div class="pfig">
+            <div class="v"><em data-count="540" data-prefix="$" data-suffix="K">$540K</em></div>
+            <div class="l">Annualized operations spend replaced by a typical engagement.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §02 SPECIALISTS -->
+<section class="specialists">
+  <div class="wrap">
+    <div class="spec-head reveal">
+      <aside class="premise-side">
+        <span class="kicker"><span class="num">§ 02</span> &nbsp;·&nbsp; The team</span>
+      </aside>
+      <h2>A specialist team. <em>On staff from day one.</em></h2>
+    </div>
+
+    <div class="speclist reveal d1">
+
+      <article class="specrow">
+        <div class="num">Spec. 01</div>
+        <div>
+          <div class="name">Chief of Staff<em>The morning brief</em></div>
+        </div>
+        <div class="scope">Owns the inbox and the calendar. Drafts replies in your voice, books meetings, chases the people you forgot to chase. Decides what reaches you and what doesn't.</div>
+        <div class="artifact">
+          <div class="h">Sample · 06:14</div>
+          <p>Replied to 14 emails · booked Tuesday with the Northwind board · pushed Q3 review to Thursday · flagged one thread that needs your eyes.</p>
+        </div>
+      </article>
+
+      <article class="specrow">
+        <div class="num">Spec. 02</div>
+        <div>
+          <div class="name">Revenue Specialist<em>Pipeline · forecast · accounts</em></div>
+        </div>
+        <div class="scope">Watches every deal across every brand. Flags risk before it churns, drafts outreach that lands, refreshes the forecast hourly with deal-level reasoning underneath.</div>
+        <div class="artifact">
+          <div class="h">Sample · 09:02</div>
+          <p>Account at $42K MRR hasn't engaged in 11 days. Drafted re-engagement, proposed a 15-min call Thu 4pm. Pipeline now 92% to plan with evidence one click below.</p>
+        </div>
+      </article>
+
+      <article class="specrow">
+        <div class="num">Spec. 03</div>
+        <div>
+          <div class="name">Operations Specialist<em>Reports · dashboards · anomalies</em></div>
+        </div>
+        <div class="scope">Builds the report before it's asked for. Watches the metrics that matter across every entity in the portfolio. Pings only when something is genuinely wrong.</div>
+        <div class="artifact">
+          <div class="h">Sample · 17:55</div>
+          <p>EOD report ready across all five brands. Anomaly: refund rate spiked Tuesday on the new SKU launch. Root cause traced to the size guide. Ticket already filed.</p>
+        </div>
+      </article>
+
+      <article class="specrow">
+        <div class="num">Spec. 04</div>
+        <div>
+          <div class="name">Research Specialist<em>Market intel · competitor briefs</em></div>
+        </div>
+        <div class="scope">Reads what your competitors ship. Watches the channels you don't have time to watch. Delivers a sourced brief Monday morning, in your house format.</div>
+        <div class="artifact">
+          <div class="h">Sample · MON 07:00</div>
+          <p>Three competitors changed pricing this week. One launched a competing line in your category. Fourteen pages, twenty-two sources cited, on your desk before the call.</p>
+        </div>
+      </article>
+
+      <article class="specrow">
+        <div class="num">Spec. 05</div>
+        <div>
+          <div class="name">Finance Specialist<em>Invoices · AR/AP · runway</em></div>
+        </div>
+        <div class="scope">Reconciles invoices across the portfolio. Chases late payers in your tone. Watches runway. Tells you the number you need, when you need it, in the format you want it.</div>
+        <div class="artifact">
+          <div class="h">Sample · 13:48</div>
+          <p>Reconciled 142 invoices · 0 exceptions · DSO down four days. Three vendors auto-paid under your $5K policy. Two flagged for partner review. Runway: nineteen months.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- §03 A DAY -->
+<section class="day">
+  <div class="wrap">
+    <div class="day-head reveal">
+      <aside class="premise-side">
+        <span class="kicker"><span class="num">§ 03</span> &nbsp;·&nbsp; A day</span>
+      </aside>
+      <div>
+        <h2>A real Wednesday. <em>Edited only for length.</em></h2>
+        <p class="sub">Every action is approvable, replayable, and tied to a policy you signed off on. Nothing happens without a paper trail.</p>
+      </div>
+    </div>
+
+    <div class="timeline reveal d1">
+
+      <div class="tlrow">
+        <div class="left">
+          <div class="time">06:14</div>
+          <div class="agent">★ Chief of Staff</div>
+        </div>
+        <div class="body">
+          <div class="what">Drafted the <em>morning brief.</em></div>
+          <div class="det">Synthesized 47 emails, three Slack channels, and last night's order ledger across the portfolio into a four-bullet memo. Three items need your judgment; the rest are queued for auto-handle.</div>
+          <div class="meta"><span><b>90 sec</b> read</span><span>·</span><span>Inbox at zero</span></div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="left">
+          <div class="time">09:02</div>
+          <div class="agent">★ Revenue Specialist</div>
+        </div>
+        <div class="body">
+          <div class="what">Flagged a <em>retention risk.</em></div>
+          <div class="det">A wholesale account ($42K MRR, ICP fit 0.91) hasn't engaged in eleven days. Drafted a re-engagement note referencing their Q4 onboarding goal. Suggested a Thursday 4pm call; their team is open. Awaiting your approval.</div>
+          <div class="meta"><span><b>$42K</b> MRR at risk</span><span>·</span><span>1 approval queued</span></div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="left">
+          <div class="time">11:30</div>
+          <div class="agent">Chief of Staff</div>
+        </div>
+        <div class="body">
+          <div class="what">Booked three meetings.</div>
+          <div class="det">Three inbound from yesterday's launch moved to qualified. Calendars matched, confirmations sent in your voice, pre-call briefs added to each event. You arrive prepared without preparing.</div>
+          <div class="meta"><span><b>Tue 2pm · Wed 11am · Thu 4pm</b></span></div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="left">
+          <div class="time">13:48</div>
+          <div class="agent">Finance Specialist</div>
+        </div>
+        <div class="body">
+          <div class="what">Reconciled the AR ledger.</div>
+          <div class="det">142 invoices reconciled across five entities. Zero exceptions. Two vendors flagged for review — terms changed, DSO drift. Auto-paid the rest under the $5K standing policy.</div>
+          <div class="meta"><span><b>2 of 142</b> exceptions</span></div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="left">
+          <div class="time">17:55</div>
+          <div class="agent">★ Operations Specialist</div>
+        </div>
+        <div class="body">
+          <div class="what">Sent the <em>EOD report.</em></div>
+          <div class="det">Revenue +6% WoW across the portfolio. CAC down eleven percent on the new line. CSAT steady at 4.8. One anomaly: refund rate on a new SKU traced to a size-guide issue on the redesigned PDP. Ticket filed with the team.</div>
+          <div class="meta"><span><b>1 page</b> · ready for board</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- §04 ENGAGEMENT -->
+<section class="engagement">
+  <div class="wrap">
+    <div class="eng-head reveal">
+      <aside class="premise-side">
+        <span class="kicker"><span class="num">§ 04</span> &nbsp;·&nbsp; The engagement</span>
+      </aside>
+      <div>
+        <h2>How an Atlas engagement <em>actually works.</em></h2>
+        <p class="sub">No self-serve signup. No template playbook. We commit to one company at a time and stay until Atlas runs without us.</p>
+      </div>
+    </div>
+
+    <div class="eng-grid reveal d1">
+
+      <div class="eng-mvt">
+        <div class="roman">I &nbsp;·&nbsp; Discovery</div>
+        <h3>Two weeks <em>embedded.</em></h3>
+        <div class="body">A senior partner from Disruptive moves into your operation. Sits in every meeting that matters. Reads every system, every report, every Slack channel. Maps how the business actually runs — not how the org chart says it does.</div>
+        <div class="timing"><b>Weeks 1–2</b></div>
+      </div>
+
+      <div class="eng-mvt">
+        <div class="roman">II &nbsp;·&nbsp; Bespoke build</div>
+        <h3>Atlas, written <em>for you.</em></h3>
+        <div class="body">We configure Atlas to your business — your tools, your data, your taxonomy, your voice. Custom agents for your category. Custom policies for your governance. Connected to your stack with single-tenant infrastructure. No two Atlases are the same.</div>
+        <div class="timing"><b>Weeks 3–8</b></div>
+      </div>
+
+      <div class="eng-mvt">
+        <div class="roman">III &nbsp;·&nbsp; Embedded ops</div>
+        <h3>We run it <em>with you.</em></h3>
+        <div class="body">Atlas runs daily. We stay on for the first quarter — tuning, retraining, expanding scope, sitting in your standup once a week. By month four, your team owns it. We remain the architect on call.</div>
+        <div class="timing"><b>Month 3 onward</b></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- §04b EXPANSIONS / UPSELLS -->
+<section class="expansions">
+  <div class="wrap">
+    <div class="exp-head reveal">
+      <aside class="premise-side">
+        <span class="kicker"><span class="num">§ 04b</span> &nbsp;·&nbsp; What we build, beyond the agents</span>
+      </aside>
+      <div>
+        <h2>Atlas grows <em>with the business.</em></h2>
+        <p class="sub">Most engagements expand inside the first quarter. Once Atlas knows your operation, we build the surrounding software around it — proprietary, single-tenant, yours.</p>
+      </div>
+    </div>
+
+    <div class="exp-grid reveal d1">
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 01</span> &nbsp;·&nbsp; Proprietary software</div>
+        <h4>An internal tool, <em>commissioned.</em></h4>
+        <p>The dashboard, ledger, or workflow your business actually needs — designed to your taxonomy, built on your stack, owned by you. Not a SaaS subscription. A piece of software you commission and keep.</p>
+        <div class="price"><span>Scoped per build</span><b>From $80K</b></div>
+      </div>
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 02</span> &nbsp;·&nbsp; CRM agents</div>
+        <h4>A sales floor, <em>that never sleeps.</em></h4>
+        <p>Inbound qualification, follow-up, account hygiene, retention nudges — agents that live inside your CRM, draft in your voice, and only escalate when a human needs to weigh in. Plugs into HubSpot, Salesforce, Attio, or your own.</p>
+        <div class="price"><span>Per seat replaced</span><b>From $4K / mo</b></div>
+      </div>
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 03</span> &nbsp;·&nbsp; Support &amp; concierge bots</div>
+        <h4>White-glove support, <em>at scale.</em></h4>
+        <p>Tier-1 and Tier-2 support handled in your tone, with replays and policy gates on every reply. Concierge tier for VIP customers, briefed on order history before they finish typing. Routes the genuinely hard ones to a human.</p>
+        <div class="price"><span>Per ticket volume</span><b>From $6K / mo</b></div>
+      </div>
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 04</span> &nbsp;·&nbsp; Data &amp; reporting layer</div>
+        <h4>One source of truth, <em>across entities.</em></h4>
+        <p>Unified ledger across every brand, store, and stack you run. Daily, weekly, monthly reports auto-generated and delivered in your house format. Board pack ready every quarter, evidence one click below.</p>
+        <div class="price"><span>One-time build + retainer</span><b>From $40K + $5K / mo</b></div>
+      </div>
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 05</span> &nbsp;·&nbsp; Brand &amp; content engine</div>
+        <h4>The marketing org, <em>distilled.</em></h4>
+        <p>Brief-to-asset agents trained on your tone and your library. Drafts campaigns, edits copy, files briefs to your creative partners. The strategist stays human. The grind doesn't.</p>
+        <div class="price"><span>Per workspace</span><b>From $5K / mo</b></div>
+      </div>
+
+      <div class="exp-card">
+        <div class="tag"><span class="dot"></span><span class="gold">EXP. 06</span> &nbsp;·&nbsp; Custom integrations</div>
+        <h4>Anything you run on, <em>connected.</em></h4>
+        <p>Shopify, NetSuite, Ramp, Gusto, Notion, Linear, Slack, Looker, your warehouse, your vendor portals. We build the connector, we own the maintenance, you keep the keys.</p>
+        <div class="price"><span>Per integration</span><b>From $12K each</b></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- §05 PARTNERS -->
+<section class="partners">
+  <div class="wrap-narrow reveal">
+    <span class="kicker"><span style="color:var(--gold)">§ 05</span> &nbsp;·&nbsp; Selected partners</span>
+    <h3>Atlas operates inside companies that won't be named twice. <em>Six we can mention.</em></h3>
+    <div class="names">
+      <span>Raw Nutrition</span><span class="sep">★</span>
+      <span>BUM Energy</span><span class="sep">★</span>
+      <span>3D Energy</span><span class="sep">★</span>
+      <span>Revive Supps</span><span class="sep">★</span>
+      <span>Cadence</span><span class="sep">★</span>
+      <span>Onside</span>
+    </div>
+    <div class="footnote">The rest, by request, under NDA.</div>
+  </div>
+</section>
+
+<!-- §06 TESTIMONIAL -->
+<section class="testimonial">
+  <div class="wrap reveal">
+    <div class="testimonial-grid">
+      <div class="test-quote">
+        <span class="qmark">"</span>
+        <blockquote>Atlas runs the parts of five companies I used to run myself. It paid for itself in the first six weeks. The honest answer is I don't know how I'd give it back.</blockquote>
+        <div class="test-attr">
+          <div class="portrait-frame">D.I.</div>
+          <div class="who">
+            <div class="name">Domenic Iacovone</div>
+            <div class="role">Founder · Raw Nutrition · BUM · 3D Energy</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-outcomes">
+        <div class="test-outcome">
+          <div class="v"><em>$540K</em></div>
+          <div class="l">Annualized operations spend replaced<br/>across the portfolio</div>
+        </div>
+        <div class="test-outcome">
+          <div class="v">14<span style="font-size:.5em;color:var(--ink-muted);letter-spacing:.04em;margin-left:8px;font-family:var(--mono)">HRS / WK</span></div>
+          <div class="l">Reclaimed in the C-suite,<br/>by week six of the engagement</div>
+        </div>
+        <div class="test-outcome">
+          <div class="v"><em>0</em><span style="font-size:.5em;color:var(--ink-muted);letter-spacing:.04em;margin-left:8px;font-family:var(--mono)">— meetings missed</span></div>
+          <div class="l">Across five entities since<br/>Atlas went live in February</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §07 COMMAND PALETTE -->
+<section class="palette-section">
+  <div class="wrap">
+    <div class="pal-head reveal">
+      <aside class="premise-side">
+        <span class="kicker"><span style="color:var(--gold)">§ 07</span> &nbsp;·&nbsp; Underneath</span>
+      </aside>
+      <div>
+        <h2>One command line over <em>every model, every agent, every action.</em></h2>
+      </div>
+      <div class="meta">
+        POLICY-AS-CODE<br/>
+        HUMAN-IN-LOOP CHECKPOINTS<br/>
+        REPLAYABLE RUNS · OTEL NATIVE
+      </div>
+    </div>
+
+    <div class="palwrap reveal d1">
+      <div class="top">
+        <span class="url">atlas / <b>portfolio</b> / iacovone-co</span>
+        <span class="right">⌘K · LIVE</span>
+      </div>
+      <div class="palette">
+        <div class="q">
+          <span class="prm">&gt;_</span>
+          <span class="qtxt">route fraud-signal to safest model · &lt; 80ms</span>
+          <span class="caret"></span>
+          <span class="kbd">⌘ K</span>
+        </div>
+        <div class="results">
+          <div class="row act">
+            <span class="ic">⎋</span><span class="nm">Route via private deployment · single-tenant VPC</span><span class="tag">POLICY · FINANCE</span><span class="ms">42 ms</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Fallback via on-prem · approved by founder</span><span class="tag">POLICY · FINANCE</span><span class="ms">67 ms</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Evaluate against ATLAS-FRAUD-V3 (1,240 cases)</span><span class="tag">EVAL SUITE</span><span class="ms">—</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Open audit trail for request #8A-2041</span><span class="tag">AUDIT</span><span class="ms">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §08 TRUST -->
+<section class="trust">
+  <div class="wrap">
+    <div class="trust-row">
+      <div class="badge"><span class="lbl">Compliance</span><span class="val">SOC 2 <em>Type II</em></span></div>
+      <div class="badge"><span class="lbl">Health data</span><span class="val">HIPAA-<em>ready</em></span></div>
+      <div class="badge"><span class="lbl">Network</span><span class="val">VPC-<em>native</em></span></div>
+      <div class="badge"><span class="lbl">PII handling</span><span class="val">PII <em>scrub</em></span></div>
+      <div class="badge"><span class="lbl">Audit</span><span class="val">Full <em>audit log</em></span></div>
+      <div class="badge"><span class="lbl">Keys</span><span class="val">Customer-<em>managed</em></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- §09 CLOSING -->
+<section class="closing" id="closing">
+  <div class="wrap-narrow">
+    <h2 class="reveal">Find your <em>north.</em></h2>
+    <p class="sub reveal d1">Agents replace $500K+ in operations spend and run on bespoke infrastructure. We accept a limited number of partners each quarter. There is no self-serve, no trial, and no shortcut.</p>
+    <form class="form reveal d2" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Received ✓'">
+      <input type="email" placeholder="you@company.com" required />
+      <button type="submit">Request invitation →</button>
+    </form>
+    <p class="fine reveal d3">By application only. We respond within 24 hours.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="megamark">ATLAS <span class="star">★</span> BY DISRUPTIVE</div>
+    <div class="colophon">
+      <div class="col">
+        <h6>Disruptive Labs, Inc.</h6>
+        <p><b>A bespoke operating layer</b>, commissioned for one company at a time. Founded by operators who built and exited consumer brands at the highest level. Headquartered in New York. Engagements available by application.</p>
+      </div>
+      <div class="col">
+        <h6>The work</h6>
+        <ul>
+          <li><a href="#">The team</a></li>
+          <li><a href="#">A day with Atlas</a></li>
+          <li><a href="#">The engagement</a></li>
+          <li><a href="#">Selected partners</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>The firm</h6>
+        <ul>
+          <li><a href="#">Disruptive</a></li>
+          <li><a href="#">The architects</a></li>
+          <li><a href="#">Press inquiries</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© 2026 Disruptive Labs, Inc. · Made in New York</span>
+      <span class="right">
+        <span>40.7484° N · 73.9857° W</span>
+        <span class="gold">★ TRUE NORTH</span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* reveal disabled — content is visible by default; no JS needed. */
+
+/* count-up numbers on viewport entry */
+(function(){
+  const targets = document.querySelectorAll('[data-count]');
+  const seen = new WeakSet();
+  function fmt(val, prefix, suffix){
+    const isInt = Math.floor(val) === val;
+    const n = isInt ? Math.round(val) : val.toFixed(1);
+    return (prefix||'') + (typeof n === 'number' ? n.toLocaleString() : n) + (suffix||'');
+  }
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting || seen.has(e.target)) return;
+      seen.add(e.target);
+      const el = e.target;
+      const target = parseFloat(el.dataset.count);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const dur = 1300 + Math.random()*400;
+      const t0 = performance.now();
+      function tick(now){
+        const t = Math.min(1,(now-t0)/dur);
+        const eased = 1 - Math.pow(1-t,3);
+        const val = target*eased;
+        el.textContent = fmt(val, prefix, suffix);
+        if(t<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  },{threshold:.4});
+  targets.forEach(t=>io.observe(t));
+})();
+
+/* hero feed: rolling activity */
+(function(){
+  const list = document.getElementById('feedList');
+  if(!list) return;
+  const items = [
+    {t:'06:14', act:'<b>Chief of Staff</b> — drafted morning brief, four bullets', tag:'INBOX'},
+    {t:'06:38', act:'<b>Chief of Staff</b> — replied to fourteen emails in your voice', tag:'INBOX'},
+    {t:'07:02', act:'<b>Revenue</b> — forecast updated, 92% to plan',  tag:'PIPELINE'},
+    {t:'08:11', act:'<b>Finance</b> — auto-paid eleven vendor invoices', tag:'AR/AP'},
+    {t:'09:02', act:'<b>Revenue</b> — flagged retention risk, $42K MRR', tag:'ACCOUNTS'},
+    {t:'09:41', act:'<b>Research</b> — competitor brief shipped, 14 pp', tag:'INTEL'},
+    {t:'10:17', act:'<b>Chief of Staff</b> — booked Tuesday board sit-down',   tag:'CALENDAR'},
+    {t:'11:30', act:'<b>Chief of Staff</b> — booked three meetings this week', tag:'CALENDAR'},
+    {t:'13:48', act:'<b>Finance</b> — reconciled 142 invoices, 0 exceptions', tag:'AR/AP'},
+    {t:'14:22', act:'<b>Operations</b> — refund anomaly traced to size guide', tag:'OPS'},
+    {t:'15:09', act:'<b>Chief of Staff</b> — drafted board update, awaiting OK', tag:'BOARD'},
+    {t:'17:55', act:'<b>Operations</b> — EOD report ready, +6% WoW', tag:'REPORT'},
+  ];
+  let idx = 0;
+  function makeRow(it){
+    const r = document.createElement('div');
+    r.className = 'feed-row';
+    r.innerHTML = `<span class="ts">${it.t}</span><span class="act">${it.act}</span><span class="tag">${it.tag}</span>`;
+    return r;
+  }
+  for(let i=0;i<4;i++) list.appendChild(makeRow(items[idx++ % items.length]));
+  setInterval(()=>{
+    const r = makeRow(items[idx++ % items.length]);
+    list.insertBefore(r, list.firstChild);
+    while(list.children.length > 4) list.removeChild(list.lastChild);
+  }, 2600);
+})();
+</script>
+</body>
+</html>

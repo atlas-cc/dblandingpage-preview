@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Disruptive — The full-stack growth agency.</title>
+<meta name="description" content="The operator-led, full-stack growth agency. Paid, creative, brand, retention and ops. Under one roof."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F1E8;
+  --bg-alt:#EDE6D3;
+  --ink:#0E1A14;
+  --green:#1F3024;
+  --green-deep:#0F1F18;
+  --gold:#B8893A;
+  --gold-light:#D9B26A;
+  --line:rgba(14,26,20,0.10);
+  --line-soft:rgba(14,26,20,0.06);
+  --muted:#5A6B5F;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:0}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+@media(max-width:720px){.wrap{padding:0 20px}}
+
+/* TYPE */
+.italic-gold{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--gold)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
+
+.display{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(40px,6vw,84px);
+  line-height:1.02;letter-spacing:-0.025em;
+  color:var(--ink);text-wrap:balance;
+}
+h2.display{font-size:clamp(36px,5vw,68px)}
+
+.lede{font-size:17px;line-height:1.6;color:var(--muted);max-width:60ch}
+
+/* CHIP */
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:999px;
+  background:transparent;color:var(--gold);
+  font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;font-weight:500;
+  border:1px solid rgba(184,137,58,0.35);
+}
+.chip .pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--gold);
+  animation:pulse 2.4s ease-out infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(184,137,58,0.55)}
+  70%{box-shadow:0 0 0 8px rgba(184,137,58,0)}
+  100%{box-shadow:0 0 0 0 rgba(184,137,58,0)}
+}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:13px 22px;border-radius:999px;
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  letter-spacing:0.01em;
+  transition:background .2s ease, color .2s ease, border-color .2s ease;
+  border:1px solid transparent;white-space:nowrap;
+}
+.btn .arrow{transition:transform .25s ease}
+.btn:hover .arrow{transform:translateX(3px)}
+/* Primary: forest green on cream backgrounds */
+.btn-primary{background:var(--green);color:#FFFFFF}
+.btn-primary:hover{background:#2A4030;color:#FFFFFF}
+/* Gold: outlined gold — used on dark green backgrounds */
+.btn-gold{background:transparent;color:var(--gold-light);border-color:var(--gold-light)}
+.btn-gold:hover{background:var(--gold-light);color:var(--green-deep)}
+/* Ghost: outlined ink on cream */
+.btn-ghost{background:transparent;color:var(--ink);border-color:rgba(14,26,20,0.28)}
+.btn-ghost:hover{border-color:var(--ink);background:rgba(14,26,20,0.04)}
+/* Ghost cream: outlined cream on dark */
+.btn-ghost-cream{background:transparent;color:var(--bg);border-color:rgba(245,241,232,0.32)}
+.btn-ghost-cream:hover{border-color:var(--bg);background:rgba(245,241,232,0.06)}
+
+/* UTILITY STRIP */
+.utility-strip{background:var(--bg);border-bottom:1px solid var(--line-soft);padding:8px 0}
+.utility-strip .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.utility-strip span{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted)}
+.utility-strip .right{display:flex;gap:24px;align-items:center}
+.utility-strip .dot{width:5px;height:5px;background:var(--gold);border-radius:50%;display:inline-block;margin-right:6px}
+@media(max-width:720px){.utility-strip .right{display:none}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(245,241,232,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:500;letter-spacing:0.04em;font-size:18px;color:var(--ink)}
+.brand-mark{width:14px;height:14px;border-radius:50%;background:var(--gold);display:inline-block}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;color:var(--ink);transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a.btn-primary,.nav-links a.btn-primary:hover{color:#FFFFFF}
+.nav-links a.btn-gold{color:var(--gold)}
+.nav-links a.btn-ghost{color:var(--ink)}
+.nav-links .btn{padding:9px 16px;font-size:13px}
+@media(max-width:720px){.nav-links a.hide-m{display:none}}
+
+/* SECTION */
+section{padding:140px 0;position:relative}
+@media(max-width:1024px){section{padding:96px 0}}
+@media(max-width:720px){section{padding:72px 0}}
+
+.section-head{display:grid;grid-template-columns:120px 1fr;gap:48px;margin-bottom:64px;align-items:start}
+.section-head .num{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;padding-top:14px}
+.section-head .sub{font-size:16px;color:var(--muted);margin-top:18px}
+@media(max-width:720px){.section-head{grid-template-columns:1fr;gap:14px;margin-bottom:48px}.section-head .num{padding-top:0}}
+
+/* HERO */
+.hero{padding:80px 0 100px}
+.hero-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:72px;align-items:center}
+@media(max-width:1024px){.hero-grid{grid-template-columns:1fr;gap:56px}}
+.hero h1{margin-top:24px}
+.hero .sub{margin-top:28px;max-width:46ch;font-size:17px;line-height:1.6;color:var(--muted)}
+.hero .ctas{margin-top:36px;display:flex;gap:12px;flex-wrap:wrap}
+
+/* DASH */
+.dash{
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px;
+}
+.dash-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line-soft);margin-bottom:6px}
+.dash-head .ttl{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--ink);text-transform:uppercase}
+.dash-head .live{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.dash-head .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2.4s ease-out infinite}
+.dash-row{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.dash-row:last-child{border-bottom:0}
+.dash-row .lbl{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase}
+.dash-row .val{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ink)}
+.dash-row .val.gold{color:var(--gold);font-style:italic}
+
+/* TICKER */
+.ticker{background:var(--green-deep);color:var(--bg);padding:16px 0;overflow:hidden}
+.ticker-inner{white-space:nowrap;font-family:var(--mono);font-size:12px;letter-spacing:0.18em;animation:ticker 60s linear infinite}
+.ticker-inner i{color:var(--gold);margin:0 22px;font-style:normal;font-family:var(--serif)}
+.ticker-inner span{display:inline-block;padding-right:60px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* INDUSTRIES */
+.wall{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+@media(max-width:900px){.wall{grid-template-columns:repeat(2,1fr)}}
+.brand-cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:32px 26px;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg);transition:background .25s ease}
+.brand-cell:hover{background:var(--bg-alt)}
+.brand-cell .cat{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase}
+.brand-cell .name{font-family:var(--serif);font-size:22px;font-weight:500;letter-spacing:-0.01em;color:var(--ink)}
+
+/* CASES */
+.cases-section{background:var(--bg-alt)}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:900px){.cases{grid-template-columns:1fr}}
+.case{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:22px;transition:border-color .25s ease}
+.case:hover{border-color:rgba(184,137,58,0.45)}
+.case .meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding-bottom:14px;border-bottom:1px solid var(--line-soft)}
+.case .meta .cat{color:var(--gold)}
+.case h3{font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.15;letter-spacing:-0.015em}
+.case h3 em{font-style:italic;color:var(--gold);font-weight:500}
+.case .body{display:grid;gap:14px}
+.case .body .row{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:start;font-size:15px;line-height:1.55}
+.case .body .row .k{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);padding-top:5px}
+.case .body .row .v{color:var(--ink)}
+.case .stat{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line-soft);padding-top:20px}
+.case .stat .num{font-family:var(--serif);font-style:italic;font-weight:500;font-size:56px;letter-spacing:-0.03em;color:var(--gold);line-height:1}
+.case .stat .num em{font-size:28px;font-style:italic;color:var(--gold);font-weight:500;margin-left:2px}
+.case .stat .lbl{font-size:13px;color:var(--muted);max-width:14ch;text-align:right}
+
+/* SERVICES (Kandy-style grid, calmer) */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+@media(max-width:900px){.services-grid{grid-template-columns:1fr}}
+.svc{background:var(--bg);padding:36px 32px;display:flex;flex-direction:column;gap:14px;min-height:240px;transition:background .25s ease}
+.svc:hover{background:var(--bg-alt)}
+.svc .num{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase}
+.svc h4{font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.05;letter-spacing:-0.02em}
+.svc h4 .sm{display:block;color:var(--gold);font-style:italic;font-size:30px;margin-top:2px}
+.svc p{color:var(--muted);font-size:14px;line-height:1.55}
+
+/* PROCESS (We Research / Build / Test) */
+.process-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+@media(max-width:900px){.process-grid{grid-template-columns:1fr;gap:24px}}
+.step{padding-top:32px;border-top:1px solid var(--line)}
+.step .n{font-family:var(--serif);font-style:italic;font-weight:500;font-size:48px;color:var(--gold);line-height:1;letter-spacing:-0.03em}
+.step h4{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.1;letter-spacing:-0.02em;margin-top:18px}
+.step p{margin-top:12px;color:var(--muted);font-size:15px;line-height:1.55;max-width:36ch}
+
+/* NUMBERS — flat, no gradients */
+.numbers-section{background:var(--bg-alt)}
+.numbers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+@media(max-width:900px){.numbers-grid{grid-template-columns:1fr}}
+.num-card{background:var(--bg);padding:40px 32px;display:flex;flex-direction:column;gap:16px;min-height:240px;justify-content:space-between}
+.num-card .lbl{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.num-card .big{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(56px,6vw,88px);line-height:0.95;letter-spacing:-0.03em;color:var(--gold)}
+.num-card .desc{font-size:14px;color:var(--muted);line-height:1.55}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+@media(max-width:900px){.why-grid{grid-template-columns:1fr}}
+.why-card{background:var(--bg);padding:32px;display:flex;flex-direction:column;gap:14px;min-height:220px}
+.why-card .n{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase}
+.why-card h4{font-family:var(--serif);font-weight:500;font-size:24px;line-height:1.15;letter-spacing:-0.015em}
+.why-card h4 em{font-style:italic;color:var(--gold)}
+.why-card p{font-size:15px;color:var(--muted);line-height:1.55}
+
+/* MANIFESTO — flat dark, no halos */
+.manifesto{background:var(--green-deep);color:var(--bg);padding:140px 0}
+@media(max-width:1024px){.manifesto{padding:96px 0}}
+.manifesto .wrap{text-align:center}
+.manifesto .stamp{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:6px 14px;border:1px solid rgba(184,137,58,0.35);border-radius:999px}
+.manifesto h2{font-family:var(--serif);font-weight:500;font-size:clamp(40px,5.6vw,84px);line-height:1.02;letter-spacing:-0.025em;margin:28px auto 0;max-width:18ch;color:var(--bg);text-wrap:balance}
+.manifesto h2 em{font-style:italic;color:var(--gold-light);font-weight:500}
+.manifesto .signature{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(20px,2vw,28px);color:var(--gold);margin-top:24px}
+.manifesto .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:80px;text-align:left;border-top:1px solid rgba(245,241,232,0.12);padding-top:48px}
+@media(max-width:900px){.manifesto .pillars{grid-template-columns:1fr;gap:32px;margin-top:64px}}
+.manifesto .pillar .lbl{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.manifesto .pillar h5{font-family:var(--serif);font-weight:500;font-size:22px;line-height:1.2;letter-spacing:-0.01em;margin-top:12px;color:var(--bg)}
+.manifesto .pillar p{margin-top:10px;color:rgba(245,241,232,0.65);font-size:14px;line-height:1.6}
+.manifesto .cta-wrap{margin-top:56px;display:flex;justify-content:center}
+
+/* CONTACT */
+.contact{background:var(--green);color:var(--bg);padding:120px 0}
+@media(max-width:1024px){.contact{padding:96px 0}}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+@media(max-width:1024px){.contact-grid{grid-template-columns:1fr;gap:48px}}
+.contact h2{color:var(--bg)}
+.contact h2 em{color:var(--gold-light);font-style:italic}
+.contact .lede{color:rgba(245,241,232,0.7);margin-top:20px}
+.contact .meta-list{margin-top:32px;display:flex;flex-direction:column;gap:14px}
+.contact .meta-list .row{display:grid;grid-template-columns:120px 1fr;gap:16px;padding-bottom:14px;border-bottom:1px solid rgba(245,241,232,0.12)}
+.contact .meta-list .k{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold)}
+.contact .meta-list .v{font-size:15px;color:rgba(245,241,232,0.85)}
+
+.form{background:transparent;border:1px solid rgba(245,241,232,0.14);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:18px}
+.form label{display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold)}
+.form input,.form select,.form textarea{background:transparent;border:0;border-bottom:1px solid rgba(245,241,232,0.18);padding:10px 0;font-family:var(--sans);font-size:15px;color:var(--bg);outline:none;transition:border-color .25s ease}
+.form input:focus,.form select:focus,.form textarea:focus{border-bottom-color:var(--gold-light)}
+.form input::placeholder,.form textarea::placeholder{color:rgba(245,241,232,0.35)}
+.form textarea{min-height:80px;resize:vertical}
+.form .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:600px){.form .row2{grid-template-columns:1fr}}
+.form .stage-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.form .stage-chips input{display:none}
+.form .stage-chips label{padding:7px 12px;border:1px solid rgba(245,241,232,0.18);border-radius:999px;font-family:var(--mono);font-size:11px;letter-spacing:0.12em;cursor:pointer;color:rgba(245,241,232,0.7);transition:all .2s;flex-direction:row}
+.form .stage-chip.active{background:var(--gold-light);color:var(--green-deep);border-color:var(--gold-light);font-weight:600}
+.form .submit{background:var(--gold-light);color:var(--green-deep);border:0;padding:14px 24px;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:10px;justify-content:center;transition:background .25s;margin-top:6px}
+.form .submit:hover{background:#E5C485}
+.form .fine{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(245,241,232,0.5);margin-top:6px}
+
+/* FOOTER */
+footer{background:var(--bg);padding:88px 0 36px;border-top:1px solid var(--line)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:48px;align-items:start}
+@media(max-width:900px){.foot-grid{grid-template-columns:1fr 1fr;gap:48px 32px}.foot-grid .foot-big{grid-column:span 2}}
+.foot-big h2{font-family:var(--serif);font-weight:500;font-size:clamp(48px,6vw,96px);line-height:0.95;letter-spacing:-0.03em;color:var(--ink)}
+.foot-big h2 em{font-style:italic;color:var(--gold);font-weight:500}
+.foot-big p{margin-top:18px;color:var(--muted);font-size:15px;max-width:36ch;line-height:1.55}
+.foot-col h5{font-family:var(--mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-weight:500}
+.foot-col a{display:block;font-size:15px;color:var(--ink);padding:6px 0;transition:color .2s}
+.foot-col a:hover{color:var(--gold)}
+.foot-bottom{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);flex-wrap:wrap;gap:16px}
+
+/* REVEAL — visible by default; only animate when JS arms+observes */
+.reveal{opacity:1;transform:none;transition:opacity .7s ease, transform .7s ease}
+.reveal.armed{opacity:0;transform:translateY(12px)}
+.reveal.in{opacity:1;transform:none}
+.no-js .reveal,html.no-js .reveal{opacity:1!important;transform:none!important}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none}
+  .ticker-inner{animation:none}
+  .chip .pulse,.dash-head .live::before{animation:none}
+}
+
+/* PRINT */
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background:#F5F1E8 !important; color:#0E1A14 !important; }
+  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; animation:none !important; transition:none !important; }
+  .reveal, .reveal.armed { opacity:1 !important; transform:none !important; }
+  .nav { position:static !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+  .ticker { overflow:hidden; }
+  .ticker-inner { animation:none !important; transform:none !important; white-space:normal; }
+  section { padding:48px 0 !important; break-inside:avoid; }
+  .hero { padding:32px 0 48px !important; }
+  .hero-grid { break-inside:avoid; }
+  .case, .svc, .step, .num-card, .why-card, .brand-cell, .dash, .pillar, .form { break-inside:avoid; }
+  .section-head { margin-bottom:32px !important; }
+  .cases-section, .numbers-section { background:#EDE6D3 !important; }
+  .manifesto { background:#0F1F18 !important; color:#F5F1E8 !important; padding:64px 0 !important; break-before:page; }
+  .manifesto h2, .manifesto h5 { color:#F5F1E8 !important; }
+  .manifesto::before, .manifesto::after { display:none !important; }
+  .contact { background:#1F3024 !important; color:#F5F1E8 !important; padding:64px 0 !important; break-before:page; }
+  .contact h2 { color:#F5F1E8 !important; }
+  footer { padding:48px 0 24px !important; break-before:page; }
+  .btn { box-shadow:none !important; }
+  a { text-decoration:none !important; color:inherit !important; }
+  .display { font-size:48px !important; line-height:1.05 !important; }
+  h2.display { font-size:40px !important; }
+  .foot-big h2 { font-size:64px !important; }
+  .num-card .big, .case .stat .num { font-size:56px !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="utility-strip">
+  <div class="wrap">
+    <span>EST. 2024 · OPERATOR-LED · FULL-STACK</span>
+    <div class="right">
+      <span><i class="dot"></i>ATLAS · OPERATIONAL</span>
+      <span>HELLO@DISRUPTIVE.CO</span>
+    </div>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="brand-mark"></span>DISRUPTIVE</a>
+    <nav class="nav-links">
+      <a href="#work" class="hide-m">Work</a>
+      <a href="#services" class="hide-m">Services</a>
+      <a href="#why" class="hide-m">Why us</a>
+      <a href="#contact" class="btn btn-primary">Book a call <span class="arrow">→</span></a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="chip reveal"><span class="pulse"></span>The Full-Stack Growth Agency</span>
+        <h1 class="display reveal" style="transition-delay:.05s">
+          We don't grow brands.<br/>
+          We <span class="italic-gold">own</span> categories.
+        </h1>
+        <p class="sub reveal" style="transition-delay:.1s">
+          Paid, creative, brand, retention and ops — under one roof. Operator-led, AI-native, and built to ship in weeks, not quarters.
+        </p>
+        <div class="ctas reveal" style="transition-delay:.15s">
+          <a href="#contact" class="btn btn-primary">Book a call <span class="arrow">→</span></a>
+          <a href="#work" class="btn btn-ghost">See the work <span class="arrow">→</span></a>
+        </div>
+      </div>
+
+      <div class="dash reveal" style="transition-delay:.2s" aria-hidden="true">
+        <div class="dash-head">
+          <span class="ttl">Atlas · Live</span>
+          <span class="live">Online</span>
+        </div>
+        <div class="dash-row"><span class="lbl">Blended CAC</span><span class="val gold">−42%</span></div>
+        <div class="dash-row"><span class="lbl">ROAS · 30d</span><span class="val">4.8x</span></div>
+        <div class="dash-row"><span class="lbl">Creatives shipped</span><span class="val">312/mo</span></div>
+        <div class="dash-row"><span class="lbl">Brands managed</span><span class="val">37</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>STRATEGY<i>/</i>MEDIA BUYING<i>/</i>CREATIVE<i>/</i>BRAND<i>/</i>RETENTION<i>/</i>LANDING PAGES<i>/</i>ATLAS OPS<i>/</i>STRATEGY<i>/</i>MEDIA BUYING<i>/</i>CREATIVE<i>/</i>BRAND<i>/</i>RETENTION<i>/</i>LANDING PAGES<i>/</i>ATLAS OPS<i>/</i>STRATEGY<i>/</i>MEDIA BUYING<i>/</i>CREATIVE<i>/</i>BRAND<i>/</i>RETENTION<i>/</i>LANDING PAGES<i>/</i>ATLAS OPS<i>/</i></span>
+  </div>
+</div>
+
+<!-- INDUSTRIES -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">01 / BRANDS</div>
+      <div>
+        <h2 class="display reveal">Brands that grow <span class="italic-gold">with us</span>.</h2>
+        <p class="sub reveal">Operators we run today. Receipts on request.</p>
+      </div>
+    </div>
+    <div class="wall reveal">
+      <div class="brand-cell"><span class="cat">CPG · Supplements</span><span class="name">Raw Nutrition</span></div>
+      <div class="brand-cell"><span class="cat">Beverage · Energy</span><span class="name">Bum Energy</span></div>
+      <div class="brand-cell"><span class="cat">Beverage · Energy</span><span class="name">3D Energy</span></div>
+      <div class="brand-cell"><span class="cat">Wellness</span><span class="name">Revive Supps</span></div>
+      <div class="brand-cell"><span class="cat">DTC · Apparel</span><span class="name">Helm 24</span></div>
+      <div class="brand-cell"><span class="cat">Local services</span><span class="name">Northmark</span></div>
+      <div class="brand-cell"><span class="cat">B2B SaaS</span><span class="name">Vector OS</span></div>
+      <div class="brand-cell"><span class="cat">CPG · Functional</span><span class="name">Field &amp; Co.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="cases-section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">02 / CASE STUDIES</div>
+      <div>
+        <h2 class="display reveal">Results we can <span class="italic-gold">prove</span>.</h2>
+        <p class="sub reveal">Two of thirty-seven. The rest on a call.</p>
+      </div>
+    </div>
+    <div class="cases">
+      <article class="case reveal">
+        <div class="meta"><span class="cat">CPG · Functional Beverage</span><span>12 months</span></div>
+        <h3>From shelf-filler to <em>category default</em>.</h3>
+        <div class="body">
+          <div class="row"><div class="k">Situation</div><div class="v">Three incumbents held 80% of search. Better product, none of the attention.</div></div>
+          <div class="row"><div class="k">Move</div><div class="v">Rebuilt the brand around a single occasion. Rewrote retail and DTC narrative. Iterated creative nightly.</div></div>
+          <div class="row"><div class="k">Outcome</div><div class="v">Category search share tripled in nine months.</div></div>
+        </div>
+        <div class="stat"><div class="num">3.1<em>x</em></div><div class="lbl">Category search share, 9 months</div></div>
+      </article>
+
+      <article class="case reveal" style="transition-delay:.08s">
+        <div class="meta"><span class="cat">B2B SaaS · Vertical</span><span>7 months</span></div>
+        <h3>Into the <em>default</em> consideration set.</h3>
+        <div class="body">
+          <div class="row"><div class="k">Situation</div><div class="v">Late entrant against two public incumbents. Sales cycles stalled.</div></div>
+          <div class="row"><div class="k">Move</div><div class="v">Category-design narrative, conversion stack, and outbound engine wired to the same number.</div></div>
+          <div class="row"><div class="k">Outcome</div><div class="v">CAC down. Win rate up. Three competitor displacements in Q1.</div></div>
+        </div>
+        <div class="stat"><div class="num">−42<em>%</em></div><div class="lbl">Blended CAC vs. prior 6 months</div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES (Kandy-style) -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">03 / FULL-STACK</div>
+      <div>
+        <h2 class="display reveal">Full circle <span class="italic-gold">performance</span>.</h2>
+        <p class="sub reveal">From strategy to retention. One team. One P&amp;L. No handoffs.</p>
+      </div>
+    </div>
+
+    <div class="services-grid reveal">
+      <article class="svc">
+        <span class="num">01</span>
+        <h4>Strategy,<span class="sm">Handled.</span></h4>
+        <p>A dedicated operator connects the dots between every department, against one number.</p>
+      </article>
+      <article class="svc">
+        <span class="num">02</span>
+        <h4>Media,<span class="sm">Optimized.</span></h4>
+        <p>Meta, Google, programmatic. Spend lives where intent is underpriced. Daily, not monthly.</p>
+      </article>
+      <article class="svc">
+        <span class="num">03</span>
+        <h4>Creative,<span class="sm">Produced.</span></h4>
+        <p>Scripting, briefing, shooting, editing. We take care of everything. You see the winners.</p>
+      </article>
+      <article class="svc">
+        <span class="num">04</span>
+        <h4>Brand,<span class="sm">Sharpened.</span></h4>
+        <p>Positioning, narrative and identity. The kind that makes a category quote you back.</p>
+      </article>
+      <article class="svc">
+        <span class="num">05</span>
+        <h4>Retention,<span class="sm">Sorted.</span></h4>
+        <p>Email, SMS, lifecycle. Designed to compound revenue after the first sale.</p>
+      </article>
+      <article class="svc">
+        <span class="num">06</span>
+        <h4>Atlas,<span class="sm">Always-On.</span></h4>
+        <p>The AI-native ops layer underneath everything. Dashboards, routing, agents, memory.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section style="background:var(--bg-alt)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">04 / PROCESS</div>
+      <div>
+        <h2 class="display reveal">No magic. <span class="italic-gold">Process</span>.</h2>
+        <p class="sub reveal">Three steps. Same engagement, every operator.</p>
+      </div>
+    </div>
+
+    <div class="process-grid">
+      <div class="step reveal">
+        <div class="n">01</div>
+        <h4>We research, deep.</h4>
+        <p>The category, the incumbents, the customer, the window. Share of voice, share of search, the move that opens it.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.08s">
+        <div class="n">02</div>
+        <h4>We build, fast.</h4>
+        <p>Position, media plan, creative system, conversion stack. Live across every surface in weeks.</p>
+      </div>
+      <div class="step reveal" style="transition-delay:.16s">
+        <div class="n">03</div>
+        <h4>We test, a lot.</h4>
+        <p>Three days to test, learn, rebuild. Atlas watches every funnel. The position compounds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers-section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">05 / RECEIPTS</div>
+      <div>
+        <h2 class="display reveal">We're here to <span class="italic-gold">move numbers</span>.</h2>
+        <p class="sub reveal">Everything else is downstream.</p>
+      </div>
+    </div>
+
+    <div class="numbers-grid reveal">
+      <div class="num-card">
+        <span class="lbl">Revenue moved · 24mo</span>
+        <div class="big">$184M</div>
+        <p class="desc">Aggregated topline shifted across operators we manage.</p>
+      </div>
+      <div class="num-card">
+        <span class="lbl">Time to category move</span>
+        <div class="big">11 wk</div>
+        <p class="desc">Median time from kickoff to measurable category-share shift.</p>
+      </div>
+      <div class="num-card">
+        <span class="lbl">Operator retention</span>
+        <div class="big">94%</div>
+        <p class="desc">Of brands renew or expand inside the first six months.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="num reveal">06 / WHY US</div>
+      <div>
+        <h2 class="display reveal">Why <span class="italic-gold">Disruptive</span>.</h2>
+        <p class="sub reveal">Operational, not rhetorical.</p>
+      </div>
+    </div>
+
+    <div class="why-grid reveal">
+      <div class="why-card">
+        <span class="n">01 · Speed</span>
+        <h4>Weeks, <em>not quarters</em>.</h4>
+        <p>We ship in weeks. Most agencies take a quarter to brief.</p>
+      </div>
+      <div class="why-card">
+        <span class="n">02 · Operators</span>
+        <h4>People who've <em>run brands</em>.</h4>
+        <p>Senior operators on the trades. No relay race through a junior AM.</p>
+      </div>
+      <div class="why-card">
+        <span class="n">03 · Full-stack</span>
+        <h4>One team, <em>one P&amp;L</em>.</h4>
+        <p>Paid, creative, brand, retention, ops. No handoffs. No finger-pointing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="wrap">
+    <span class="stamp">07 · The line</span>
+    <h2>Different is better than <em>better</em>.</h2>
+    <span class="signature">— Be disruptive.</span>
+
+    <div class="pillars">
+      <div class="pillar">
+        <span class="lbl">Operator-led</span>
+        <h5>Built by people who've run brands.</h5>
+        <p>The person you brief is the person on the trades.</p>
+      </div>
+      <div class="pillar">
+        <span class="lbl">AI-native</span>
+        <h5>Atlas runs underneath everything.</h5>
+        <p>Dashboards, routing, agents, memory. The work compounds nightly.</p>
+      </div>
+      <div class="pillar">
+        <span class="lbl">Full-stack</span>
+        <h5>One roof. One number.</h5>
+        <p>Every discipline pointed at where you sit in the category.</p>
+      </div>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="#contact" class="btn btn-gold">Book a call <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <span class="chip" style="border-color:rgba(217,178,106,0.4);color:var(--gold-light)"><span class="pulse"></span>Book a call</span>
+        <h2 class="display" style="margin-top:24px">Let's <span class="italic-gold" style="color:var(--gold-light)">talk</span>.</h2>
+        <p class="lede">Tell us what you're trying to take. We reply inside 24 hours, from an operator.</p>
+        <div class="meta-list">
+          <div class="row"><span class="k">Response</span><span class="v">Inside 24h, from an operator.</span></div>
+          <div class="row"><span class="k">Minimum</span><span class="v">$15k scoped sprint.</span></div>
+          <div class="row"><span class="k">Direct</span><span class="v">hello@disruptive.co</span></div>
+        </div>
+      </div>
+
+      <form class="form" id="contactForm">
+        <label>Name<input type="text" required placeholder="First and last"/></label>
+        <div class="row2">
+          <label>Brand<input type="text" required placeholder="Where you operate"/></label>
+          <label>Role<input type="text" placeholder="Founder, CEO, CMO"/></label>
+        </div>
+        <label>Email<input type="email" required placeholder="you@brand.com"/></label>
+        <label>Monthly revenue stage
+          <div class="stage-chips" id="stageChips">
+            <label class="stage-chip"><input type="radio" name="stage" value="<100k"/>&lt; $100K</label>
+            <label class="stage-chip"><input type="radio" name="stage" value="100k-1m"/>$100K – $1M</label>
+            <label class="stage-chip"><input type="radio" name="stage" value="1m-10m"/>$1M – $10M</label>
+            <label class="stage-chip"><input type="radio" name="stage" value="10m+"/>$10M+</label>
+          </div>
+        </label>
+        <label>What are you trying to take?<textarea placeholder="Category, incumbents, current position."></textarea></label>
+        <button type="submit" class="submit">Book a call <span class="arrow">→</span></button>
+        <p class="fine">No funnel. No SDR.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-big">
+        <h2>Be <em>disruptive</em>.</h2>
+        <p>The operator-led, full-stack growth agency. Different is better than better.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Navigate</h5>
+        <a href="#work">Work</a>
+        <a href="#services">Services</a>
+        <a href="#why">Why us</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="foot-col">
+        <h5>Services</h5>
+        <a href="#services">Strategy</a>
+        <a href="#services">Media</a>
+        <a href="#services">Creative</a>
+        <a href="#services">Retention</a>
+        <a href="#services">Atlas</a>
+      </div>
+      <div class="foot-col">
+        <h5>Direct</h5>
+        <a href="mailto:hello@disruptive.co">hello@disruptive.co</a>
+        <a href="#contact">Book a call</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 Disruptive — Different is better than better.</div>
+      <div>All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Auto-print after fonts + layout settle
+(function(){
+  function go(){ setTimeout(() => window.print(), 500); }
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(go);
+  } else {
+    window.addEventListener('load', go);
+  }
+})();
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  if(!els.length) return;
+  if(!('IntersectionObserver' in window)){
+    els.forEach(e => e.classList.add('in'));
+    return;
+  }
+  // Reveal anything already in viewport immediately, arm the rest.
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  els.forEach(e => {
+    const r = e.getBoundingClientRect();
+    if(r.top < vh && r.bottom > 0){
+      e.classList.add('in');
+    } else {
+      e.classList.add('armed');
+    }
+  });
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.remove('armed');
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold: 0.05, rootMargin: '0px 0px -4% 0px'});
+  document.querySelectorAll('.reveal.armed').forEach(e => io.observe(e));
+  // Safety net
+  setTimeout(() => {
+    document.querySelectorAll('.reveal.armed').forEach(e => {
+      e.classList.remove('armed');
+      e.classList.add('in');
+    });
+  }, 2000);
+})();
+(function(){
+  const chips = document.querySelectorAll('#stageChips .stage-chip');
+  chips.forEach(c => c.addEventListener('click', () => {
+    chips.forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  }));
+})();
+(function(){
+  const f = document.getElementById('contactForm');
+  if(!f) return;
+  f.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = f.querySelector('.submit');
+    btn.textContent = 'Sent. We\u2019ll be in touch \u2192';
+    btn.style.background = 'var(--gold-light)';
+  });
+})();
+</script>
+</body>
+</html>

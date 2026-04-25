@@ -28,6 +28,11 @@ jobs:
         env:
           NEXT_PUBLIC_BASE_PATH: /dblandingpage-preview
         run: npm run build
+      - name: Copy non-Next static landers into out/
+        run: |
+          if [ -d static ]; then
+            cp -R static/* out/
+          fi
       - name: Add .nojekyll
         run: touch out/.nojekyll
       - uses: actions/configure-pages@v5

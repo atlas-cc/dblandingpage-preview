@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disruptive Lander Gallery</title>
+<style>
+  :root { --bg:#0b0d14; --fg:#f2f5ea; --muted:#8d9287; --accent:#d8ff57; --line:rgba(242,245,234,0.13); }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--fg); font-family:-apple-system,BlinkMacSystemFont,Inter,Segoe UI,sans-serif; padding:48px 24px; }
+  .wrap { max-width:960px; margin:0 auto; }
+  .eyebrow { font-family:ui-monospace,Cascadia Mono,monospace; font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
+  h1 { font-size:clamp(2.5rem,6vw,4rem); font-weight:900; line-height:1; margin:0 0 16px; }
+  p.lead { color:var(--muted); font-size:18px; line-height:1.6; max-width:560px; margin:0 0 48px; }
+  h2 { font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--muted); margin:48px 0 16px; font-family:ui-monospace,Cascadia Mono,monospace; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  a.card { display:block; padding:24px; background:var(--bg); color:var(--fg); text-decoration:none; transition:background .2s; }
+  a.card:hover { background:#10120e; }
+  a.card .name { font-size:18px; font-weight:700; margin-bottom:8px; }
+  a.card .desc { font-size:13px; color:var(--muted); line-height:1.5; }
+  a.card .url { font-family:ui-monospace,monospace; font-size:11px; color:var(--accent); margin-top:12px; word-break:break-all; }
+  .meta { font-family:ui-monospace,monospace; font-size:11px; color:var(--muted); margin-top:64px; padding-top:24px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">● Disruptive · Internal preview</div>
+  <h1>Lander gallery.</h1>
+  <p class="lead">Working drafts of the Disruptive and ATLAS landing pages. Hosted on GitHub Pages, free, $0/mo. For the team. For the weekend. Not public-facing yet.</p>
+
+  <h2>● Disruptive Brands · Next.js (Gustavo)</h2>
+  <div class="grid">
+    <a class="card" href="../">
+      <div class="name">Disruptive Brands · production lander</div>
+      <div class="desc">Gustavo's Next.js build. Operator-led DTC growth, lime accent, dark theme. Lead form + 3 case studies pre-rendered.</div>
+      <div class="url">/dblandingpage-preview/</div>
+    </a>
+  </div>
+
+  <h2>● Disruptive · Claude design directions</h2>
+  <div class="grid">
+    <a class="card" href="../disruptive/"><div class="name">Disruptive · v1 (own categories)</div><div class="desc">"We don't grow brands. We own categories." Operator-led, AI-native, Atlas OS positioning.</div><div class="url">/dblandingpage-preview/disruptive/</div></a>
+    <a class="card" href="../disruptive/alt.html"><div class="name">Disruptive · alt (full-stack)</div><div class="desc">"The full-stack growth agency." Paid, creative, brand, retention, ops.</div><div class="url">/disruptive/alt.html</div></a>
+    <a class="card" href="../disruptive/print.html"><div class="name">Disruptive · print variant</div><div class="desc">Print-optimized layout of the full-stack version.</div><div class="url">/disruptive/print.html</div></a>
+    <a class="card" href="../disruptive/share.html"><div class="name">Disruptive · share bundle</div><div class="desc">Self-contained share variant (large file).</div><div class="url">/disruptive/share.html</div></a>
+  </div>
+
+  <h2>● ATLAS OS · Claude design directions</h2>
+  <div class="grid">
+    <a class="card" href="../atlas/"><div class="name">ATLAS · canonical</div><div class="desc">"A bespoke operating layer for the founder-CEO." Cream + gold accent, editorial.</div><div class="url">/dblandingpage-preview/atlas/</div></a>
+    <a class="card" href="../atlas/v1.html"><div class="name">ATLAS · v1 (north star)</div><div class="desc">"The North Star of Enterprise AI."</div><div class="url">/atlas/v1.html</div></a>
+    <a class="card" href="../atlas/v2.html"><div class="name">ATLAS · v2 (handled)</div><div class="desc">"Your business, handled."</div><div class="url">/atlas/v2.html</div></a>
+    <a class="card" href="../atlas/alt.html"><div class="name">ATLAS · alt (operating system)</div><div class="desc">"The AI operating system for your business." Own infra, own memory, own agents.</div><div class="url">/atlas/alt.html</div></a>
+    <a class="card" href="../atlas/shareable.html"><div class="name">ATLAS · share bundle</div><div class="desc">Self-contained share variant (large file).</div><div class="url">/atlas/shareable.html</div></a>
+  </div>
+
+  <p class="meta">Hosted on GitHub Pages · atlas-cc/dblandingpage-preview · auto-deploys on git push</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,1720 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ATLAS OS — Your business, handled.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000;
+    --bg-1:#05070F;
+    --bg-2:#0A0E27;
+    --ink:#F5F8FF;
+    --ink-dim:#AEB4C2;
+    --ink-muted:#6B7184;
+    --ink-faint:#3A3F4E;
+    --star:#E8F4FF;
+    --star-blue:#7CB8FF;
+    --amber:#E8B873;       /* warm champagne accent */
+    --amber-dim:#9C7A4A;
+    --hair:rgba(255,255,255,0.08);
+    --hair-2:rgba(255,255,255,0.14);
+    --sans:"Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --serif:"Instrument Serif", ui-serif, Georgia, serif;
+    --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  html{scroll-behavior:smooth}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--amber);color:#000}
+
+  /* ---------- GLOBAL LAYERS ---------- */
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:80;opacity:.08;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .vignette{
+    position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(120% 80% at 50% 30%, transparent 60%, rgba(0,0,0,.55) 100%);
+  }
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:1}
+  .stars canvas{display:block;width:100%;height:100%}
+  /* parallax constellation that responds to cursor */
+  .conlayer{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.55;transition:transform .8s ease-out}
+
+  @keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+  @keyframes twinkle{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes starBreathe{0%,100%{transform:translateX(-50%) scale(1);opacity:.95}50%{transform:translateX(-50%) scale(1.3);opacity:1}}
+
+  /* ---------- STATUS BAR ---------- */
+  .statusbar{
+    position:fixed;top:0;left:0;right:0;z-index:90;height:30px;
+    display:flex;align-items:center;gap:24px;
+    padding:0 24px;border-bottom:1px solid var(--hair);
+    background:rgba(0,0,0,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-muted);
+    white-space:nowrap;overflow:hidden;
+  }
+  .statusbar .sep{color:var(--ink-faint)}
+  .statusbar .live{display:inline-flex;align-items:center;gap:8px;color:var(--ink-dim)}
+  .statusbar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber);animation:pulse 1.6s ease-in-out infinite}
+  .statusbar .ok{color:var(--star)}
+  .statusbar .right{margin-left:auto;display:flex;gap:24px}
+
+  /* ---------- NAV ---------- */
+  nav.top{
+    position:fixed;top:30px;left:0;right:0;z-index:60;
+    display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    padding:14px 32px;
+    backdrop-filter:blur(14px) saturate(120%);
+    -webkit-backdrop-filter:blur(14px) saturate(120%);
+    background:linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15));
+    border-bottom:1px solid var(--hair);
+    transition:background .3s;
+  }
+  .brand{display:flex;align-items:baseline;gap:10px}
+  .brand .mark{font-family:var(--serif);font-size:22px;letter-spacing:.18em;font-weight:400}
+  .brand .star{color:var(--amber);text-shadow:0 0 10px rgba(232,184,115,.7);font-size:12px;transform:translateY(-6px);display:inline-block;animation:twinkle 3s infinite}
+  .brand .by{font-family:var(--mono);font-size:10px;color:var(--ink-muted);letter-spacing:.22em;text-transform:uppercase}
+  .navlinks{display:flex;gap:30px;font-size:13px;color:var(--ink-dim);letter-spacing:.01em}
+  .navlinks a{position:relative;padding:6px 0;transition:color .2s}
+  .navlinks a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+  .navlinks a:hover{color:var(--ink)}
+  .navlinks a:hover::after{transform:scaleX(1)}
+  .navright{display:flex;justify-content:flex-end;align-items:center;gap:18px}
+  .signin{font-size:13px;color:var(--ink-dim)}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;letter-spacing:.01em;font-weight:500;
+    padding:9px 16px;border-radius:999px;
+    background:var(--ink);color:#000;
+    box-shadow:0 0 0 1px rgba(255,255,255,.6), 0 0 24px rgba(232,244,255,.25);
+    transition:transform .3s, box-shadow .3s;
+  }
+  .pill:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(255,255,255,.85), 0 0 40px rgba(232,244,255,.5)}
+  .pill .arw{display:inline-block;transition:transform .3s}
+  .pill:hover .arw{transform:translateX(3px)}
+
+  /* sticky CTA pill that appears after first scroll */
+  .stickycta{
+    position:fixed;right:24px;bottom:24px;z-index:75;
+    display:inline-flex;align-items:center;gap:10px;
+    padding:12px 20px;border-radius:999px;
+    background:var(--amber);color:#15110a;font-weight:600;font-size:13.5px;letter-spacing:.005em;
+    box-shadow:0 0 0 1px rgba(232,184,115,.55), 0 14px 40px rgba(232,184,115,.25);
+    opacity:0;transform:translateY(14px) scale(.96);pointer-events:none;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .stickycta.on{opacity:1;transform:none;pointer-events:auto}
+  .stickycta:hover{box-shadow:0 0 0 1px rgba(232,184,115,.8), 0 18px 60px rgba(232,184,115,.45)}
+
+  /* ---------- GENERIC ---------- */
+  section{position:relative;z-index:3}
+  .wrap{max-width:1360px;margin:0 auto;padding:0 48px}
+  .eyebrow{
+    font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-dim);
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow .dot{width:6px;height:6px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px var(--amber)}
+  .eyebrow .bar{width:28px;height:1px;background:var(--hair-2)}
+  .rule{height:1px;background:var(--hair);width:100%}
+  .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;padding:160px 0 100px;position:relative;overflow:hidden;
+  }
+  .hero .beam{
+    position:absolute;left:50%;top:-10%;width:1400px;height:1100px;transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 25%, rgba(232,244,255,.18) 0%, rgba(124,184,255,.06) 14%, rgba(11,11,31,0) 42%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;z-index:4;display:grid;
+    grid-template-columns:1.05fr 1.35fr;gap:64px;align-items:center;
+    padding-top:40px;
+  }
+  .hero .copy .eyebrow{margin-bottom:32px}
+  .hero h1{
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(56px, 7.4vw, 124px);
+    line-height:.94;letter-spacing:-.025em;
+  }
+  .hero h1 em{font-style:italic;background:linear-gradient(180deg,#fff 0%,#E8B873 60%, #9C7A4A 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .sub{
+    margin-top:30px;max-width:520px;font-size:18px;line-height:1.55;color:var(--ink-dim);font-weight:400;letter-spacing:-.005em;
+  }
+  .cta-row{display:flex;gap:12px;margin-top:36px;align-items:center;flex-wrap:wrap}
+  .cta-solid{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:500;
+    padding:14px 22px;border-radius:999px;background:var(--ink);color:#000;
+    box-shadow:0 0 0 1px rgba(255,255,255,.6), 0 10px 40px rgba(232,244,255,.22);
+    transition:all .3s;
+  }
+  .cta-solid:hover{box-shadow:0 0 0 1px rgba(255,255,255,.9), 0 14px 60px rgba(232,244,255,.5);transform:translateY(-1px)}
+  .cta-ghost{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;
+    padding:14px 20px;border-radius:999px;border:1px solid var(--hair-2);color:var(--ink);
+    transition:all .3s;
+  }
+  .cta-ghost:hover{border-color:rgba(232,184,115,.6);color:#fff;background:rgba(232,184,115,.05)}
+  .cta-ghost .play{width:18px;height:18px;border-radius:50%;border:1px solid rgba(232,184,115,.6);display:grid;place-items:center}
+  .cta-ghost .play::before{content:"";border-left:5px solid var(--amber);border-top:3px solid transparent;border-bottom:3px solid transparent;margin-left:2px}
+
+  .hero-aside-meta{margin-top:44px;display:flex;gap:32px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .hero-aside-meta b{color:var(--ink-dim);font-weight:400}
+  .hero-aside-meta .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber);margin-right:6px;vertical-align:middle}
+
+  /* hero dashboard preview */
+  .hdash{
+    position:relative;border:1px solid var(--hair-2);border-radius:14px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(10,14,28,.85), rgba(5,7,15,.94));
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.04) inset,
+      0 0 80px rgba(124,184,255,.08),
+      0 0 100px rgba(232,184,115,.06),
+      0 60px 140px rgba(0,0,0,.85);
+    transform:rotate(-.3deg);
+  }
+  .hdash::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 60% at 80% -10%, rgba(232,184,115,.06), transparent 55%),radial-gradient(80% 50% at 0% 100%, rgba(124,184,255,.06), transparent 55%);
+  }
+  .hdash-top{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--hair)}
+  .hdash-top .dots{display:flex;gap:6px}
+  .hdash-top .dots i{width:8px;height:8px;border-radius:50%;background:#262A38}
+  .hdash-top .url{font-family:var(--mono);font-size:10.5px;color:var(--ink-muted);letter-spacing:.08em}
+  .hdash-top .url b{color:var(--ink-dim);font-weight:400}
+  .hdash-top .right{margin-left:auto;display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .hdash-top .right .live{color:var(--amber);display:inline-flex;align-items:center;gap:6px}
+  .hdash-top .right .live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 1.8s infinite}
+
+  .hdash-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:20px}
+
+  .greet{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+  .greet .hi{font-family:var(--serif);font-size:34px;line-height:1.05;letter-spacing:-.015em;color:var(--ink)}
+  .greet .hi em{font-style:italic;color:var(--amber)}
+  .greet .meta{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase;text-align:right;line-height:1.7}
+  .greet .meta b{color:var(--ink-dim);font-weight:400}
+
+  .hkpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .hkpi{
+    border:1px solid var(--hair);border-radius:8px;padding:14px 14px 12px;
+    background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0));
+    position:relative;overflow:hidden;
+  }
+  .hkpi .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .hkpi .v{font-family:var(--serif);font-size:32px;line-height:1.05;color:var(--ink);margin-top:8px;letter-spacing:-.01em}
+  .hkpi .t{display:flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--star);text-transform:uppercase}
+  .hkpi .t.warn{color:var(--amber)}
+  .hkpi .spark{position:absolute;right:10px;bottom:10px;width:62px;height:22px;opacity:.7}
+
+  .feed{
+    border:1px solid var(--hair);border-radius:8px;padding:0;
+    background:rgba(255,255,255,.012);overflow:hidden;
+  }
+  .feed-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--hair)}
+  .feed-head .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-dim);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .feed-head .lbl::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 1.8s infinite}
+  .feed-head .seeall{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .feed-list{position:relative;height:170px;overflow:hidden}
+  .feed-row{
+    display:grid;grid-template-columns:54px 60px 1fr auto;gap:12px;align-items:center;
+    padding:10px 14px;border-bottom:1px dashed rgba(255,255,255,.05);
+    font-family:var(--mono);font-size:11px;color:var(--ink-dim);
+    animation:feedIn .55s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes feedIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  .feed-row .ts{color:var(--ink-muted);letter-spacing:.04em}
+  .feed-row .who{color:var(--amber);letter-spacing:.18em;font-size:10px;text-transform:uppercase}
+  .feed-row .act{color:var(--ink);font-family:var(--sans);font-size:12.5px;letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .feed-row .tag{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- TICKER ---------- */
+  .ticker{
+    border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    overflow:hidden;white-space:nowrap;padding:14px 0;position:relative;z-index:4;
+    background:rgba(0,0,0,.5);
+  }
+  .ticker-track{display:inline-flex;gap:42px;animation:slide 80s linear infinite;padding-left:42px}
+  .ticker-track span{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-dim);text-transform:uppercase;display:inline-flex;align-items:center;gap:42px}
+  .ticker-track span::after{content:"◆";color:var(--ink-faint);font-size:8px}
+  .ticker-track b{color:var(--amber);font-weight:400}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- THE FOG ---------- */
+  .why{padding:140px 0 140px;position:relative}
+  .why .grid{display:grid;grid-template-columns:1.15fr 1fr;gap:80px;align-items:center}
+  .why .kicker-row{display:flex;gap:16px;align-items:center;margin-bottom:32px}
+  .why h2{
+    font-family:var(--serif);font-weight:400;font-size:clamp(40px, 4.4vw, 72px);line-height:1.04;letter-spacing:-.02em;
+  }
+  .why h2 .dim{color:var(--ink-muted);font-style:italic}
+  .why h2 em{font-style:italic;color:var(--amber)}
+  .why .lead{margin-top:28px;max-width:560px;color:var(--ink-dim);font-size:16px;line-height:1.6}
+  .why .stats{display:flex;gap:48px;margin-top:48px;padding-top:32px;border-top:1px solid var(--hair);flex-wrap:wrap}
+  .stat .num{font-family:var(--serif);font-size:44px;color:var(--ink);font-weight:400;letter-spacing:-.015em;line-height:1}
+  .stat .num em{color:var(--amber);font-style:normal}
+  .stat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;margin-top:10px}
+  .constellation{position:relative;aspect-ratio:1;width:100%;max-width:520px;margin-left:auto}
+  .constellation svg{width:100%;height:100%;overflow:visible}
+  #fogSvg .vnode circle{transition:transform 1.4s cubic-bezier(.6,.1,.2,1), opacity .9s}
+  #fogSvg .vnode text{transition:opacity .6s ease}
+  #fogSvg.collapsed .vnode{opacity:0}
+  #fogSvg #fogLines path{transition:opacity 1.2s ease}
+  #fogSvg.collapsed #fogLines path{opacity:0}
+
+  /* ---------- AGENTS ---------- */
+  .agents{padding:160px 0 140px;position:relative;border-top:1px solid var(--hair)}
+  .agents .head{margin-bottom:64px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+  .agents h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.4vw,72px);line-height:1.02;letter-spacing:-.02em;max-width:760px}
+  .agents h2 em{font-style:italic;color:var(--amber)}
+  .agents .head .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;text-align:right;line-height:1.9}
+
+  .agentgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--hair);border-radius:14px;overflow:hidden}
+  .acard{
+    position:relative;padding:28px 24px 22px;display:flex;flex-direction:column;gap:18px;
+    border-right:1px solid var(--hair);background:#000;
+    transition:background .5s, box-shadow .5s;
+    min-height:520px;
+  }
+  .acard:last-child{border-right:none}
+  .acard::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s;
+    background:radial-gradient(80% 60% at 50% 20%, rgba(232,184,115,.08), transparent 60%);
+  }
+  .acard:hover::before{opacity:1}
+  .acard:hover .portrait{box-shadow:0 0 0 1px rgba(232,184,115,.35), 0 0 40px rgba(232,184,115,.18)}
+  .acard:hover .pulse{animation-duration:1.6s}
+  .atop{display:flex;justify-content:space-between;align-items:center}
+  .atop .idx{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--amber)}
+  .atop .role{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase}
+  .portrait{
+    aspect-ratio:1;width:100%;border-radius:8px;
+    background:radial-gradient(120% 90% at 30% 20%, rgba(232,184,115,.15), rgba(10,12,28,.4) 55%, #05070F 100%);
+    position:relative;overflow:hidden;border:1px solid var(--hair);
+    transition:box-shadow .5s;
+  }
+  .portrait svg{position:absolute;inset:0;width:100%;height:100%}
+  .portrait .mono{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-family:var(--serif);font-style:italic;font-size:80px;color:rgba(232,184,115,.85);
+    text-shadow:0 0 30px rgba(232,184,115,.3);letter-spacing:-.02em;
+  }
+  .portrait .pulse{
+    position:absolute;top:14px;right:14px;width:8px;height:8px;border-radius:50%;
+    background:var(--amber);box-shadow:0 0 12px var(--amber);animation:pulse 2.4s infinite;
+  }
+  .aname{font-family:var(--serif);font-size:34px;line-height:1;letter-spacing:-.01em}
+  .aname em{font-style:italic;color:var(--ink-muted);font-size:.55em;display:block;margin-top:8px;letter-spacing:.04em}
+  .arole{color:var(--ink-dim);font-size:13.5px;line-height:1.55}
+  .asample{
+    margin-top:auto;border-top:1px dashed var(--hair);padding-top:14px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:var(--ink-muted);
+    display:flex;flex-direction:column;gap:6px;line-height:1.5;
+  }
+  .asample .h{font-size:9.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+  .asample .h::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber)}
+  .asample p{color:var(--ink-dim);font-family:var(--sans);font-size:12.5px;letter-spacing:0;line-height:1.5}
+
+  /* ---------- A DAY WITH ATLAS ---------- */
+  .day{padding:160px 0 140px;position:relative;border-top:1px solid var(--hair);overflow:hidden}
+  .day .head{margin-bottom:60px;max-width:820px}
+  .day h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.2vw,68px);line-height:1.02;letter-spacing:-.02em}
+  .day h2 em{font-style:italic;color:var(--amber)}
+  .day .sub{margin-top:20px;color:var(--ink-dim);font-size:16px;line-height:1.55;max-width:560px}
+
+  .timeline{
+    position:relative;display:grid;grid-template-columns:80px 1fr;gap:0;
+    border-top:1px solid var(--hair);
+  }
+  .tline{position:absolute;left:80px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom, transparent, var(--hair) 4%, var(--hair) 96%, transparent)}
+  .tlrow{
+    display:contents;
+  }
+  .tlrow .time{
+    grid-column:1;border-right:1px solid var(--hair);padding:32px 12px 32px 0;
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase;
+    display:flex;align-items:flex-start;justify-content:flex-end;
+  }
+  .tlrow .body{
+    grid-column:2;padding:28px 0 32px 36px;border-bottom:1px solid var(--hair);position:relative;
+  }
+  .tlrow:last-child .body{border-bottom:none}
+  .tlrow .body::before{
+    content:"";position:absolute;left:-5px;top:38px;width:9px;height:9px;border-radius:50%;
+    background:#000;border:1px solid var(--hair-2);
+  }
+  .tlrow.amber .body::before{background:var(--amber);border-color:var(--amber);box-shadow:0 0 12px var(--amber)}
+  .tlrow .who{font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--amber);text-transform:uppercase;margin-bottom:8px}
+  .tlrow .what{font-family:var(--serif);font-size:28px;line-height:1.1;letter-spacing:-.01em}
+  .tlrow .what em{font-style:italic;color:var(--ink-muted)}
+  .tlrow .det{margin-top:10px;color:var(--ink-dim);font-size:14px;line-height:1.55;max-width:680px}
+  .tlrow .chip{
+    display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+    border:1px solid var(--hair);background:rgba(255,255,255,.02);
+    padding:8px 12px;border-radius:6px;
+    font-family:var(--mono);font-size:11px;color:var(--ink-dim);letter-spacing:.04em;
+  }
+  .tlrow .chip b{color:var(--amber);font-weight:400;letter-spacing:.18em;font-size:9.5px;text-transform:uppercase}
+
+  /* ---------- USE CASES ---------- */
+  .uses{padding:160px 0 140px;position:relative;border-top:1px solid var(--hair)}
+  .uses .head{margin-bottom:48px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+  .uses h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,4.2vw,68px);line-height:1.02;letter-spacing:-.02em;max-width:820px}
+  .uses h2 em{font-style:italic;color:var(--amber)}
+  .tabs{
+    display:flex;gap:0;border:1px solid var(--hair);border-radius:999px;padding:5px;
+    background:rgba(5,7,15,.6);backdrop-filter:blur(10px);
+  }
+  .tabs button{
+    padding:10px 18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-muted);text-transform:uppercase;
+    border-radius:999px;transition:all .3s;
+  }
+  .tabs button.act{background:var(--ink);color:#000}
+  .tabs button:hover:not(.act){color:var(--ink)}
+
+  .usepanel{
+    display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:center;
+    border:1px solid var(--hair);border-radius:14px;padding:48px 44px;
+    background:linear-gradient(180deg, rgba(10,14,28,.55), rgba(5,7,15,.7));
+    position:relative;overflow:hidden;
+    min-height:500px;
+  }
+  .usepanel::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(70% 50% at 90% -10%, rgba(232,184,115,.07), transparent 55%);
+  }
+  .uleft .ueye{font-family:var(--mono);font-size:10.5px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:16px;display:inline-flex;align-items:center;gap:10px}
+  .uleft .ueye::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber)}
+  .uleft h3{font-family:var(--serif);font-size:42px;line-height:1.05;letter-spacing:-.015em}
+  .uleft h3 em{font-style:italic;color:var(--ink-muted)}
+  .uleft p{margin-top:18px;color:var(--ink-dim);font-size:15px;line-height:1.6;max-width:480px}
+  .uleft ul{margin-top:24px;list-style:none;display:flex;flex-direction:column;gap:14px}
+  .uleft ul li{padding-left:22px;position:relative;font-size:14.5px;line-height:1.5;color:var(--ink)}
+  .uleft ul li::before{content:"★";position:absolute;left:0;color:var(--amber);font-size:11px;top:5px}
+  .uleft ul li b{color:var(--amber);font-weight:400}
+  .uright{
+    border:1px solid var(--hair);border-radius:10px;padding:18px;
+    background:rgba(0,0,0,.55);
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .uright .urhead{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase;padding-bottom:10px;border-bottom:1px dashed var(--hair)}
+  .uright .urhead b{color:var(--ink);font-weight:400}
+  .urtile{
+    display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+    padding:12px 14px;border:1px solid var(--hair);border-radius:6px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+  }
+  .urtile .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase}
+  .urtile .v{font-family:var(--serif);font-size:24px;line-height:1;color:var(--ink);margin-top:6px;letter-spacing:-.01em}
+  .urtile .delta{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--amber);text-align:right}
+
+  /* ---------- INTEGRATIONS ---------- */
+  .integ{padding:120px 0 100px;border-top:1px solid var(--hair);position:relative}
+  .integ .row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;gap:40px;flex-wrap:wrap}
+  .integ h3{font-family:var(--serif);font-weight:400;font-size:clamp(28px,2.8vw,44px);line-height:1.06;letter-spacing:-.015em;max-width:540px}
+  .integ h3 em{font-style:italic;color:var(--amber)}
+  .integ .lead{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  .iglogos{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--hair);border-radius:10px;overflow:hidden;
+  }
+  .iglogo{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    padding:30px 20px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);
+    color:var(--ink-muted);transition:color .3s, background .3s;min-height:130px;
+    cursor:default;
+  }
+  .iglogo:hover{color:var(--ink);background:rgba(232,184,115,.03)}
+  .iglogo:nth-child(5n){border-right:none}
+  .iglogo:nth-last-child(-n+5){border-bottom:none}
+  .iglogo .nm{font-family:var(--serif);font-size:20px;letter-spacing:.02em}
+  .iglogo .nm.mono{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+  .iglogo .ic{width:22px;height:22px;border:1px solid var(--hair-2);border-radius:50%;display:grid;place-items:center;color:var(--amber);font-family:var(--mono);font-size:9px}
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust{padding:80px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);background:rgba(0,0,0,.4);position:relative}
+  .trust .row{display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:stretch}
+  .badge{
+    padding:18px 22px;border-left:1px solid var(--hair);
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .badge:first-child{border-left:none}
+  .badge .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase}
+  .badge .val{font-family:var(--serif);font-size:22px;line-height:1.05;letter-spacing:-.01em;color:var(--ink)}
+  .badge .val em{color:var(--amber);font-style:italic;font-size:.7em;margin-left:4px}
+  .trust .more{margin-top:32px;font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;text-align:center}
+  .trust .more a{color:var(--amber)}
+
+  /* ---------- COMMAND PALETTE BLOCK (kept, moved lower) ---------- */
+  .palette-section{padding:140px 0;position:relative;border-top:1px solid var(--hair)}
+  .palette-section .head{margin-bottom:48px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+  .palette-section h2{font-family:var(--serif);font-weight:400;font-size:clamp(34px,3.4vw,52px);line-height:1.04;letter-spacing:-.02em;max-width:720px}
+  .palette-section h2 em{font-style:italic;color:var(--ink-muted)}
+  .palette-section .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;line-height:1.9;text-align:right}
+
+  .palettewrap{
+    border:1px solid var(--hair-2);border-radius:14px;overflow:hidden;
+    background:linear-gradient(180deg, rgba(10,14,28,.6), rgba(5,7,15,.85));
+    box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 60px 140px rgba(0,0,0,.7);
+  }
+  .palettewrap .top{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--hair)}
+  .palettewrap .top .dots{display:flex;gap:6px}
+  .palettewrap .top .dots i{width:9px;height:9px;border-radius:50%;background:#262A38}
+  .palettewrap .top .url{font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.08em}
+  .palettewrap .top .url b{color:var(--ink-dim);font-weight:400}
+  .palettewrap .top .right{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+  .palettewrap .top .right::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 1.8s infinite}
+
+  .palette{padding:32px 32px 36px}
+  .palette .q{display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px solid var(--hair);border-radius:8px;background:rgba(0,0,0,.55)}
+  .palette .q .prm{color:var(--amber);font-family:var(--mono);font-size:13px}
+  .palette .q input{flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--mono);font-size:13.5px;outline:none}
+  .palette .q .caret{width:7px;height:14px;background:var(--amber);animation:blink 1s step-end infinite;box-shadow:0 0 6px var(--amber)}
+  @keyframes blink{50%{opacity:0}}
+  .palette .q .kbd{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-muted);border:1px solid var(--hair);padding:3px 6px;border-radius:4px}
+  .palette .results{margin-top:14px;display:flex;flex-direction:column;gap:2px}
+  .palette .row{display:grid;grid-template-columns:18px 1fr auto auto;gap:14px;align-items:center;padding:11px 14px;border-radius:6px;border:1px solid transparent}
+  .palette .row:hover,.palette .row.act{background:rgba(255,255,255,.03);border-color:var(--hair)}
+  .palette .row .ic{font-family:var(--mono);color:var(--ink-muted);font-size:11px}
+  .palette .row .nm{font-size:13.5px;color:var(--ink-dim)}
+  .palette .row.act .nm{color:var(--ink)}
+  .palette .row .tag{font-family:var(--mono);font-size:10px;color:var(--ink-muted);letter-spacing:.18em;text-transform:uppercase}
+  .palette .row .ms{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.08em}
+
+  /* ---------- NUMBERS ---------- */
+  .numbers{padding:140px 0;position:relative;overflow:hidden;border-top:1px solid var(--hair)}
+  .numbers .head{margin-bottom:60px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+  .numbers h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3vw,48px);letter-spacing:-.02em;max-width:560px;line-height:1.06}
+  .numbers h2 em{color:var(--amber);font-style:italic}
+  .numgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .numcell{background:#000;padding:36px 30px;position:relative;min-height:240px;display:flex;flex-direction:column;justify-content:space-between}
+  .numcell .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  .numcell .big{font-family:var(--serif);font-weight:400;font-size:clamp(48px,5vw,80px);line-height:.95;letter-spacing:-.02em;color:var(--ink);margin-top:14px}
+  .numcell .big em{font-style:italic;color:var(--amber);font-size:.7em}
+  .numcell .big .unit{color:var(--ink-muted);font-size:.4em;margin-left:6px;letter-spacing:.1em;font-family:var(--mono);font-style:normal}
+  .numcell .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- TESTIMONIAL ---------- */
+  .quote{padding:160px 0;text-align:center;position:relative;border-top:1px solid var(--hair);overflow:hidden}
+  .quote::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(60% 60% at 50% 30%, rgba(232,184,115,.06), transparent 65%);
+    pointer-events:none;
+  }
+  .quote .mark{font-family:var(--serif);font-style:italic;color:var(--amber);font-size:120px;line-height:1;height:0;opacity:.5}
+  .quote blockquote{
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(30px,3.4vw,52px);line-height:1.16;letter-spacing:-.012em;
+    max-width:1080px;margin:0 auto;
+  }
+  .quote blockquote em{font-style:italic;color:var(--amber)}
+  .quote .attr{margin-top:48px;font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+  .quote .attr b{color:var(--ink-dim);font-weight:400}
+  .quote .metrics{margin-top:48px;display:flex;gap:48px;justify-content:center;padding-top:32px;border-top:1px solid var(--hair);max-width:780px;margin-left:auto;margin-right:auto;flex-wrap:wrap}
+  .quote .metrics .m{text-align:left}
+  .quote .metrics .v{font-family:var(--serif);font-size:36px;color:var(--ink);letter-spacing:-.01em;line-height:1}
+  .quote .metrics .v em{font-style:italic;color:var(--amber)}
+  .quote .metrics .l{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase;margin-top:8px}
+
+  /* ---------- TRUSTED BY ---------- */
+  .customers{padding:80px 0 100px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+  .customers h4{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--ink-muted);text-transform:uppercase;text-align:center;margin-bottom:48px}
+  .logos{display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:center}
+  .logo{
+    display:flex;align-items:center;justify-content:center;padding:22px 0;
+    color:var(--ink-muted);font-family:var(--serif);font-size:22px;letter-spacing:.04em;
+    border-left:1px solid var(--hair);opacity:.7;transition:opacity .3s,color .3s;
+    font-weight:500;
+  }
+  .logo:first-child{border-left:none}
+  .logo:hover{opacity:1;color:var(--ink)}
+  .logo.mono{font-family:var(--mono);font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+
+  /* ---------- PRICING ---------- */
+  .pricing{padding:140px 0;position:relative;border-top:1px solid var(--hair)}
+  .pricing .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:center}
+  .pricing h2{font-family:var(--serif);font-weight:400;font-size:clamp(36px,3.6vw,56px);line-height:1.04;letter-spacing:-.02em}
+  .pricing h2 em{font-style:italic;color:var(--amber)}
+  .pricing .lead{margin-top:20px;color:var(--ink-dim);font-size:15.5px;line-height:1.6;max-width:480px}
+  .ptiers{display:flex;flex-direction:column;gap:14px}
+  .ptier{
+    border:1px solid var(--hair);border-radius:12px;padding:24px 26px;
+    background:linear-gradient(180deg, rgba(10,14,28,.45), rgba(5,7,15,.6));
+    display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;
+    transition:border-color .3s, transform .3s;
+  }
+  .ptier:hover{border-color:var(--hair-2);transform:translateY(-2px)}
+  .ptier.feat{border-color:rgba(232,184,115,.4);box-shadow:0 0 0 1px rgba(232,184,115,.1) inset, 0 0 60px rgba(232,184,115,.06)}
+  .ptier .left .nm{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  .ptier .left h4{font-family:var(--serif);font-size:28px;line-height:1.1;letter-spacing:-.01em;margin-top:8px}
+  .ptier .left h4 em{font-style:italic;color:var(--amber)}
+  .ptier .left p{margin-top:8px;color:var(--ink-dim);font-size:13.5px;line-height:1.5;max-width:440px}
+  .ptier .right{text-align:right}
+  .ptier .right .price{font-family:var(--serif);font-size:36px;line-height:1;letter-spacing:-.01em}
+  .ptier .right .price em{font-style:italic;color:var(--amber)}
+  .ptier .right .pf{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-muted);text-transform:uppercase;margin-top:8px}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{padding:200px 0 160px;position:relative;overflow:hidden;text-align:center;border-top:1px solid var(--hair)}
+  .final .bignorth{
+    position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);
+    width:10px;height:10px;border-radius:50%;background:#fff;
+    box-shadow:0 0 30px 10px rgba(232,244,255,1), 0 0 120px 40px rgba(232,184,115,.4);
+    animation:starBreathe 4s ease-in-out infinite;
+  }
+  .final h2{
+    position:relative;z-index:4;
+    font-family:var(--serif);font-weight:400;
+    font-size:clamp(64px,10vw,180px);line-height:.94;letter-spacing:-.03em;
+  }
+  .final h2 em{font-style:italic;background:linear-gradient(180deg,#fff 0%,#E8B873 60%, #9C7A4A 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .final .sub{position:relative;z-index:4;margin-top:34px;font-size:16px;color:var(--ink-dim)}
+  .final .form{
+    position:relative;z-index:4;margin:48px auto 0;max-width:520px;
+    display:flex;gap:8px;padding:8px;border:1px solid var(--hair-2);border-radius:999px;
+    background:rgba(5,7,15,.7);backdrop-filter:blur(10px);
+  }
+  .final .form input{
+    flex:1;background:transparent;border:none;color:var(--ink);font-family:var(--sans);
+    font-size:14px;padding:10px 18px;outline:none;
+  }
+  .final .form input::placeholder{color:var(--ink-muted)}
+  .final .form button{
+    background:var(--amber);color:#15110a;padding:10px 20px;border-radius:999px;font-size:13.5px;font-weight:600;
+    box-shadow:0 0 24px rgba(232,184,115,.35);
+  }
+  .final .fine{position:relative;z-index:4;margin-top:24px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--ink-muted);text-transform:uppercase}
+
+  /* ---------- FOOTER ---------- */
+  footer{position:relative;z-index:4;border-top:1px solid var(--hair);padding:80px 0 40px;background:#000}
+  footer .mega{
+    font-family:var(--serif);font-size:clamp(80px,14vw,220px);line-height:.9;letter-spacing:-.03em;
+    color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);padding:20px 0 40px;
+    display:flex;align-items:baseline;gap:20px;
+  }
+  footer .mega .star{color:var(--amber);-webkit-text-stroke:0;font-size:.5em;transform:translateY(-.5em);display:inline-block}
+  footer .cols{display:grid;grid-template-columns:1.3fr repeat(4,1fr);gap:40px;padding:60px 0 40px;border-top:1px solid var(--hair)}
+  footer .col h6{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;color:var(--ink-muted);text-transform:uppercase;margin-bottom:18px;font-weight:500}
+  footer .col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  footer .col a{color:var(--ink-dim);font-size:13.5px;transition:color .2s}
+  footer .col a:hover{color:var(--ink)}
+  footer .col.first p{color:var(--ink-dim);font-size:13px;line-height:1.6;max-width:280px}
+  footer .bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid var(--hair)}
+  footer .bottom .l,footer .bottom .r{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--ink-muted);text-transform:uppercase}
+  footer .bottom .r{display:flex;gap:24px}
+  footer .bottom .r .ok{color:var(--amber)}
+
+  /* scroll-reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.2,.7,.2,1), transform 1s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}.reveal.d5{transition-delay:.40s}
+
+  @media (max-width: 1100px){
+    .agentgrid{grid-template-columns:repeat(2,1fr)}
+    .acard{border-bottom:1px solid var(--hair);min-height:auto}
+    .acard:nth-child(2n){border-right:none}
+    .iglogos{grid-template-columns:repeat(3,1fr)}
+    .iglogo:nth-child(5n){border-right:1px solid var(--hair)}
+    .iglogo:nth-child(3n){border-right:none}
+    .trust .row{grid-template-columns:repeat(3,1fr)}
+    .badge:nth-child(4){border-left:none}
+    .badge{border-top:1px solid var(--hair)}
+    .badge:nth-child(-n+3){border-top:none}
+    .numgrid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width: 900px){
+    nav.top{grid-template-columns:1fr auto;padding:14px 20px}
+    .navlinks{display:none}
+    .wrap{padding:0 20px}
+    .hero-inner{grid-template-columns:1fr;gap:40px}
+    .why .grid,.usepanel,.pricing .grid{grid-template-columns:1fr;gap:48px}
+    .agentgrid{grid-template-columns:1fr}
+    .acard{border-right:none}
+    .iglogos{grid-template-columns:repeat(2,1fr)}
+    .logos{grid-template-columns:repeat(2,1fr)}
+    .logo{border-left:none;border-top:1px solid var(--hair)}
+    footer .cols{grid-template-columns:1fr 1fr;gap:30px}
+    .timeline{grid-template-columns:60px 1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- Global layers -->
+<div class="stars" id="stars"><canvas id="starsA"></canvas></div>
+<div class="conlayer" id="conlayer"></div>
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <span class="live">ATLAS · LIVE</span>
+  <span class="sep">/</span>
+  <span>v1.4 · APRIL 24, 2026</span>
+  <span class="sep">/</span>
+  <span>NYC-1 · NOMINAL</span>
+  <span class="right">
+    <span>2,481 ACTIONS / HR</span>
+    <span class="sep">·</span>
+    <span class="ok">★ TRUE NORTH</span>
+  </span>
+</div>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="brand">
+    <span class="mark">ATLAS</span>
+    <span class="star">★</span>
+    <span class="by">by Disruptive</span>
+  </div>
+  <div class="navlinks">
+    <a href="#agents">Agents</a>
+    <a href="#day">A day</a>
+    <a href="#uses">Use cases</a>
+    <a href="#integ">Integrations</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="navright">
+    <a class="signin" href="#">Sign in</a>
+    <a class="pill" href="#final">Request access <span class="arw">→</span></a>
+  </div>
+</nav>
+
+<!-- Sticky CTA -->
+<a class="stickycta" id="stickycta" href="#final">Request access <span>→</span></a>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="beam"></div>
+  <div class="wrap hero-inner">
+    <div class="copy">
+      <div class="eyebrow reveal">
+        <span class="dot"></span>
+        ATLAS OS &nbsp;·&nbsp; v1.4 &nbsp;·&nbsp; INVITE-ONLY PILOT
+      </div>
+      <h1 class="reveal d1">
+        Your business,<br/><em>handled.</em>
+      </h1>
+      <p class="sub reveal d2">
+        Atlas is a drop-in AI operator. A dashboard, a team of agents,
+        and one interface that runs the work you shouldn't be doing.
+      </p>
+      <div class="cta-row reveal d3">
+        <a class="cta-solid" href="#final">Request access <span>→</span></a>
+        <a class="cta-ghost" href="#dashboard"><span class="play"></span> See a live dashboard</a>
+      </div>
+      <div class="hero-aside-meta reveal d4">
+        <div><span class="dot"></span><b>312</b> actions today</div>
+        <div><b>14</b> hrs reclaimed / wk</div>
+        <div><b>72h</b> to first value</div>
+      </div>
+    </div>
+
+    <!-- Hero dashboard preview -->
+    <div class="hdash reveal d2" id="dashboard">
+      <div class="hdash-top">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="url">atlas.app / <b>acme co.</b> / wednesday morning</div>
+        <div class="right">
+          <span class="live">LIVE</span>
+          <span>06:42 EDT</span>
+        </div>
+      </div>
+      <div class="hdash-body">
+        <div class="greet">
+          <div class="hi">Good morning, <em>Sarah</em>.<br/>Atlas handled <em>312 things</em> while you slept.</div>
+          <div class="meta">
+            <div><b>Wed</b> · Apr 24</div>
+            <div>5 inboxes · clean</div>
+            <div>3 calls · booked</div>
+          </div>
+        </div>
+
+        <div class="hkpis">
+          <div class="hkpi">
+            <div class="l">Tasks handled today</div>
+            <div class="v" data-count="312">312</div>
+            <div class="t">↗ +24 from yesterday</div>
+            <svg class="spark" viewBox="0 0 62 22" preserveAspectRatio="none"><path d="M0 18 L8 14 L16 16 L24 10 L32 12 L40 7 L48 9 L56 4 L62 6" fill="none" stroke="rgba(232,244,255,.7)" stroke-width=".9"/></svg>
+          </div>
+          <div class="hkpi">
+            <div class="l">Emails triaged</div>
+            <div class="v" data-count="148">148</div>
+            <div class="t">94% archived</div>
+            <svg class="spark" viewBox="0 0 62 22" preserveAspectRatio="none"><path d="M0 4 L62 4 M0 12 L62 12 M0 20 L62 20" stroke="rgba(232,244,255,.25)" stroke-width=".7" fill="none"/></svg>
+          </div>
+          <div class="hkpi">
+            <div class="l">Revenue at risk</div>
+            <div class="v" data-count="48200" data-prefix="$" data-suffix="">$48.2K</div>
+            <div class="t warn">⚑ 3 accounts flagged</div>
+            <svg class="spark" viewBox="0 0 62 22" preserveAspectRatio="none"><path d="M0 8 L8 10 L16 8 L24 14 L32 12 L40 18 L48 16 L56 19 L62 17" fill="none" stroke="rgba(232,184,115,.85)" stroke-width=".9"/></svg>
+          </div>
+        </div>
+
+        <div class="feed">
+          <div class="feed-head">
+            <span class="lbl">Recent activity</span>
+            <span class="seeall">SEE ALL ↗</span>
+          </div>
+          <div class="feed-list" id="feedList">
+            <!-- rows injected by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack">
+    <span><b>POLARIS</b> drafted morning brief · 06:14</span>
+    <span><b>VEGA</b> flagged churn risk · NORTHWIND ($12K)</span>
+    <span><b>ORION</b> assembled board pack · Q2</span>
+    <span><b>POLARIS</b> booked 3 sales calls · Tue 2pm / Wed 11am / Thu 4pm</span>
+    <span><b>ALTAIR</b> reconciled 142 invoices · 0 exceptions</span>
+    <span><b>LYRA</b> shipped competitor brief · 14 pages, 22 sources</span>
+    <span><b>POLARIS</b> drafted morning brief · 06:14</span>
+    <span><b>VEGA</b> flagged churn risk · NORTHWIND ($12K)</span>
+    <span><b>ORION</b> assembled board pack · Q2</span>
+    <span><b>POLARIS</b> booked 3 sales calls</span>
+    <span><b>ALTAIR</b> reconciled 142 invoices · 0 exceptions</span>
+    <span><b>LYRA</b> shipped competitor brief · 14 pages, 22 sources</span>
+  </div>
+</div>
+
+<!-- THE FOG -->
+<section class="why fog" id="fog">
+  <div class="wrap">
+    <div class="grid">
+      <div class="left reveal">
+        <div class="kicker-row">
+          <span class="kicker">§ 01</span>
+          <span class="rule" style="width:80px"></span>
+          <span class="kicker">The Fog</span>
+        </div>
+        <h2>
+          Every operator runs on <span class="dim">14 tabs, 3 inboxes,</span> and a to-do list that never ends.
+          <br/><br/>
+          Atlas is the <em>fixed point</em>.<br/>
+          The one system your business orients around.
+        </h2>
+        <p class="lead">No new platform to learn. Atlas reads your email, calendar, Shopify, CRM, docs — and gets to work the same day.</p>
+        <div class="stats">
+          <div class="stat"><div class="num"><em data-count="14" data-suffix=" hrs">14 hrs</em></div><div class="lbl">Reclaimed / week / operator</div></div>
+          <div class="stat"><div class="num"><em data-count="312" data-suffix="">312</em></div><div class="lbl">Tasks handled / day, on average</div></div>
+          <div class="stat"><div class="num"><em data-count="72" data-suffix="h">72h</em></div><div class="lbl">From signup to first value</div></div>
+        </div>
+      </div>
+      <div class="constellation reveal d2">
+        <svg viewBox="0 0 520 520" id="fogSvg">
+          <defs>
+            <radialGradient id="atlasCore" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+              <stop offset="40%" stop-color="#E8B873" stop-opacity=".75"/>
+              <stop offset="100%" stop-color="#7CB8FF" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <g id="fogLines" stroke="rgba(255,255,255,.22)" stroke-width=".8" fill="none"></g>
+          <g id="fogNodes" font-family="JetBrains Mono" font-size="9" letter-spacing="1.5" fill="#6B7184"></g>
+          <g id="fogCore" opacity="0" style="transition:opacity .9s ease">
+            <circle cx="260" cy="260" r="58" fill="url(#atlasCore)"/>
+            <circle cx="260" cy="260" r="5" fill="#fff"/>
+            <circle cx="260" cy="260" r="14" fill="none" stroke="rgba(232,184,115,.5)"/>
+            <text x="260" y="336" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="3" fill="#E8B873">★ ATLAS</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="agents" id="agents">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 02 &nbsp;·&nbsp; MEET YOUR TEAM</div>
+        <h2>A team of agents. <em>Ready on day one.</em></h2>
+      </div>
+      <div class="meta">
+        <div>5 NAMED · 12 STANDBY</div>
+        <div>SHARED INSTITUTIONAL MEMORY</div>
+        <div>HUMAN-IN-LOOP · ALWAYS</div>
+      </div>
+    </div>
+
+    <div class="agentgrid reveal d1">
+
+      <article class="acard">
+        <div class="atop"><span class="idx">01 / POLARIS</span><span class="role">CHIEF OF STAFF</span></div>
+        <div class="portrait">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="pPolaris" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#E8B873" stop-opacity=".55"/><stop offset="100%" stop-color="#0A0E27" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="80" r="70" fill="url(#pPolaris)"/>
+            <g stroke="rgba(232,184,115,.4)" fill="none">
+              <path d="M30 150 Q100 90 170 150"/>
+              <path d="M50 170 Q100 130 150 170" stroke-dasharray="2 4"/>
+            </g>
+            <g fill="#E8B873">
+              <circle cx="100" cy="60" r="3"/><circle cx="60" cy="80" r="1.6"/><circle cx="140" cy="80" r="1.6"/>
+              <circle cx="80" cy="100" r="1.2"/><circle cx="120" cy="100" r="1.2"/>
+            </g>
+            <g stroke="rgba(232,184,115,.7)" stroke-width=".5" fill="none">
+              <path d="M100 60 L 60 80 L 80 100 L 120 100 L 140 80 Z"/>
+            </g>
+          </svg>
+          <div class="mono">P</div>
+          <span class="pulse"></span>
+        </div>
+        <div class="aname">Polaris<em>Inbox · calendar · follow-ups</em></div>
+        <p class="arole">Owns your inbox and your calendar. Drafts replies in your voice, books meetings, chases the people you forgot to chase.</p>
+        <div class="asample">
+          <div class="h">Sample · 06:14</div>
+          <p>Drafted reply to 14 emails · booked Tuesday demo with Northwind · pushed Q3 review to Thursday · flagged 1 thread for your eyes.</p>
+        </div>
+      </article>
+
+      <article class="acard">
+        <div class="atop"><span class="idx">02 / VEGA</span><span class="role">REVENUE</span></div>
+        <div class="portrait">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="pVega" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#E8B873" stop-opacity=".5"/><stop offset="100%" stop-color="#0A0E27" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="80" r="70" fill="url(#pVega)"/>
+            <g fill="#E8B873">
+              <circle cx="60" cy="60" r="2"/><circle cx="100" cy="40" r="3"/><circle cx="140" cy="60" r="2"/>
+              <circle cx="100" cy="120" r="1.6"/>
+            </g>
+            <g stroke="rgba(232,184,115,.7)" stroke-width=".5" fill="none">
+              <path d="M60 60 L100 40 L140 60 L100 120 Z"/>
+            </g>
+          </svg>
+          <div class="mono">V</div>
+          <span class="pulse"></span>
+        </div>
+        <div class="aname">Vega<em>Pipeline · forecast · outreach</em></div>
+        <p class="arole">Watches every deal. Flags churn risk before it churns. Drafts outreach that lands. Forecasts you can actually trust.</p>
+        <div class="asample">
+          <div class="h">Sample · 09:02</div>
+          <p>Northwind ($12K MRR) hasn't logged in for 11 days. Drafted re-engagement email · proposed 15-min check-in Thu 4pm. Pipeline now 92% to plan.</p>
+        </div>
+      </article>
+
+      <article class="acard">
+        <div class="atop"><span class="idx">03 / ORION</span><span class="role">OPERATIONS</span></div>
+        <div class="portrait">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="pOrion" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#E8B873" stop-opacity=".5"/><stop offset="100%" stop-color="#0A0E27" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="80" r="70" fill="url(#pOrion)"/>
+            <g fill="#E8B873">
+              <circle cx="70" cy="50" r="2.5"/><circle cx="100" cy="60" r="3"/><circle cx="130" cy="50" r="2.5"/>
+              <circle cx="80" cy="100" r="2"/><circle cx="120" cy="100" r="2"/>
+              <circle cx="90" cy="130" r="1.6"/><circle cx="110" cy="130" r="1.6"/>
+            </g>
+            <g stroke="rgba(232,184,115,.7)" stroke-width=".5" fill="none">
+              <path d="M70 50 L100 60 L130 50 M80 100 L120 100 M90 130 L110 130 M100 60 L100 100 M100 100 L100 130"/>
+            </g>
+          </svg>
+          <div class="mono">O</div>
+          <span class="pulse"></span>
+        </div>
+        <div class="aname">Orion<em>Reports · dashboards · alerts</em></div>
+        <p class="arole">Builds the report before you ask. Watches the metrics that matter. Pings you when something is genuinely wrong — not before.</p>
+        <div class="asample">
+          <div class="h">Sample · 17:55</div>
+          <p>EOD report ready. Revenue +6% WoW · CAC down 11% · CSAT steady at 4.8. Anomaly: refund rate spiked Tue (size guide on PDP). Ticket filed.</p>
+        </div>
+      </article>
+
+      <article class="acard">
+        <div class="atop"><span class="idx">04 / LYRA</span><span class="role">RESEARCH</span></div>
+        <div class="portrait">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="pLyra" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#E8B873" stop-opacity=".5"/><stop offset="100%" stop-color="#0A0E27" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="80" r="70" fill="url(#pLyra)"/>
+            <g fill="#E8B873">
+              <circle cx="100" cy="40" r="3"/><circle cx="70" cy="80" r="2"/>
+              <circle cx="130" cy="80" r="2"/><circle cx="100" cy="120" r="2"/>
+            </g>
+            <g stroke="rgba(232,184,115,.7)" stroke-width=".5" fill="none">
+              <path d="M100 40 L70 80 L100 120 L130 80 Z"/>
+            </g>
+          </svg>
+          <div class="mono">L</div>
+          <span class="pulse"></span>
+        </div>
+        <div class="aname">Lyra<em>Market briefs · competitive intel</em></div>
+        <p class="arole">Reads what your competitors ship. Watches the channels you don't have time to watch. Delivers a market brief Monday morning.</p>
+        <div class="asample">
+          <div class="h">Sample · MON 07:00</div>
+          <p>Three competitors changed pricing this week (BrandA −12% on tier 1; BrandB added free shipping). 22 sources cited · 14-page brief in your inbox.</p>
+        </div>
+      </article>
+
+      <article class="acard">
+        <div class="atop"><span class="idx">05 / ALTAIR</span><span class="role">FINANCE</span></div>
+        <div class="portrait">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="pAltair" cx="50%" cy="40%" r="55%"><stop offset="0%" stop-color="#E8B873" stop-opacity=".5"/><stop offset="100%" stop-color="#0A0E27" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="100" cy="80" r="70" fill="url(#pAltair)"/>
+            <g fill="#E8B873">
+              <circle cx="80" cy="60" r="2"/><circle cx="120" cy="60" r="2"/>
+              <circle cx="100" cy="90" r="3"/>
+              <circle cx="80" cy="120" r="2"/><circle cx="120" cy="120" r="2"/>
+            </g>
+            <g stroke="rgba(232,184,115,.7)" stroke-width=".5" fill="none">
+              <path d="M80 60 L100 90 L120 60 M80 120 L100 90 L120 120"/>
+            </g>
+          </svg>
+          <div class="mono">A</div>
+          <span class="pulse"></span>
+        </div>
+        <div class="aname">Altair<em>Invoices · AR/AP · runway</em></div>
+        <p class="arole">Reconciles invoices. Chases late payers in your tone. Watches runway. Tells you the number you actually need to know, when you need it.</p>
+        <div class="asample">
+          <div class="h">Sample · 13:48</div>
+          <p>Reconciled 142 invoices · 0 exceptions · DSO down 4 days. Runway: 19 months at current burn. Three vendors auto-paid · two flagged for review.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- A DAY WITH ATLAS -->
+<section class="day" id="day">
+  <div class="wrap">
+    <div class="head reveal">
+      <div class="kicker" style="margin-bottom:18px">§ 03 &nbsp;·&nbsp; A DAY WITH ATLAS</div>
+      <h2>What Atlas does <em>between 6am and 6pm</em>.</h2>
+      <p class="sub">A real Wednesday. Edited only for length. Every action is approvable, replayable, and tied to a human-defined policy.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tline"></div>
+
+      <div class="tlrow amber">
+        <div class="time">06:14</div>
+        <div class="body">
+          <div class="who">★ Polaris</div>
+          <div class="what">Drafted the <em>morning brief</em>.</div>
+          <div class="det">Synthesized 47 emails, 3 Slack channels, and last night's Shopify orders into a 4-bullet memo. Three items need your judgment; the rest are queued for auto-handle.</div>
+          <div class="chip"><b>READ TIME</b> 90 sec</div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="time">07:02</div>
+        <div class="body">
+          <div class="who">Polaris · Vega</div>
+          <div class="what">Triaged overnight email.</div>
+          <div class="det">132 messages in. 14 drafted replies queued for review · 86 archived · 28 routed to teammates · 4 escalated. Your inbox shows zero before coffee.</div>
+          <div class="chip"><b>INBOX</b> 0 / 132</div>
+        </div>
+      </div>
+
+      <div class="tlrow amber">
+        <div class="time">09:02</div>
+        <div class="body">
+          <div class="who">★ Vega</div>
+          <div class="what">Flagged a <em>churn-risk account</em>.</div>
+          <div class="det">Northwind ($12K MRR, ICP fit 0.91) hasn't logged in for 11 days. Drafted re-engagement email referencing their Q4 onboarding goal. Suggested a 15-minute call Thursday at 4pm; their team's calendar is open.</div>
+          <div class="chip"><b>REVENUE AT RISK</b> $12,000 MRR</div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="time">11:30</div>
+        <div class="body">
+          <div class="who">Polaris</div>
+          <div class="what">Booked three sales calls.</div>
+          <div class="det">Three inbound leads from yesterday's campaign moved to "qualified." Polaris matched calendars, sent confirmations in your voice, and added pre-call briefs to each event.</div>
+          <div class="chip"><b>BOOKED</b> Tue 2pm · Wed 11am · Thu 4pm</div>
+        </div>
+      </div>
+
+      <div class="tlrow">
+        <div class="time">13:48</div>
+        <div class="body">
+          <div class="who">Altair</div>
+          <div class="what">Reconciled the AR ledger.</div>
+          <div class="det">142 invoices reconciled · 0 exceptions. Two vendors flagged for review (terms changed; DSO drift). Auto-paid the rest under your $5K/no-question policy.</div>
+          <div class="chip"><b>EXCEPTIONS</b> 2 of 142</div>
+        </div>
+      </div>
+
+      <div class="tlrow amber">
+        <div class="time">17:55</div>
+        <div class="body">
+          <div class="who">★ Orion</div>
+          <div class="what">Sent the <em>EOD report</em>.</div>
+          <div class="det">Revenue +6% WoW · CAC down 11% · CSAT steady at 4.8. One anomaly: refund rate spiked Tuesday — root cause traced to size guide on a redesigned PDP. Ticket already filed with eng.</div>
+          <div class="chip"><b>REPORT</b> 1 page · ready for board</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="uses" id="uses">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 04 &nbsp;·&nbsp; USE CASES</div>
+        <h2>Atlas reconfigures itself <em>around your role</em>.</h2>
+      </div>
+      <div class="tabs" id="tabs">
+        <button class="act" data-tab="ecom">Ecommerce founder</button>
+        <button data-tab="agency">Agency owner</button>
+        <button data-tab="coach">Coach</button>
+        <button data-tab="ops">Ops lead</button>
+        <button data-tab="rev">RevOps</button>
+      </div>
+    </div>
+
+    <div class="usepanel reveal d1" id="usepanel">
+      <div class="uleft">
+        <div class="ueye" id="upEye">★ Atlas for Ecommerce</div>
+        <h3 id="upTitle">Run the store. <em>Not the spreadsheet.</em></h3>
+        <p id="upBlurb">Atlas plugs into Shopify, your ad accounts, your 3PL, and your inbox — then quietly handles the parts of the day no founder should still be doing manually.</p>
+        <ul id="upList">
+          <li><b>Recovers</b> abandoned carts in your brand voice — same hour, not next day.</li>
+          <li><b>Reconciles</b> Shopify orders against the 3PL daily; flags discrepancies before they ship.</li>
+          <li><b>Drafts</b> the weekly merch report your investors keep asking for.</li>
+        </ul>
+      </div>
+      <div class="uright" id="upRight">
+        <!-- tile content swapped in JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integ" id="integ">
+  <div class="wrap">
+    <div class="row reveal">
+      <h3>Atlas shows up <em>where you already work</em>.</h3>
+      <div class="lead">10+ NATIVE INTEGRATIONS · OPENAPI BRIDGE · SOC 2 SCOPED</div>
+    </div>
+    <div class="iglogos reveal d1">
+      <div class="iglogo"><span class="ic">G</span><span class="nm">Gmail</span></div>
+      <div class="iglogo"><span class="ic">C</span><span class="nm">Calendar</span></div>
+      <div class="iglogo"><span class="ic">S</span><span class="nm mono">SLACK</span></div>
+      <div class="iglogo"><span class="ic">N</span><span class="nm">Notion</span></div>
+      <div class="iglogo"><span class="ic">★</span><span class="nm mono">SHOPIFY</span></div>
+      <div class="iglogo"><span class="ic">$</span><span class="nm">Stripe</span></div>
+      <div class="iglogo"><span class="ic">H</span><span class="nm mono">HUBSPOT</span></div>
+      <div class="iglogo"><span class="ic">SF</span><span class="nm">Salesforce</span></div>
+      <div class="iglogo"><span class="ic">L</span><span class="nm mono">LINEAR</span></div>
+      <div class="iglogo"><span class="ic">QB</span><span class="nm">QuickBooks</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust" id="trust">
+  <div class="wrap">
+    <div class="row reveal">
+      <div class="badge"><span class="lbl">Compliance</span><span class="val">SOC 2 <em>Type II</em></span></div>
+      <div class="badge"><span class="lbl">Health data</span><span class="val">HIPAA-<em>ready</em></span></div>
+      <div class="badge"><span class="lbl">Network</span><span class="val">VPC-<em>native</em></span></div>
+      <div class="badge"><span class="lbl">PII handling</span><span class="val">PII <em>scrub</em></span></div>
+      <div class="badge"><span class="lbl">Audit</span><span class="val">Full <em>audit log</em></span></div>
+      <div class="badge"><span class="lbl">Keys</span><span class="val">Customer-<em>managed</em></span></div>
+    </div>
+    <div class="more">Enterprise-grade security without enterprise-grade complexity. &nbsp; <a href="#">Read the security page →</a></div>
+  </div>
+</section>
+
+<!-- COMMAND PALETTE — depth, for technical buyers -->
+<section class="palette-section" id="palette">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 05 &nbsp;·&nbsp; FOR THE TECHNICAL BUYER</div>
+        <h2>One command line over <em>every model, every agent</em>.</h2>
+      </div>
+      <div class="sub">
+        <div>POLICY-AS-CODE</div>
+        <div>HUMAN-IN-LOOP CHECKPOINTS</div>
+        <div>REPLAYABLE RUNS · OTEL NATIVE</div>
+      </div>
+    </div>
+
+    <div class="palettewrap reveal d1">
+      <div class="top">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <div class="url">atlas / <b>production</b> / acme-co</div>
+        <div class="right">⌘K · LIVE</div>
+      </div>
+      <div class="palette">
+        <div class="q">
+          <span class="prm">&gt;_</span>
+          <input value="route fraud-signal to safest model · &lt; 80ms" disabled />
+          <span class="caret"></span>
+          <span class="kbd">⌘ K</span>
+        </div>
+        <div class="results">
+          <div class="row act">
+            <span class="ic">⎋</span><span class="nm">Route via claude-opus-4.5 · private-vpc</span><span class="tag">POLICY · FINANCE</span><span class="ms">42 ms</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Fallback via gpt-5-turbo · on-prem</span><span class="tag">POLICY · FINANCE</span><span class="ms">67 ms</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Evaluate against ACME-FRAUD-V3 (1,240 cases)</span><span class="tag">EVAL SUITE</span><span class="ms">—</span>
+          </div>
+          <div class="row">
+            <span class="ic">⎋</span><span class="nm">Open audit trail for request #8A-2041</span><span class="tag">AUDIT</span><span class="ms">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers">
+  <div class="wrap">
+    <div class="head reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 06 · BY THE NUMBERS</div>
+        <h2>Measured in <em>hours reclaimed</em>, not features shipped.</h2>
+      </div>
+    </div>
+    <div class="numgrid reveal d1">
+      <div class="numcell">
+        <div class="lbl">Hours reclaimed / operator / week</div>
+        <div class="big" data-count="14"><em>14</em><span class="unit">HRS</span></div>
+        <div class="note">AVG · ACROSS 84 DESIGN PARTNERS</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Tasks Atlas handles / day</div>
+        <div class="big" data-count="312">312</div>
+        <div class="note">MEDIAN · APRIL 2026</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Time to first value</div>
+        <div class="big">&lt;72<span class="unit">HRS</span></div>
+        <div class="note">FROM SIGNUP TO FIRST AUTOMATED ACTION</div>
+      </div>
+      <div class="numcell">
+        <div class="lbl">Hires replaced (estimated)</div>
+        <div class="big" data-count="1.4">1.4</div>
+        <div class="note">PER ATLAS DEPLOYMENT · MEDIAN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="quote">
+  <div class="wrap reveal">
+    <div class="mark">"</div>
+    <blockquote>
+      Atlas is the chief of staff I couldn't afford to hire.<br/>
+      I got my <em>nights and weekends</em> back.
+    </blockquote>
+    <div class="attr">
+      <b>— Maya Castillo</b> &nbsp;·&nbsp; Founder, Northwind Apothecary &nbsp;·&nbsp; $4.2M ARR
+    </div>
+    <div class="metrics">
+      <div class="m"><div class="v"><em>17h</em></div><div class="l">Reclaimed / week</div></div>
+      <div class="m"><div class="v"><em>2x</em></div><div class="l">Email response speed</div></div>
+      <div class="m"><div class="v"><em>$48K</em></div><div class="l">Saved · first quarter</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<section class="customers" id="customers">
+  <div class="wrap">
+    <h4 class="reveal">In pilot with founders, operators, and lean teams</h4>
+    <div class="logos reveal d1">
+      <div class="logo">Northwind</div>
+      <div class="logo mono">VANTA CAP</div>
+      <div class="logo">Helion</div>
+      <div class="logo mono">ORRE / NYC</div>
+      <div class="logo">Meridian</div>
+      <div class="logo mono">SAGEWORKS</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="grid reveal">
+      <div>
+        <div class="kicker" style="margin-bottom:18px">§ 07 &nbsp;·&nbsp; PRICING</div>
+        <h2>One <em>flat seat</em>.<br/>One enterprise plan.</h2>
+        <p class="lead">No per-action billing, no per-agent tax. Atlas is priced like the operator it replaces — predictable monthly, scaled to your team.</p>
+      </div>
+      <div class="ptiers">
+        <div class="ptier feat">
+          <div class="left">
+            <div class="nm">Pilot</div>
+            <h4>First week, <em>$1</em>.</h4>
+            <p>The full Atlas, on your stack. Cancel any time. We pair you with a deployment lead for the first 72 hours.</p>
+          </div>
+          <div class="right">
+            <div class="price"><em>$1</em></div>
+            <div class="pf">FIRST 7 DAYS</div>
+          </div>
+        </div>
+        <div class="ptier">
+          <div class="left">
+            <div class="nm">Operator</div>
+            <h4>For founders &amp; lean teams.</h4>
+            <p>One Atlas, all 5 named agents, all integrations. Up to 25 seats. Priced like a full-time operator, not a SaaS tool.</p>
+          </div>
+          <div class="right">
+            <div class="price">$2,400<span style="font-size:.5em;color:var(--ink-muted);font-family:var(--mono);letter-spacing:.1em">/mo</span></div>
+            <div class="pf">FROM</div>
+          </div>
+        </div>
+        <div class="ptier">
+          <div class="left">
+            <div class="nm">Enterprise</div>
+            <h4>For ops, RevOps &amp; scaling teams.</h4>
+            <p>VPC deploy, custom agents, SSO, audit retention, dedicated success. Annual contracts. SOC 2 Type II in scope.</p>
+          </div>
+          <div class="right">
+            <div class="price">Custom</div>
+            <div class="pf">TALK TO US</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="final">
+  <div class="bignorth"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <h2>Find your <em>north.</em></h2>
+      <p class="sub">Request access to the Atlas pilot. First week, $1.</p>
+      <form class="form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Requested ✓'">
+        <input type="email" placeholder="you@company.com" required />
+        <button type="submit">Request access →</button>
+      </form>
+      <p class="fine">Enterprise only. We'll reach out within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="docs">
+  <div class="wrap">
+    <div class="mega">ATLAS <span class="star">★</span> BY DISRUPTIVE</div>
+    <div class="cols">
+      <div class="col first">
+        <h6>Disruptive Labs, Inc.</h6>
+        <p>The drop-in AI operator for founders, operators, and lean teams. Built by the team behind Raw Nutrition, BUM Energy, and 3D Energy.</p>
+      </div>
+      <div class="col">
+        <h6>Product</h6>
+        <ul>
+          <li><a href="#agents">Agents</a></li>
+          <li><a href="#day">A day with Atlas</a></li>
+          <li><a href="#uses">Use cases</a></li>
+          <li><a href="#integ">Integrations</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Company</h6>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Manifesto</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Resources</h6>
+        <ul>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Status</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h6>Legal</h6>
+        <ul>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">DPA</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="l">© 2026 Disruptive Labs, Inc. · Made on Earth · Oriented toward operators.</div>
+      <div class="r">
+        <span>LAT 40.7484° N</span>
+        <span>LONG 73.9857° W</span>
+        <span class="ok">★ TRUE NORTH</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* -------- starfield -------- */
+(function(){
+  const c = document.getElementById('starsA');
+  const ctx = c.getContext('2d');
+  let w,h,dpr=Math.min(window.devicePixelRatio||1,2);
+  const layers = [
+    {n:120, speed:0.03, size:[.3,.8], alpha:[.25,.65]},
+    {n:70,  speed:0.08, size:[.6,1.4], alpha:[.5,.9]},
+    {n:30,  speed:0.16, size:[1.0,2.0], alpha:[.6,.95]},
+  ];
+  let stars = [];
+  function resize(){
+    w = c.width = innerWidth*dpr; h = c.height = innerHeight*dpr;
+    c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px';
+    stars = [];
+    layers.forEach(L=>{
+      for(let i=0;i<L.n;i++){
+        stars.push({
+          x: Math.random()*w,
+          y: Math.random()*h*2,
+          r: (L.size[0]+Math.random()*(L.size[1]-L.size[0]))*dpr,
+          a: L.alpha[0]+Math.random()*(L.alpha[1]-L.alpha[0]),
+          s: L.speed,
+          tw: Math.random()*Math.PI*2
+        });
+      }
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    const sy = window.scrollY;
+    for(const st of stars){
+      const y = (st.y - sy*st.s*dpr) % (h*2);
+      const yy = y<0 ? y + h*2 : y;
+      st.tw += 0.01;
+      const tw = 0.7 + 0.3*Math.sin(st.tw + st.x*0.01);
+      ctx.beginPath();
+      ctx.arc(st.x, yy, st.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(232,244,255,${st.a*tw})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize); resize(); draw();
+})();
+
+/* -------- constellation parallax to cursor -------- */
+(function(){
+  const layer = document.getElementById('conlayer');
+  if(!layer) return;
+  let tx=0,ty=0,x=0,y=0;
+  window.addEventListener('mousemove',e=>{
+    tx = (e.clientX/innerWidth - .5);
+    ty = (e.clientY/innerHeight - .5);
+  });
+  function loop(){
+    x += (tx-x)*.04; y += (ty-y)*.04;
+    layer.style.transform = `translate3d(${x*-22}px, ${y*-22}px, 0)`;
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* -------- reveal on scroll -------- */
+(function(){
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+/* -------- nav shade on scroll + sticky CTA -------- */
+(function(){
+  const n = document.querySelector('nav.top');
+  const sticky = document.getElementById('stickycta');
+  window.addEventListener('scroll',()=>{
+    const y = window.scrollY;
+    if(y>40) n.style.background='linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.5))';
+    else n.style.background='linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15))';
+    if(y>innerHeight*.7) sticky.classList.add('on');
+    else sticky.classList.remove('on');
+  });
+})();
+
+/* -------- count-up numbers on viewport entry -------- */
+(function(){
+  function fmt(n, prefix, suffix, hasDecimal){
+    if(hasDecimal) return (prefix||'') + n.toFixed(1) + (suffix||'');
+    if(n>=1000) return (prefix||'') + (n>=10000 ? Math.round(n).toLocaleString() : n.toLocaleString()) + (suffix||'');
+    return (prefix||'') + Math.round(n) + (suffix||'');
+  }
+  const targets = document.querySelectorAll('[data-count]');
+  const seen = new WeakSet();
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting || seen.has(e.target)) return;
+      seen.add(e.target);
+      const el = e.target;
+      const target = parseFloat(el.dataset.count);
+      const prefix = el.dataset.prefix || '';
+      let suffix = el.dataset.suffix || '';
+      // for $48,200 KPI tile show as $48.2K
+      const isMoneyK = el.textContent.includes('K') || (prefix==='$' && target>=1000);
+      const hasDecimal = (target % 1) !== 0;
+      const dur = 1400 + Math.random()*400;
+      const t0 = performance.now();
+      function tick(now){
+        const t = Math.min(1, (now-t0)/dur);
+        const eased = 1 - Math.pow(1-t, 3);
+        const val = target*eased;
+        if(isMoneyK){
+          el.textContent = '$' + (val/1000).toFixed(1) + 'K';
+        } else {
+          el.textContent = fmt(val, prefix, suffix, hasDecimal);
+        }
+        if(t<1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  },{threshold:.4});
+  targets.forEach(t=>io.observe(t));
+})();
+
+/* -------- live activity feed in hero dashboard -------- */
+(function(){
+  const list = document.getElementById('feedList');
+  if(!list) return;
+  const items = [
+    {t:'06:14', who:'POLARIS', act:'Drafted morning brief · 4 bullets', tag:'INBOX'},
+    {t:'06:38', who:'POLARIS', act:'Replied to 14 emails in your voice', tag:'INBOX'},
+    {t:'07:02', who:'VEGA',    act:'Forecast updated · 92% to plan',    tag:'PIPELINE'},
+    {t:'08:11', who:'ALTAIR',  act:'Auto-paid 11 vendor invoices',      tag:'AR/AP'},
+    {t:'09:02', who:'VEGA',    act:'Flagged churn risk · NORTHWIND',    tag:'REVENUE'},
+    {t:'09:41', who:'LYRA',    act:'Shipped competitor brief · 14 pp',  tag:'RESEARCH'},
+    {t:'10:17', who:'POLARIS', act:'Booked Tuesday demo · NORTHWIND',   tag:'CALENDAR'},
+    {t:'11:30', who:'POLARIS', act:'Booked 3 sales calls this week',    tag:'CALENDAR'},
+    {t:'13:48', who:'ALTAIR',  act:'Reconciled 142 invoices · 0 except.',tag:'AR/AP'},
+    {t:'14:22', who:'ORION',   act:'Anomaly: refund spike on PDP-7',    tag:'OPS'},
+    {t:'15:09', who:'POLARIS', act:'Drafted board update · awaiting OK',tag:'BOARD'},
+    {t:'17:55', who:'ORION',   act:'EOD report ready · revenue +6% WoW',tag:'REPORT'},
+  ];
+  let idx = 0;
+  // seed first 4 instantly
+  function makeRow(it){
+    const row = document.createElement('div');
+    row.className = 'feed-row';
+    row.innerHTML = `<span class="ts">${it.t}</span><span class="who">${it.who}</span><span class="act">${it.act}</span><span class="tag">${it.tag}</span>`;
+    return row;
+  }
+  for(let i=0;i<4;i++){ list.appendChild(makeRow(items[idx++ % items.length])); }
+  setInterval(()=>{
+    const it = items[idx++ % items.length];
+    const row = makeRow(it);
+    list.insertBefore(row, list.firstChild);
+    // remove last if too many
+    while(list.children.length > 4){ list.removeChild(list.lastChild); }
+  }, 2400);
+})();
+
+/* -------- FOG diagram: tangled nodes collapse to Atlas core -------- */
+(function(){
+  const svg = document.getElementById('fogSvg');
+  if(!svg) return;
+  const linesG = document.getElementById('fogLines');
+  const nodesG = document.getElementById('fogNodes');
+  const core = document.getElementById('fogCore');
+  const vendors = ['EMAIL','CALENDAR','SHOPIFY','SLACK','NOTION','HUBSPOT','STRIPE','SHEETS','ANALYTICS','3PL'];
+  const cx=260, cy=260, R=200;
+  const pts = vendors.map((v,i)=>{
+    const a = (i/vendors.length)*Math.PI*2 - Math.PI/2;
+    return {x: cx + Math.cos(a)*R, y: cy + Math.sin(a)*R, v};
+  });
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      if((i+j)%2===0 || Math.abs(i-j)===3){
+        const p = document.createElementNS('http://www.w3.org/2000/svg','path');
+        const mx = (pts[i].x+pts[j].x)/2 + (Math.random()-.5)*80;
+        const my = (pts[i].y+pts[j].y)/2 + (Math.random()-.5)*80;
+        p.setAttribute('d', `M ${pts[i].x} ${pts[i].y} Q ${mx} ${my} ${pts[j].x} ${pts[j].y}`);
+        linesG.appendChild(p);
+      }
+    }
+  }
+  pts.forEach(p=>{
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','vnode');
+    g.setAttribute('transform',`translate(${p.x} ${p.y})`);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r','3.5'); c.setAttribute('fill','#fff'); c.setAttribute('opacity','.85');
+    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ring.setAttribute('r','8'); ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(255,255,255,.2)');
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('y',(p.y<cy?-14:20)); t.setAttribute('text-anchor','middle');
+    t.textContent = p.v;
+    g.appendChild(ring); g.appendChild(c); g.appendChild(t);
+    g.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    g.style.transition = 'transform 1.6s cubic-bezier(.6,.1,.2,1), opacity 1s ease';
+    g.setAttribute('transform','');
+    nodesG.appendChild(g);
+  });
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        nodesG.querySelectorAll('.vnode').forEach(g=>{
+          g.style.transform = `translate(${cx}px, ${cy}px)`;
+          g.style.opacity = '0';
+        });
+        svg.classList.add('collapsed');
+        setTimeout(()=>{ core.setAttribute('opacity','1'); }, 900);
+        io.disconnect();
+      }
+    });
+  },{threshold:.35});
+  io.observe(svg);
+})();
+
+/* -------- USE CASES tab swap -------- */
+(function(){
+  const data = {
+    ecom: {
+      eye: '★ Atlas for Ecommerce',
+      title: 'Run the store. <em>Not the spreadsheet.</em>',
+      blurb: 'Atlas plugs into Shopify, your ad accounts, your 3PL, and your inbox — then quietly handles the parts of the day no founder should still be doing manually.',
+      bullets: [
+        '<b>Recovers</b> abandoned carts in your brand voice — same hour, not next day.',
+        '<b>Reconciles</b> Shopify orders against the 3PL daily; flags discrepancies before they ship.',
+        '<b>Drafts</b> the weekly merch report your investors keep asking for.'
+      ],
+      tiles: [
+        {l:'GMV TODAY', v:'$24,812', d:'↗ +18%'},
+        {l:'CARTS RECOVERED', v:'47', d:'★ $3.1K'},
+        {l:'3PL EXCEPTIONS', v:'2 / 412', d:'flagged'},
+        {l:'AD ROAS · 7D', v:'4.2×', d:'↗ +0.4'}
+      ]
+    },
+    agency: {
+      eye: '★ Atlas for Agencies',
+      title: 'Bill more hours. <em>Work fewer of them.</em>',
+      blurb: 'Atlas drafts client status updates, watches utilization, builds the SOWs, and follows up on every late invoice — so your team stays on the work that bills.',
+      bullets: [
+        '<b>Drafts</b> Friday client status emails for every account, in each PM\'s voice.',
+        '<b>Watches</b> utilization across the team; flags burnout 2 weeks before it lands.',
+        '<b>Chases</b> late invoices automatically, and tells you who needs a partner call.'
+      ],
+      tiles: [
+        {l:'UTILIZATION', v:'78%', d:'↗ +6'},
+        {l:'AR · OUTSTANDING', v:'$112K', d:'↘ -$18K'},
+        {l:'STATUS EMAILS', v:'14 / 14', d:'sent'},
+        {l:'NEW SOW DRAFTS', v:'3', d:'awaiting review'}
+      ]
+    },
+    coach: {
+      eye: '★ Atlas for Coaches',
+      title: 'Show up for clients. <em>Not for admin.</em>',
+      blurb: 'Atlas onboards new clients, handles re-bookings, drafts session recaps, and watches retention — so your week is back-to-back sessions, not back-to-back logistics.',
+      bullets: [
+        '<b>Onboards</b> new clients end-to-end: intake form, Stripe, Calendly, welcome packet.',
+        '<b>Drafts</b> session recaps and homework within 10 minutes of the call ending.',
+        '<b>Watches</b> attendance and engagement; flags clients drifting before they cancel.'
+      ],
+      tiles: [
+        {l:'SESSIONS THIS WEEK', v:'27', d:'all confirmed'},
+        {l:'NEW CLIENTS', v:'4', d:'★ onboarded'},
+        {l:'RETENTION · 90D', v:'94%', d:'↗ +3'},
+        {l:'RECAPS DRAFTED', v:'27 / 27', d:'sent'}
+      ]
+    },
+    ops: {
+      eye: '★ Atlas for Ops Leads',
+      title: 'See the whole house. <em>From one screen.</em>',
+      blurb: 'Atlas stitches every system you watch — Slack, Notion, Linear, Stripe, your data warehouse — into one dashboard, with anomaly detection on every metric you care about.',
+      bullets: [
+        '<b>Watches</b> 40+ metrics across Slack, Linear, Stripe; pings on real anomalies only.',
+        '<b>Builds</b> the weekly ops review automatically — every Monday, in your format.',
+        '<b>Tracks</b> every action back to a human, a policy, and a model version.'
+      ],
+      tiles: [
+        {l:'SYSTEMS WATCHED', v:'42', d:'all green'},
+        {l:'ANOMALIES · 24H', v:'3', d:'1 critical'},
+        {l:'WEEKLY REVIEW', v:'Mon 09:00', d:'on track'},
+        {l:'AUDIT EVENTS', v:'12.4K', d:'verified'}
+      ]
+    },
+    rev: {
+      eye: '★ Atlas for RevOps',
+      title: 'A forecast you can <em>actually trust</em>.',
+      blurb: 'Atlas reads every CRM update, call transcript, and Slack signal — then refreshes the forecast in real time, with the deal-by-deal evidence sitting one click below.',
+      bullets: [
+        '<b>Refreshes</b> the forecast hourly with deal-level reasoning you can audit.',
+        '<b>Drafts</b> outreach on stuck deals — in the AE\'s voice, with their permission.',
+        '<b>Detects</b> churn-risk patterns 30 days before renewal; routes to CSM with a play.'
+      ],
+      tiles: [
+        {l:'PIPELINE · QTD', v:'$4.8M', d:'92% to plan'},
+        {l:'STUCK DEALS', v:'14', d:'14 nudges sent'},
+        {l:'CHURN-RISK ACCTS', v:'7', d:'★ all routed'},
+        {l:'FORECAST CHANGED', v:'+$220K', d:'last 24h'}
+      ]
+    }
+  };
+  const tabs = document.querySelectorAll('#tabs button');
+  const eye = document.getElementById('upEye');
+  const title = document.getElementById('upTitle');
+  const blurb = document.getElementById('upBlurb');
+  const list = document.getElementById('upList');
+  const right = document.getElementById('upRight');
+
+  function render(key){
+    const d = data[key]; if(!d) return;
+    eye.textContent = d.eye;
+    title.innerHTML = d.title;
+    blurb.textContent = d.blurb;
+    list.innerHTML = d.bullets.map(b=>`<li>${b}</li>`).join('');
+    right.innerHTML = `
+      <div class="urhead"><span>SAMPLE DASHBOARD</span><span>● <b>LIVE</b></span></div>
+      ${d.tiles.map(t=>`
+        <div class="urtile">
+          <div><div class="l">${t.l}</div><div class="v">${t.v}</div></div>
+          <div class="delta">${t.d}</div>
+        </div>`).join('')}
+    `;
+  }
+  tabs.forEach(b=>{
+    b.addEventListener('click', ()=>{
+      tabs.forEach(x=>x.classList.remove('act'));
+      b.classList.add('act');
+      render(b.dataset.tab);
+    });
+  });
+  render('ecom');
+})();
+</script>
+</body>
+</html>
