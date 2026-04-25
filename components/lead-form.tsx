@@ -11,11 +11,9 @@ export function LeadForm() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     setStatus("sending");
-    await fetch("/api/inbound", {
-      method: "POST",
-      body: JSON.stringify(Object.fromEntries(formData)),
-      headers: { "Content-Type": "application/json" }
-    });
+    // Static preview build: form is a visual demo, not wired to a backend yet.
+    void formData;
+    await new Promise((r) => setTimeout(r, 600));
     setStatus("sent");
   }
 

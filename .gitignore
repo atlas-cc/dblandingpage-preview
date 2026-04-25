@@ -24,3 +24,7 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# build output
+out/
+.next/
