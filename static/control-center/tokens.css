@@ -1,0 +1,123 @@
+/* =============================================================
+   DISRUPTIVE CONTROL CENTER — TOKENS
+   -------------------------------------------------------------
+   Tokens are the single source of truth.
+   Every screen imports this file first, before any other CSS.
+   Gold appears only in three named moments — the Approve & ship
+     pill, the manifesto stat moment, and the kill-switch armed chip.
+   Provenance lines use --muted at rest and --pine-tint-08 on hover.
+   ============================================================= */
+
+:root {
+  /* surfaces */
+  --bg: #F5F1E8;
+  --bg-alt: #EDE6D3;
+  --surface: #F5F1E8;
+  --surface-inset: #EDE6D3;
+
+  /* ink */
+  --ink: #0E1A14;
+  --muted: #5A6B5F;
+
+  /* pine — primary brand */
+  --pine: #2F6B4A;
+  --pine-light: #4A8F6C;
+  --pine-deep: #1F3024;
+  --pine-darkest: #0F1F18;
+
+  /* gold — three named moments only */
+  --gold: #B8893A;
+  --gold-light: #D9B26A;
+
+  /* status — calm, never neon */
+  --rust: #B85C3A;
+  --sage: #5A6B5F;
+
+  /* hairlines */
+  --line: rgba(14, 26, 20, 0.10);
+  --line-soft: rgba(14, 26, 20, 0.06);
+  --line-strong: rgba(14, 26, 20, 0.18);
+
+  /* tints (for hover/active fills, never standalone) */
+  --pine-tint-04: rgba(47, 107, 74, 0.04);
+  --pine-tint-08: rgba(47, 107, 74, 0.08);
+  --pine-tint-12: rgba(47, 107, 74, 0.12);
+  --gold-tint-08: rgba(184, 137, 58, 0.08);
+  --rust-tint-08: rgba(184, 92, 58, 0.08);
+
+  /* type families */
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* type scale — pulled from Disruptive.html, do not adjust */
+  --t-display-xl: 86px;       /* manifesto-mode hero numerals */
+  --t-display-l:  68px;       /* legacy section h2 — rarely used in dashboard */
+  --t-screen-title: 34px;     /* Dashboard, Agents, Tasks screen titles */
+  --t-card-title: 24px;       /* card headlines: "Next decision", "Fleet pulse" */
+  --t-decision: 30px;         /* decision card body: "Shift $4.2K…" */
+  --t-stat: 40px;             /* serif italic KPI numerals */
+  --t-stat-sm: 22px;          /* serif italic row numerals (memory sizes, counts) */
+  --t-lede: 17px;             /* card body copy */
+  --t-body: 14px;             /* table cells, nav links, default body */
+  --t-body-sm: 13px;          /* CTA labels, dense table values */
+  --t-mono-label: 11px;       /* mono uppercase labels */
+  --t-mono-meta: 10px;        /* mono uppercase micro labels */
+
+  /* line-heights */
+  --lh-tight: 1.05;           /* display serif */
+  --lh-snug:  1.2;            /* card titles */
+  --lh-base:  1.5;            /* body */
+  --lh-mono:  1.6;            /* mono */
+
+  /* letter-spacing */
+  --ls-display: -0.02em;      /* serif display, tight */
+  --ls-tight:   -0.01em;      /* serif card titles */
+  --ls-mono-label: 0.12em;    /* 1.32px @ 11px */
+  --ls-mono-meta:  0.18em;    /* 1.8px @ 10px */
+  --ls-mono-chip:  0.16em;    /* 1.76px @ 11px */
+  --ls-button:     0.01em;    /* CTA labels */
+
+  /* weights */
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+
+  /* spacing — exact rhythm from Disruptive.html, no new values */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 14px;     /* card row interior */
+  --s-5: 16px;     /* small grid gap */
+  --s-6: 22px;     /* card padding */
+  --s-7: 24px;     /* card grid gap */
+  --s-8: 32px;     /* page gutter, case row interior */
+  --s-9: 48px;     /* section-head gap */
+  --s-10: 72px;    /* hero column gap */
+  --s-11: 88px;    /* footer top */
+  --s-12: 100px;   /* hero bottom */
+  --s-13: 120px;   /* contact section */
+  --s-14: 140px;   /* content section vertical */
+
+  /* radii */
+  --r-sm: 4px;     /* badges, tiny pills */
+  --r-md: 8px;     /* form fields, small surfaces */
+  --r-lg: 14px;    /* cards — the brand radius */
+  --r-pill: 999px; /* CTAs, chips */
+
+  /* hairlines (border shorthand fragments) */
+  --border-hair: 1px solid var(--line);
+  --border-hair-soft: 1px solid var(--line-soft);
+  --border-hair-strong: 1px solid var(--line-strong);
+
+  /* container */
+  --container-max: 1240px;
+  --gutter: 32px;
+
+  /* motion — restrained, no bounce */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 360ms;
+  --ease-out: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}

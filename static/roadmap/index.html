@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Disruptive · Internal Roadmap · 30 / 60 / 90</title>
+<style>
+@page {
+  size: Letter portrait;
+  margin: 22mm 18mm 20mm 18mm;
+  background: #F5F1E8;
+  @bottom-left {
+    content: "DISRUPTIVE · INTERNAL ROADMAP · MADE BY KAEDEN";
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7pt;
+    letter-spacing: 0.16em;
+    color: #5A6B5F;
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7pt;
+    letter-spacing: 0.16em;
+    color: #5A6B5F;
+  }
+}
+@page cover { margin: 0; @bottom-left { content: ""; } @bottom-right { content: ""; } }
+
+:root {
+  --bg:#F5F1E8; --bg-alt:#EDE6D3;
+  --ink:#0E1A14; --muted:#5A6B5F;
+  --pine:#2F6B4A; --pine-light:#4A8F6C; --pine-deep:#1F3024; --pine-darkest:#0F1F18;
+  --gold:#B8893A; --gold-light:#D9B26A;
+  --rust:#B85C3A;
+  --line:#D6CFB9; --line-soft:#E5DFC9; --line-strong:#B5AB8E;
+  --pine-tint-04:#EDEEDF; --pine-tint-08:#E1E5D2;
+  --serif:'Fraunces','Georgia',serif;
+  --sans:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--sans); font-size: 10pt; line-height: 1.5;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+em { font-style: italic; }
+
+.dot { display: inline-block; width: 5pt; height: 5pt; border-radius: 999px; background: var(--pine); vertical-align: middle; margin-top: -1pt; }
+.dot--gold { background: var(--gold); }
+.dot--muted { background: var(--muted); }
+.dot--rust { background: var(--rust); }
+
+.kicker {
+  display: inline-flex; align-items: center; gap: 6pt;
+  font-family: var(--mono); font-size: 8pt; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--pine);
+  margin-bottom: 4pt;
+}
+
+h1 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 30pt; line-height: 1.05; letter-spacing: -0.022em;
+  color: var(--ink); margin: 4pt 0 12pt 0;
+}
+h1 em { color: var(--pine); font-style: italic; }
+
+h2 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 18pt; line-height: 1.15; letter-spacing: -0.018em;
+  color: var(--ink); margin: 16pt 0 8pt 0;
+  page-break-after: avoid;
+}
+h2 em { color: var(--pine); font-style: italic; }
+
+h3 {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 13pt; line-height: 1.2; letter-spacing: -0.012em;
+  color: var(--ink); margin: 12pt 0 5pt 0;
+  page-break-after: avoid;
+}
+h3 em { color: var(--pine); font-style: italic; }
+
+p { margin: 0 0 7pt 0; max-width: 165mm; }
+.lede { color: var(--muted); font-size: 11pt; line-height: 1.5; max-width: 160mm; margin-bottom: 12pt; }
+
+.section { page-break-before: always; }
+.no-break { page-break-inside: avoid; }
+
+/* ===== COVER ===== */
+.cover {
+  page: cover;
+  width: 100%; height: 100vh; min-height: 252mm;
+  background: var(--bg); padding: 28mm 22mm;
+  display: flex; flex-direction: column; justify-content: space-between;
+  page-break-after: always;
+}
+.cover__topstrip {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--line); padding-bottom: 12pt;
+}
+.cover__center { display: flex; flex-direction: column; gap: 14pt; }
+.cover__chip {
+  display: inline-block; align-self: flex-start;
+  padding: 4pt 10pt; border: 1px solid var(--line); border-radius: 999px;
+  font-family: var(--mono); font-size: 8pt; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--pine); margin-bottom: 6pt;
+}
+.cover__title {
+  font-family: var(--serif); font-weight: 500;
+  font-size: 64pt; line-height: 0.98; letter-spacing: -0.022em;
+  color: var(--ink); margin: 0; max-width: 165mm;
+}
+.cover__title em { color: var(--pine); font-style: italic; }
+.cover__lede {
+  font-size: 12pt; color: var(--muted); line-height: 1.5;
+  max-width: 130mm; margin: 8pt 0 0 0;
+}
+.cover__meta {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  border-top: 1px solid var(--line); padding-top: 12pt;
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.cover__meta strong { color: var(--ink); font-weight: 500; }
+
+/* ===== TOC ===== */
+.toc {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 24pt; border-top: 1px solid var(--line);
+  padding-top: 12pt; margin-top: 6pt;
+}
+.toc__item {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 7pt 0; border-bottom: 1px solid var(--line-soft);
+  font-family: var(--sans); font-size: 10pt;
+  page-break-inside: avoid;
+}
+.toc__num {
+  font-family: var(--mono); font-size: 8pt; letter-spacing: 0.16em;
+  color: var(--muted); margin-right: 10pt;
+}
+.toc__name { flex: 1; color: var(--ink); }
+.toc__name em { color: var(--pine); font-style: italic; }
+.toc__page {
+  font-family: var(--mono); font-size: 8pt; letter-spacing: 0.16em; color: var(--muted);
+}
+
+/* ===== PIPELINE ===== */
+.pipeline {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line); border-radius: 8pt; overflow: hidden;
+  background: var(--bg); margin: 8pt 0 12pt 0;
+  page-break-inside: avoid;
+}
+.pipeline__cell {
+  padding: 10pt 9pt; border-right: 1px solid var(--line-soft);
+}
+.pipeline__cell:last-child { border-right: 0; background: var(--pine-tint-04); }
+.pipeline__stage {
+  font-family: var(--mono); font-size: 7pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6pt;
+}
+.pipeline__title {
+  font-family: var(--serif); font-weight: 500; font-size: 11pt;
+  line-height: 1.2; color: var(--ink); margin-bottom: 3pt;
+}
+.pipeline__title em { color: var(--pine); font-style: italic; }
+.pipeline__desc { font-size: 8.5pt; color: var(--muted); line-height: 1.4; }
+
+/* ===== ARCH BLOCK ===== */
+.archblock {
+  border: 1px solid var(--line); border-radius: 8pt;
+  padding: 11pt 13pt; margin-bottom: 8pt; background: var(--bg);
+  page-break-inside: avoid;
+}
+.archblock__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--line-soft); padding-bottom: 5pt; margin-bottom: 7pt;
+}
+.archblock__layer {
+  font-family: var(--mono); font-size: 8pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.archblock__title {
+  font-family: var(--serif); font-weight: 500; font-size: 13pt;
+  letter-spacing: -0.012em; color: var(--ink);
+}
+.archblock__title em { color: var(--pine); font-style: italic; }
+.archblock__count {
+  font-family: var(--mono); font-size: 8pt; letter-spacing: 0.16em; color: var(--pine);
+}
+.archblock ul { margin: 4pt 0 0 0; padding: 0; list-style: none; }
+.archblock li {
+  display: grid; grid-template-columns: 80pt 1fr; gap: 8pt;
+  padding: 3pt 0; font-size: 9pt; line-height: 1.4;
+  border-top: 1px solid var(--line-soft);
+}
+.archblock li:first-child { border-top: 0; padding-top: 4pt; }
+.archblock li b {
+  font-family: var(--mono); font-size: 8pt; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--pine);
+}
+.archblock li span { color: var(--muted); }
+
+/* ===== ARCH SVG ===== */
+.arch-svg {
+  width: 100%; height: auto; display: block; margin: 6pt 0 12pt 0;
+  page-break-inside: avoid;
+}
+
+/* ===== MATRIX ===== */
+.matrix {
+  margin-top: 6pt; width: 100%; border-collapse: collapse; font-size: 8.5pt;
+}
+.matrix thead { display: table-header-group; }
+.matrix th {
+  text-align: left; font-family: var(--mono); font-weight: 500;
+  font-size: 7.5pt; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); padding: 6pt 6pt 6pt 0; border-bottom: 1px solid var(--line);
+}
+.matrix tr { page-break-inside: avoid; }
+.matrix td {
+  padding: 5pt 6pt 5pt 0; border-bottom: 1px solid var(--line-soft);
+  vertical-align: top; line-height: 1.4;
+}
+.matrix .m-id {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.14em;
+  color: var(--muted); white-space: nowrap;
+}
+.matrix .m-name { font-family: var(--sans); font-weight: 500; color: var(--ink); }
+.matrix .m-name em { color: var(--pine); font-style: italic; }
+.matrix .m-stage {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.16em;
+  text-transform: uppercase; white-space: nowrap;
+}
+.s-S1 { color: var(--gold); }
+.s-S2 { color: var(--pine); }
+.s-S3 { color: var(--pine); font-weight: 500; }
+.s-S4 { color: var(--rust); }
+.s-S5 { color: var(--gold); font-weight: 500; }
+
+/* ===== TIMELINE ===== */
+.tl { margin-top: 8pt; border-top: 1px solid var(--line); }
+.tl__phase {
+  display: grid; grid-template-columns: 28mm 1fr;
+  gap: 10pt; padding: 11pt 0; border-bottom: 1px solid var(--line-soft);
+  page-break-inside: avoid;
+}
+.tl__when {
+  font-family: var(--mono); font-size: 8.5pt; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--pine); line-height: 1.4;
+}
+.tl__when-meta { display: block; color: var(--muted); margin-top: 3pt; }
+.tl__title {
+  font-family: var(--serif); font-weight: 500; font-size: 14pt;
+  line-height: 1.2; letter-spacing: -0.012em; color: var(--ink); margin: 0 0 5pt 0;
+}
+.tl__title em { color: var(--pine); font-style: italic; }
+.tl__lede { color: var(--muted); font-size: 9.5pt; line-height: 1.45; margin: 0 0 7pt 0; max-width: 150mm; }
+
+.commit {
+  display: grid; grid-template-columns: 18mm 1fr 24mm;
+  gap: 8pt; align-items: baseline; padding: 5pt 0;
+  border-top: 1px solid var(--line-soft);
+  font-size: 9pt; line-height: 1.4;
+  page-break-inside: avoid;
+}
+.commit__lane {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.commit__what { color: var(--ink); }
+.commit__what em { color: var(--pine); font-style: italic; }
+.commit__owner {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--pine); text-align: right;
+}
+
+/* ===== CALLOUT ===== */
+.callout {
+  background: var(--pine-tint-04); border: 1px solid var(--line);
+  border-radius: 8pt; padding: 11pt 13pt; margin: 9pt 0;
+  page-break-inside: avoid;
+}
+.callout__head {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--pine); margin-bottom: 5pt;
+}
+.callout__title {
+  font-family: var(--serif); font-weight: 500; font-size: 12pt;
+  letter-spacing: -0.01em; color: var(--ink); margin-bottom: 5pt;
+}
+.callout__title em { color: var(--pine); font-style: italic; }
+.callout p { font-size: 9pt; color: var(--muted); margin: 0; }
+.callout p + p { margin-top: 5pt; }
+
+/* ===== PRODUCT-LINE GRID ===== */
+.lines {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 9pt; margin-top: 8pt;
+}
+.line {
+  border: 1px solid var(--line); border-radius: 8pt;
+  padding: 11pt 13pt; background: var(--bg);
+  page-break-inside: avoid;
+}
+.line__head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--line-soft); padding-bottom: 5pt; margin-bottom: 7pt;
+}
+.line__id {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted);
+}
+.line__pill {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--pine);
+  border: 1px solid var(--line); border-radius: 999px; padding: 2pt 7pt;
+}
+.line__title {
+  font-family: var(--serif); font-weight: 500; font-size: 16pt;
+  line-height: 1.15; letter-spacing: -0.012em; color: var(--ink); margin-bottom: 5pt;
+}
+.line__title em { color: var(--pine); font-style: italic; }
+.line__desc { font-size: 9pt; color: var(--muted); line-height: 1.45; }
+
+/* ===== STAGE COUNT ===== */
+.stage-count {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line); border-radius: 6pt; overflow: hidden;
+  margin: 8pt 0 12pt 0; background: var(--bg);
+  page-break-inside: avoid;
+}
+.stage-count__cell {
+  padding: 8pt 9pt; border-right: 1px solid var(--line-soft);
+}
+.stage-count__cell:last-child { border-right: 0; background: var(--pine-tint-04); }
+.stage-count__num {
+  font-family: var(--mono); font-size: 7.5pt; letter-spacing: 0.18em;
+  color: var(--muted); margin-bottom: 3pt;
+}
+.stage-count__big {
+  font-family: var(--serif); font-style: italic; font-size: 26pt;
+  color: var(--pine); line-height: 1; margin-bottom: 3pt;
+}
+.stage-count__lbl {
+  font-family: var(--mono); font-size: 7pt; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--muted); line-height: 1.3;
+}
+
+/* ===== OPENS ===== */
+.opens { border-top: 1px solid var(--line); margin-top: 6pt; }
+.opens__row {
+  display: grid; grid-template-columns: 35mm 1fr;
+  gap: 12pt; padding: 7pt 0;
+  border-bottom: 1px solid var(--line-soft);
+  page-break-inside: avoid;
+}
+.opens__q {
+  font-family: var(--mono); font-size: 8pt; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--pine);
+}
+.opens__what { font-size: 9.5pt; line-height: 1.45; color: var(--ink); }
+.opens__what em { color: var(--pine); font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- =================== COVER =================== -->
+<section class="cover">
+  <div class="cover__topstrip">
+    <span>EST. 2024 · OPERATOR-LED · FULL-STACK</span>
+    <span><span class="dot"></span> ATLAS · OPERATIONAL &nbsp; HELLO@DISRUPTIVE.CO</span>
+  </div>
+
+  <div class="cover__center">
+    <span class="cover__chip"><span class="dot"></span> &nbsp; INTERNAL ROADMAP · 30 / 60 / 90</span>
+    <h1 class="cover__title"><em>Disruptive</em>.<br>Internal <em>roadmap</em>.</h1>
+    <p class="cover__lede">The agency, the stack, and the next ninety days. Architecture, products, brand operations, workflow, and how Atlas leaves the building.</p>
+  </div>
+
+  <div class="cover__meta">
+    <div><strong>VERSION 17</strong><br>DRAFT · ITERATING</div>
+    <div style="text-align:right;"><strong>MADE BY KAEDEN</strong><br>ZEN · DISRUPTIVE</div>
+  </div>
+</section>
+
+<!-- =================== TOC =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> CONTENTS</span>
+  <h1>What's in <em>here</em>.</h1>
+  <p class="lede">Read top to bottom. Thesis. Architecture. Product lines. The 30/60/90 commitments. Open decisions.</p>
+
+  <div class="toc">
+    <div class="toc__item"><span class="toc__num">01</span><span class="toc__name">The <em>thesis</em></span><span class="toc__page">03</span></div>
+    <div class="toc__item"><span class="toc__num">02</span><span class="toc__name">Maturity <em>path</em></span><span class="toc__page">04</span></div>
+    <div class="toc__item"><span class="toc__num">03</span><span class="toc__name">Stack <em>architecture</em></span><span class="toc__page">05</span></div>
+    <div class="toc__item"><span class="toc__num">04</span><span class="toc__name">Server <em>topology</em></span><span class="toc__page">06</span></div>
+    <div class="toc__item"><span class="toc__num">05</span><span class="toc__name">Product <em>lines</em></span><span class="toc__page">08</span></div>
+    <div class="toc__item"><span class="toc__num">06</span><span class="toc__name">Control Center <em>matrix</em></span><span class="toc__page">09</span></div>
+    <div class="toc__item"><span class="toc__num">07</span><span class="toc__name">Atlas <em>personas</em></span><span class="toc__page">10</span></div>
+    <div class="toc__item"><span class="toc__num">08</span><span class="toc__name">Atlas <em>agents</em></span><span class="toc__page">11</span></div>
+    <div class="toc__item"><span class="toc__num">09</span><span class="toc__name">Brand <em>operations</em></span><span class="toc__page">12</span></div>
+    <div class="toc__item"><span class="toc__num">10</span><span class="toc__name">Day <em>30</em></span><span class="toc__page">13</span></div>
+    <div class="toc__item"><span class="toc__num">11</span><span class="toc__name">Day <em>60</em></span><span class="toc__page">14</span></div>
+    <div class="toc__item"><span class="toc__num">12</span><span class="toc__name">Day <em>90</em></span><span class="toc__page">15</span></div>
+    <div class="toc__item"><span class="toc__num">13</span><span class="toc__name">Workflow <em>stack</em></span><span class="toc__page">16</span></div>
+    <div class="toc__item"><span class="toc__num">14</span><span class="toc__name">Atlas <em>go-to-market</em></span><span class="toc__page">17</span></div>
+    <div class="toc__item"><span class="toc__num">15</span><span class="toc__name">Open <em>decisions</em></span><span class="toc__page">18</span></div>
+  </div>
+</section>
+
+<!-- =================== 01 · THESIS =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 01 · THESIS</span>
+  <h1>Disruptive is the <em>parent</em>. Atlas is the <em>upsell</em>.</h1>
+  <p class="lede">Disruptive is a full-stack growth agency that runs every owned brand on a shared internal stack. Atlas is the productized version of that stack, sold to customers outside Disruptive. The agency proves the product. The product compounds the agency.</p>
+
+  <h3>The shape.</h3>
+  <p>One brain. One operator. A fleet of agents. A shared memory mesh. The same architecture every customer gets, configured per use. Internal first. Customer Atlas is the same code, running for someone else.</p>
+
+  <h3>Why this works.</h3>
+  <p>By the time a surface is sellable, the operational scars are absorbed. We know where it breaks, what the operator wants, how it integrates. Customers buy hardened tools, not betas. Disruptive gets the moat: every customer is paying for a stack the agency itself uses.</p>
+
+  <div class="callout">
+    <div class="callout__head"><span class="dot dot--gold"></span> THE ANALOGY</div>
+    <div class="callout__title">Atlas is to Disruptive what <em>Claude</em> is to <em>Anthropic</em>.</div>
+    <p>Disruptive is the operator-led growth agency that runs on the stack. Atlas is the operator-grade SaaS that other businesses buy when they want to run that way too.</p>
+  </div>
+</section>
+
+<!-- =================== 02 · MATURITY PATH =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 02 · MATURITY PATH</span>
+  <h1>Five stages. Same path for <em>every surface</em>.</h1>
+  <p class="lede">Surfaces inside the stack mature through five stages. The product matrix tags each one with current stage and 90-day target.</p>
+
+  <div class="pipeline">
+    <div class="pipeline__cell">
+      <div class="pipeline__stage"><span class="dot"></span> S1</div>
+      <div class="pipeline__title">Internal · <em>Disruptive</em></div>
+      <div class="pipeline__desc">Built for the agency. Real operators using daily.</div>
+    </div>
+    <div class="pipeline__cell">
+      <div class="pipeline__stage"><span class="dot"></span> S2</div>
+      <div class="pipeline__title">Internal · <em>first brand</em></div>
+      <div class="pipeline__desc">Ship to one Disruptive-owned brand. Proves second user.</div>
+    </div>
+    <div class="pipeline__cell">
+      <div class="pipeline__stage"><span class="dot"></span> S3</div>
+      <div class="pipeline__title">Internal · <em>portfolio</em></div>
+      <div class="pipeline__desc">All owned brands. Multi-tenant tested in our own house.</div>
+    </div>
+    <div class="pipeline__cell">
+      <div class="pipeline__stage"><span class="dot"></span> S4</div>
+      <div class="pipeline__title">Atlas · <em>productized</em></div>
+      <div class="pipeline__desc">Hardened. Pricing, onboarding, docs, support.</div>
+    </div>
+    <div class="pipeline__cell">
+      <div class="pipeline__stage"><span class="dot dot--gold"></span> S5</div>
+      <div class="pipeline__title">Atlas · <em>live customer</em></div>
+      <div class="pipeline__desc">External customers running Atlas. Real revenue.</div>
+    </div>
+  </div>
+
+  <h3>Stage gates.</h3>
+  <p>A surface cannot advance until it satisfies the gate criteria below. No subjective calls.</p>
+
+  <div class="opens">
+    <div class="opens__row"><span class="opens__q">S1 → S2</span><span class="opens__what">In daily use by an operator who is <em>not the builder</em>. One non-trivial decision routed through it. Manual interventions documented.</span></div>
+    <div class="opens__row"><span class="opens__q">S2 → S3</span><span class="opens__what">First brand using daily for two weeks. Brand operator can run a normal day without builder. <em>One bug-bash</em> completed.</span></div>
+    <div class="opens__row"><span class="opens__q">S3 → S4</span><span class="opens__what">All Disruptive brands onboarded. Multi-tenant boundaries clean. <em>Pricing</em> and <em>onboarding flow</em> drafted.</span></div>
+    <div class="opens__row"><span class="opens__q">S4 → S5</span><span class="opens__what">First external customer signed (LOI minimum). Customer instance deployable on demand. Support runbook exists.</span></div>
+  </div>
+</section>
+
+<!-- =================== 03 · STACK ARCHITECTURE =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 03 · STACK ARCHITECTURE</span>
+  <h1>Brain, operator, fleet, <em>memory</em>.</h1>
+  <p class="lede">Four logical layers. The Atlas brain reasons. The Zen operator drives infrastructure. The agent fleet does the work. The memory mesh remembers everything.</p>
+
+  <svg class="arch-svg" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        .l-text { font-family: 'Inter', sans-serif; font-size: 10px; fill: #0E1A14; }
+        .l-text-mut { font-family: 'Inter', sans-serif; font-size: 9px; fill: #5A6B5F; }
+        .l-title { font-family: 'Fraunces', serif; font-size: 14px; font-style: italic; fill: #2F6B4A; }
+        .l-mono { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.18em; fill: #5A6B5F; text-transform: uppercase; }
+        .l-mono-pine { font-family: 'JetBrains Mono', monospace; font-size: 8px; letter-spacing: 0.18em; fill: #2F6B4A; }
+      </style>
+    </defs>
+
+    <!-- LAYER 1 BRAIN -->
+    <rect x="80" y="20" width="600" height="62" fill="#EDEEDF" stroke="#2F6B4A" stroke-width="1" rx="8"/>
+    <text class="l-mono-pine" x="95" y="38">LAYER 1 · ATLAS BRAIN · HQ EC2</text>
+    <text class="l-title" x="95" y="58">Reasons. Decides. Briefs operators.</text>
+    <text class="l-text-mut" x="95" y="74">CTO · Head of Brand · Performance · CS · Founder · personas as configs on one runtime</text>
+
+    <!-- LAYER 2 OPERATOR -->
+    <rect x="80" y="100" width="290" height="62" fill="#F5F1E8" stroke="#D6CFB9" rx="8"/>
+    <text class="l-mono-pine" x="95" y="118">LAYER 2 · ZEN · zen-control EC2</text>
+    <text class="l-title" x="95" y="138">The operator.</text>
+    <text class="l-text-mut" x="95" y="154">SSM · deploys · diagnostics · cross-server</text>
+
+    <!-- LAYER 2b CONTROL CENTERS -->
+    <rect x="390" y="100" width="290" height="62" fill="#F5F1E8" stroke="#D6CFB9" rx="8"/>
+    <text class="l-mono" x="405" y="118">LAYER 2 · CONTROL CENTER · WEB</text>
+    <text class="l-title" x="405" y="138">The cockpit.</text>
+    <text class="l-text-mut" x="405" y="154">Per-role views · reads brain via API</text>
+
+    <!-- LAYER 3 FLEET LABEL -->
+    <text class="l-mono-pine" x="80" y="195">LAYER 3 · AGENT FLEET · ONE EC2 PER BOT</text>
+
+    <!-- AGENT BOXES (6 across) -->
+    <g>
+      <rect x="80" y="206" width="100" height="78" fill="#F5F1E8" stroke="#D6CFB9" rx="6"/>
+      <text class="l-mono" x="89" y="223">TOMMY · RAW</text>
+      <text class="l-mono" x="89" y="234">ATHLETIC</text>
+      <text class="l-text" x="89" y="252" font-size="9">Customer chat</text>
+      <text class="l-text" x="89" y="265" font-size="9">2 locations</text>
+      <text class="l-mono-pine" x="89" y="278">EC2 · LIVE</text>
+    </g>
+    <g>
+      <rect x="190" y="206" width="100" height="78" fill="#F5F1E8" stroke="#D6CFB9" rx="6"/>
+      <text class="l-mono" x="199" y="223">TOMMY · RAW</text>
+      <text class="l-mono" x="199" y="234">NUTRITION</text>
+      <text class="l-text" x="199" y="252" font-size="9">Customer chat</text>
+      <text class="l-text" x="199" y="265" font-size="9">Subs flows</text>
+      <text class="l-mono-pine" x="199" y="278">EC2 · 30d</text>
+    </g>
+    <g>
+      <rect x="300" y="206" width="100" height="78" fill="#F5F1E8" stroke="#D6CFB9" rx="6"/>
+      <text class="l-mono" x="309" y="223">TOMMY · REVIVE</text>
+      <text class="l-mono" x="309" y="234">MD</text>
+      <text class="l-text" x="309" y="252" font-size="9">Customer chat</text>
+      <text class="l-text" x="309" y="265" font-size="9">Compliance</text>
+      <text class="l-mono-pine" x="309" y="278">EC2 · 60d</text>
+    </g>
+    <g>
+      <rect x="410" y="206" width="100" height="78" fill="#F5F1E8" stroke="#D6CFB9" rx="6"/>
+      <text class="l-mono" x="419" y="223">TOMMY · BUM /</text>
+      <text class="l-mono" x="419" y="234">3D</text>
+      <text class="l-text" x="419" y="252" font-size="9">Customer chat</text>
+      <text class="l-text" x="419" y="265" font-size="9">Cadence</text>
+      <text class="l-mono-pine" x="419" y="278">EC2 · 60-90d</text>
+    </g>
+    <g>
+      <rect x="520" y="206" width="100" height="78" fill="#F5F1E8" stroke="#D6CFB9" rx="6"/>
+      <text class="l-mono" x="529" y="223">FUNCTIONAL</text>
+      <text class="l-mono" x="529" y="234">AGENTS</text>
+      <text class="l-text" x="529" y="252" font-size="9">Brief · SOPs</text>
+      <text class="l-text" x="529" y="265" font-size="9">Voice · research</text>
+      <text class="l-mono-pine" x="529" y="278">EC2s · MIXED</text>
+    </g>
+    <g>
+      <rect x="630" y="206" width="48" height="78" fill="#0F1F18" rx="6"/>
+      <text class="l-mono" x="638" y="226" fill="#D9B26A">ATLAS</text>
+      <text class="l-mono" x="638" y="240" fill="#D9B26A">MEMORY</text>
+      <text class="l-mono" x="638" y="258" fill="#D9B26A" opacity="0.7">PG</text>
+      <text class="l-mono" x="638" y="270" fill="#D9B26A" opacity="0.7">VECTOR</text>
+    </g>
+
+    <!-- arrows -->
+    <line x1="380" y1="82" x2="380" y2="100" stroke="#2F6B4A" stroke-width="1"/>
+    <line x1="225" y1="162" x2="130" y2="206" stroke="#2F6B4A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="535" y1="162" x2="465" y2="206" stroke="#2F6B4A" stroke-width="0.8" opacity="0.5"/>
+    <line x1="225" y1="162" x2="225" y2="206" stroke="#2F6B4A" stroke-width="0.8" opacity="0.5"/>
+
+    <!-- footer -->
+    <text class="l-mono" x="80" y="320">ONE BOT PER EC2 · BLAST-RADIUS ISOLATION · BRANDS ARE LOGICAL GROUPINGS, NOT PHYSICAL ONES</text>
+    <text class="l-text-mut" x="80" y="340">Tommy variants run as separate EC2s per brand. Functional agents (brief generator, voice monitor, compliance, research) run as their</text>
+    <text class="l-text-mut" x="80" y="354">own EC2s and are addressed by all brands via the brain's API. Atlas memory is the shared store every layer reads and writes.</text>
+  </svg>
+</section>
+
+<!-- =================== 04 · SERVER TOPOLOGY =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 04 · SERVER TOPOLOGY</span>
+  <h1>One bot per <em>EC2</em>. Brain and operator are <em>separate</em>.</h1>
+  <p class="lede">No single box hosts both the brain and a worker. Each customer-facing bot gets its own EC2 for blast-radius isolation. Brand is a logical grouping of bots, not a server boundary.</p>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">LAYER 1 · BRAIN</div>
+        <div class="archblock__title">Atlas <em>EC2</em></div>
+      </div>
+      <span class="archblock__count">1 BOX</span>
+    </div>
+    <ul>
+      <li><b>Runs</b><span>All Atlas brain personas (CTO, Head of Brand, Head of Performance, Head of CS, Founder) as configs on one runtime.</span></li>
+      <li><b>Stores</b><span>pgvector mesh, 5 schemas, Hive Mind. 768d embeddings.</span></li>
+      <li><b>Exposes</b><span>API the Control Center reads from. Action endpoints the operator triggers.</span></li>
+      <li><b>Receives</b><span>Memory writes from every agent EC2 in the fleet.</span></li>
+      <li><b>Constraint</b><span>Atlas brain is exempt from auto-restart. Diagnose root cause, do not self-heal.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">LAYER 2 · OPERATOR</div>
+        <div class="archblock__title">Zen · <em>zen-control</em> EC2</div>
+      </div>
+      <span class="archblock__count">1 BOX</span>
+    </div>
+    <ul>
+      <li><b>Identity</b><span>Zen is the CTO operator. Persona on the brain, runtime on this box.</span></li>
+      <li><b>Runs</b><span>Cross-server SSM, deploys, diagnostics, repo ops, infrastructure changes.</span></li>
+      <li><b>Why separate</b><span>Mistakes on operator box must not take down brain. Brain must not slow under operator workloads.</span></li>
+      <li><b>Reaches</b><span>All bot EC2s via SSM, the brain via API, GitHub via PAT, AWS via instance role.</span></li>
+      <li><b>Future</b><span>Stays separate through 90d. Merge candidate after Atlas customer instances stabilize.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">LAYER 3 · FLEET</div>
+        <div class="archblock__title">Per-bot <em>EC2s</em></div>
+      </div>
+      <span class="archblock__count">N BOXES</span>
+    </div>
+    <ul>
+      <li><b>Pattern</b><span>One EC2 per bot. Tommy on RAW Athletic is its own EC2. Tommy on RAW Nutrition is a different EC2. Same brain, separate runtimes.</span></li>
+      <li><b>Brands</b><span>Brand is a logical filter, not a server. RAW Athletic Stuart runs on the same box as RAW Athletic main, location-scoped at the data layer.</span></li>
+      <li><b>Functional bots</b><span>Cross-brand workers (brief generator, voice monitor, compliance, research) get their own EC2s and are addressed by every brand through the brain.</span></li>
+      <li><b>Memory</b><span>Read/write Atlas mesh via API. No local memory stores.</span></li>
+      <li><b>Constraint</b><span>24/7 Restart=always. Customer-facing, must self-heal.</span></li>
+      <li><b>Today</b><span>RAW Athletic Tommy live. Other bot EC2s spin up as the 30/60/90 commitments land.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">LAYER 4 · WEB SURFACE</div>
+        <div class="archblock__title">Control Center <em>deploy</em></div>
+      </div>
+      <span class="archblock__count">VERCEL / GH PAGES</span>
+    </div>
+    <ul>
+      <li><b>Stack</b><span>Static or SSR Next.js. No own backend.</span></li>
+      <li><b>Reads</b><span>Atlas API for all data. Stateless. Throwaway. Re-skinnable without infra impact.</span></li>
+      <li><b>Views</b><span>Disruptive HQ · per-brand · per-role. Same code, scoped data per view.</span></li>
+      <li><b>Productized</b><span>Customer Atlas ships its own Control Center deploy as part of the bundle.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">LAYER 5 · CUSTOMER ATLAS · S4 / S5</div>
+        <div class="archblock__title">The <em>productized</em> bundle</div>
+      </div>
+      <span class="archblock__count">PER CUSTOMER</span>
+    </div>
+    <ul>
+      <li><b>Bundle</b><span>1 brain EC2 + 1 operator EC2 + N bot EC2s + 1 Control Center deploy. Same shape Disruptive runs.</span></li>
+      <li><b>Memory</b><span>Customer schema-isolated in their own pgvector. Optional Hive Mind hookback with consent.</span></li>
+      <li><b>Personas</b><span>Brain personas configured for the customer's roles (their CTO, their Head of CS, etc).</span></li>
+      <li><b>Onboarding</b><span>Deployable on demand by 90d. Manual until then.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- =================== 05 · PRODUCT LINES =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 05 · PRODUCT LINES</span>
+  <h1>Six <em>lines</em> of work.</h1>
+  <p class="lede">Every surface in the matrix belongs to one of these. Lines are the lens; the matrix is the inventory; the 30/60/90 is the schedule.</p>
+
+  <div class="lines">
+    <div class="line">
+      <div class="line__head"><span class="line__id">L01</span><span class="line__pill"><span class="dot"></span>OPERATOR · WEB</span></div>
+      <div class="line__title">Control <em>Center</em></div>
+      <div class="line__desc">The cockpit per scope. One per brand, one per role. Disruptive HQ first, then RAW Nutrition, then Revive MD, then BUM, then 3D. Customer Atlas ships its own.</div>
+    </div>
+    <div class="line">
+      <div class="line__head"><span class="line__id">L02</span><span class="line__pill"><span class="dot"></span>STRATEGIC · BRAIN</span></div>
+      <div class="line__title">Atlas <em>personas</em></div>
+      <div class="line__desc">CTO, Head of Brand, Head of Performance, Head of CS, Head of Creative, Founder. Configurations on the brain runtime. Zen is CTO.</div>
+    </div>
+    <div class="line">
+      <div class="line__head"><span class="line__id">L03</span><span class="line__pill"><span class="dot"></span>CUSTOMER · CHAT</span></div>
+      <div class="line__title">Tommy <em>fleet</em></div>
+      <div class="line__desc">Per-brand customer chat. RAW Athletic live. RAW Nutrition + Revive MD + BUM + 3D rolling out across 90d. One EC2 each.</div>
+    </div>
+    <div class="line">
+      <div class="line__head"><span class="line__id">L04</span><span class="line__pill"><span class="dot"></span>FUNCTIONAL · AGENTS</span></div>
+      <div class="line__title">Cross-brand <em>workers</em></div>
+      <div class="line__desc">Brief generator, SOP/playbook agent, voice monitor, compliance agent, doctor research, cohort retention, pacing, creative production, memory pulse, onboarding.</div>
+    </div>
+    <div class="line">
+      <div class="line__head"><span class="line__id">L05</span><span class="line__pill"><span class="dot"></span>SOFTWARE · HEAVY</span></div>
+      <div class="line__title">Brand <em>commerce OS</em></div>
+      <div class="line__desc">RAW Nutrition Software, four modules: dashboard, fulfillment, creative team, briefs. The template the rest of the brands inherit.</div>
+    </div>
+    <div class="line">
+      <div class="line__head"><span class="line__id">L06</span><span class="line__pill"><span class="dot dot--gold"></span>EXTERNAL · GTM</span></div>
+      <div class="line__title">Atlas <em>productized</em></div>
+      <div class="line__desc">Customer template, pricing, lander v3, onboarding flow, first pilot. Memory mesh multi-tenant boundaries clean by 60d.</div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 06 · CONTROL CENTER MATRIX =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 06 · CONTROL CENTER MATRIX</span>
+  <h1>The <em>cockpits</em>.</h1>
+  <p class="lede">One Control Center per brand. Same design language across all of them. Stage column is today; target is 90 days.</p>
+
+  <div class="stage-count">
+    <div class="stage-count__cell"><div class="stage-count__num">S1</div><div class="stage-count__big">14</div><div class="stage-count__lbl">Internal · Disruptive</div></div>
+    <div class="stage-count__cell"><div class="stage-count__num">S2</div><div class="stage-count__big">5</div><div class="stage-count__lbl">First brand</div></div>
+    <div class="stage-count__cell"><div class="stage-count__num">S3</div><div class="stage-count__big">2</div><div class="stage-count__lbl">Portfolio</div></div>
+    <div class="stage-count__cell"><div class="stage-count__num">S4</div><div class="stage-count__big">0</div><div class="stage-count__lbl">Atlas product</div></div>
+    <div class="stage-count__cell"><div class="stage-count__num">S5</div><div class="stage-count__big">0</div><div class="stage-count__lbl">Live customer</div></div>
+  </div>
+
+  <table class="matrix">
+    <thead><tr><th style="width:22mm">ID</th><th>Surface</th><th style="width:34mm">Stage today</th><th style="width:34mm">90d target</th></tr></thead>
+    <tbody>
+      <tr><td class="m-id">CC-01</td><td class="m-name">Disruptive HQ <em>Control Center</em></td><td class="m-stage s-S1">S1 · in build</td><td class="m-stage s-S2">S2 · daily use</td></tr>
+      <tr><td class="m-id">CC-02</td><td class="m-name">RAW Athletic <em>Control Center</em></td><td class="m-stage s-S1">S1 · scoping</td><td class="m-stage s-S2">S2 · live</td></tr>
+      <tr><td class="m-id">CC-03</td><td class="m-name">RAW Athletic Stuart <em>view</em></td><td class="m-stage s-S1">S1 · planned</td><td class="m-stage s-S2">S2 · location filter</td></tr>
+      <tr><td class="m-id">CC-04</td><td class="m-name">RAW Nutrition <em>Control Center</em></td><td class="m-stage s-S1">S1 · scoping</td><td class="m-stage s-S3">S3 · fully operational</td></tr>
+      <tr><td class="m-id">CC-05</td><td class="m-name">Revive MD <em>Control Center</em></td><td class="m-stage" style="color:var(--muted)">— · greenfield</td><td class="m-stage s-S2">S2 · v1 live</td></tr>
+      <tr><td class="m-id">CC-06</td><td class="m-name">BUM Energy <em>Control Center</em></td><td class="m-stage" style="color:var(--muted)">— · greenfield</td><td class="m-stage s-S1">S1 · v0 live</td></tr>
+      <tr><td class="m-id">CC-07</td><td class="m-name">3D Energy <em>Control Center</em></td><td class="m-stage" style="color:var(--muted)">— · greenfield</td><td class="m-stage s-S1">S1 · v0 live</td></tr>
+      <tr><td class="m-id">CC-08</td><td class="m-name">Atlas <em>customer template</em> CC</td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S4">S4 · ready</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =================== 07 · ATLAS PERSONAS =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 07 · ATLAS PERSONAS</span>
+  <h1>The <em>brain</em>, by role.</h1>
+  <p class="lede">Personas are configurations on the Atlas brain runtime. Each persona has scope, memory access, voice, and authority. Zen is the CTO persona today, with operator runtime on zen-control.</p>
+
+  <table class="matrix">
+    <thead><tr><th style="width:22mm">ID</th><th>Persona</th><th style="width:34mm">Stage today</th><th style="width:34mm">90d target</th></tr></thead>
+    <tbody>
+      <tr><td class="m-id">PR-01</td><td class="m-name">CTO <em>persona</em> · Zen</td><td class="m-stage s-S2">S2 · live</td><td class="m-stage s-S3">S3 · formalized scope</td></tr>
+      <tr><td class="m-id">PR-02</td><td class="m-name">Head of Performance <em>persona</em></td><td class="m-stage" style="color:var(--muted)">— · concept</td><td class="m-stage s-S2">S2 · prototype</td></tr>
+      <tr><td class="m-id">PR-03</td><td class="m-name">Head of CS <em>persona</em></td><td class="m-stage" style="color:var(--muted)">— · concept</td><td class="m-stage s-S2">S2 · prototype</td></tr>
+      <tr><td class="m-id">PR-04</td><td class="m-name">Head of Brand <em>persona</em> · per brand</td><td class="m-stage" style="color:var(--muted)">— · concept</td><td class="m-stage s-S1">S1 · RAW Nutrition first</td></tr>
+      <tr><td class="m-id">PR-05</td><td class="m-name">Head of Creative <em>persona</em></td><td class="m-stage" style="color:var(--muted)">— · concept</td><td class="m-stage s-S1">S1 · scoping</td></tr>
+      <tr><td class="m-id">PR-06</td><td class="m-name">Founder <em>persona</em> · cross-everything</td><td class="m-stage" style="color:var(--muted)">— · concept</td><td class="m-stage s-S2">S2 · prototype</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout__head"><span class="dot"></span> ON ZEN</div>
+    <div class="callout__title">Zen is the <em>operator</em>.</div>
+    <p>Zen runs the CTO persona on the brain plus the operator runtime on zen-control EC2. Zen is who Kaeden talks to in Telegram, who does cross-server SSM, who writes plans and updates skills, who reviews PRs, who manages the fleet. As more personas come online (Head of Performance, Head of CS, Head of Brand), Zen remains the operator-of-operators.</p>
+  </div>
+</section>
+
+<!-- =================== 08 · ATLAS AGENTS =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 08 · ATLAS AGENTS</span>
+  <h1>The <em>fleet</em>.</h1>
+  <p class="lede">Agents do the actual work the brain decides on. Customer-facing chat per brand (one EC2 each), plus functional cross-brand workers (one EC2 each, addressed by every brand).</p>
+
+  <h3>Customer-facing · per-brand EC2</h3>
+  <table class="matrix">
+    <thead><tr><th style="width:22mm">ID</th><th>Bot</th><th style="width:34mm">Stage today</th><th style="width:34mm">90d target</th></tr></thead>
+    <tbody>
+      <tr><td class="m-id">AG-01</td><td class="m-name">Tommy · <em>RAW Athletic</em></td><td class="m-stage s-S2">S2 · live</td><td class="m-stage s-S3">S3 · A-Z dialed</td></tr>
+      <tr><td class="m-id">AG-02</td><td class="m-name">Tommy · <em>Stuart</em> filter</td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · location-scoped</td></tr>
+      <tr><td class="m-id">AG-03</td><td class="m-name">Tommy · <em>RAW Nutrition</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · live with v0 CC</td></tr>
+      <tr><td class="m-id">AG-04</td><td class="m-name">Tommy · <em>Revive MD</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · live</td></tr>
+      <tr><td class="m-id">AG-05</td><td class="m-name">Tommy · <em>BUM Energy</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · cadence variant</td></tr>
+      <tr><td class="m-id">AG-06</td><td class="m-name">Tommy · <em>3D Energy</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · v0</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Functional · cross-brand EC2</h3>
+  <table class="matrix">
+    <thead><tr><th style="width:22mm">ID</th><th>Agent</th><th style="width:34mm">Stage today</th><th style="width:34mm">90d target</th></tr></thead>
+    <tbody>
+      <tr><td class="m-id">AG-07</td><td class="m-name">Brief <em>generator</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · daily use</td></tr>
+      <tr><td class="m-id">AG-08</td><td class="m-name">SOP / playbook <em>agent</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · live</td></tr>
+      <tr><td class="m-id">AG-09</td><td class="m-name">Voice / tone <em>monitor</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · cross-brand</td></tr>
+      <tr><td class="m-id">AG-10</td><td class="m-name">Compliance <em>agent</em> · supps</td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · all supp brands</td></tr>
+      <tr><td class="m-id">AG-11</td><td class="m-name">Doctor / practitioner <em>research</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · Revive MD team</td></tr>
+      <tr><td class="m-id">AG-12</td><td class="m-name">Cohort / retention <em>agent</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · per brand</td></tr>
+      <tr><td class="m-id">AG-13</td><td class="m-name">Pacing / spend <em>agent</em></td><td class="m-stage s-S1">S1 · in CC</td><td class="m-stage s-S2">S2 · paging persona</td></tr>
+      <tr><td class="m-id">AG-14</td><td class="m-name">Creative production <em>agent</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · feeds creative</td></tr>
+      <tr><td class="m-id">AG-15</td><td class="m-name">Memory <em>Pulse</em></td><td class="m-stage s-S1">S1 · in CC</td><td class="m-stage s-S2">S2 · monitoring</td></tr>
+      <tr><td class="m-id">AG-16</td><td class="m-name">Onboarding <em>agent</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S1">S1 · contractors</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Software · heavier builds</h3>
+  <table class="matrix">
+    <thead><tr><th style="width:22mm">ID</th><th>Product</th><th style="width:34mm">Stage today</th><th style="width:34mm">90d target</th></tr></thead>
+    <tbody>
+      <tr><td class="m-id">SW-01</td><td class="m-name">RAW Nutrition <em>Software</em> · 4 modules</td><td class="m-stage s-S1">S1 · scoping</td><td class="m-stage s-S2">S2 · all 4 modules live</td></tr>
+      <tr><td class="m-id">SW-02</td><td class="m-name">Atlas <em>Memory Mesh</em></td><td class="m-stage s-S3">S3 · cross-brand live</td><td class="m-stage s-S4">S4 · multi-tenant ready</td></tr>
+      <tr><td class="m-id">SW-03</td><td class="m-name">Hive <em>Mind</em> layer</td><td class="m-stage s-S2">S2 · partial</td><td class="m-stage s-S3">S3 · formalized</td></tr>
+      <tr><td class="m-id">SW-04</td><td class="m-name">Brief <em>system</em> · standalone</td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S2">S2 · all brands</td></tr>
+      <tr><td class="m-id">SW-05</td><td class="m-name">Atlas OS <em>productized</em></td><td class="m-stage" style="color:var(--muted)">—</td><td class="m-stage s-S4">S4 · sellable</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- =================== 09 · BRAND OPS =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 09 · BRAND OPERATIONS</span>
+  <h1>Five owned brands. <em>Different shapes</em>. One stack.</h1>
+  <p class="lede">RAW Athletic is the validated chat surface. RAW Nutrition is the first software pilot. Revive MD is the practitioner play. BUM and 3D are the energy plays.</p>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">VALIDATED CHAT · LIFESTYLE</div>
+        <div class="archblock__title">RAW <em>Athletic</em> Club</div>
+      </div>
+      <span class="archblock__count">2 LOCATIONS</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>Tommy live in production. Customers chat, cart, retain. Pattern validated.</span></li>
+      <li><b>30d</b><span>Tommy A-Z dialed. Every flow handled. Escalation paths tight.</span></li>
+      <li><b>60d</b><span>Stuart location filter inside same brand box. Multi-location pattern proved.</span></li>
+      <li><b>Lifecycle</b><span>Chat → cart → fulfillment → retention. Tommy is the front door.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">FIRST SOFTWARE PILOT</div>
+        <div class="archblock__title">RAW <em>Nutrition</em></div>
+      </div>
+      <span class="archblock__count">FOUR MODULES</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>Scoping. Highest software ROI of any brand. Full Disruptive control.</span></li>
+      <li><b>30d</b><span>CC v0 read-only. Tommy live for chat. Module 1 (dashboard) building.</span></li>
+      <li><b>60d</b><span>All four modules live: dashboard, fulfillment, creative team, briefs.</span></li>
+      <li><b>Why first</b><span>Subscription engine + fulfillment ops + creative cadence are the highest ROI surfaces. Build here, fork to others.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">PRACTITIONER PLAY</div>
+        <div class="archblock__title">Revive <em>MD</em></div>
+      </div>
+      <span class="archblock__count">CLINICAL TEAM</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>No dashboard exists. Greenfield.</span></li>
+      <li><b>60d</b><span>CC v1 live. Doctor / research agent live for clinical team.</span></li>
+      <li><b>Compliance</b><span>FDA structure / function language. Compliance agent shipped 60d. Critical.</span></li>
+      <li><b>Cohort</b><span>E0 to E10 retention timeline is unique. Cohort agent feeds CC.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">ENERGY PLAY · CADENCE</div>
+        <div class="archblock__title">BUM <em>Energy</em> &nbsp;&amp;&nbsp; 3D <em>Energy</em></div>
+      </div>
+      <span class="archblock__count">2 BRANDS</span>
+    </div>
+    <ul>
+      <li><b>Motion</b><span>Cadence content. Athlete-led. Tommy here is fan engagement, not customer service.</span></li>
+      <li><b>BUM 60d</b><span>CC v0 live. Tommy cadence variant on its own EC2.</span></li>
+      <li><b>3D 60-90d</b><span>CC v0 live. Tommy cadence variant on its own EC2.</span></li>
+      <li><b>Open</b><span>3D ownership / partnership status to confirm.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- =================== 10 · DAY 30 =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 10 · DAY 30</span>
+  <h1>Disruptive <em>runs</em> on the stack.</h1>
+  <p class="lede">By day 30, the agency itself uses the stack daily. No external customers yet. Internal pressure surfaces the bugs and grows the system.</p>
+
+  <div class="tl">
+    <div class="tl__phase">
+      <div class="tl__when">DAY 30<br><span class="tl__when-meta">PRODUCTS</span></div>
+      <div>
+        <h3 class="tl__title">Surfaces <em>live</em>.</h3>
+        <p class="tl__lede">Every product on this list ships and gets used by someone other than its builder.</p>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">Disruptive HQ Control Center 100% complete · all eight screens · daily use</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">RAW Nutrition CC v0 · read-only dashboard, real data, functional</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">RAW Athletic Tommy · A-Z dialed · every customer flow handled</span><span class="commit__owner">GUSTAVO</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Marketing agents live for <em>all five brands</em> helping real users · rough but live</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Brief generator agent · one-shot brief from a topic, hits Drive</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 30<br><span class="tl__when-meta">PLATFORM</span></div>
+      <div>
+        <h3 class="tl__title">Wires <em>connected</em>.</h3>
+        <p class="tl__lede">Glue between the team's daily tools and the stack. Slack and Monday are where the agency lives.</p>
+        <div class="commit"><span class="commit__lane">SLACK</span><span class="commit__what">Slack ↔ Control Center · notifications, approvals, decision archive in channel</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">MONDAY</span><span class="commit__what">Monday ↔ Control Center · Tasks reads from Monday, two-way status</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">VOICE</span><span class="commit__what">Voice / tone monitor · cross-brand drift flagged on every published asset</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 30<br><span class="tl__when-meta">ATLAS GTM</span></div>
+      <div>
+        <h3 class="tl__title">Story <em>locked</em>.</h3>
+        <p class="tl__lede">The customer pitch and first prospect candidate. Nothing sold yet.</p>
+        <div class="commit"><span class="commit__lane">LANDER</span><span class="commit__what">Atlas v3 lander · the productized story, evolves from v1/v2</span><span class="commit__owner">KAEDEN</span></div>
+        <div class="commit"><span class="commit__lane">PROFILE</span><span class="commit__what">First-customer profile defined · friendly first paying customer</span><span class="commit__owner">MIGUEL</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 11 · DAY 60 =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 11 · DAY 60</span>
+  <h1>The stack <em>is</em> the agency.</h1>
+  <p class="lede">By day 60, every brand has a Control Center. Marketing agents autonomous on at least two brands. First non-CTO personas online. Atlas multi-tenant work begins.</p>
+
+  <div class="tl">
+    <div class="tl__phase">
+      <div class="tl__when">DAY 60<br><span class="tl__when-meta">PRODUCTS</span></div>
+      <div>
+        <h3 class="tl__title">Per-brand <em>portfolio</em>.</h3>
+        <p class="tl__lede">Every owned brand on the stack. RAW Nutrition Software fully operational.</p>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">RAW Nutrition CC fully operational · dashboard, fulfillment, creative, briefs</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">Revive MD CC v1 · greenfield build · doctor research wired</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">RAW Athletic <em>Stuart</em> location filter live in same CC</span><span class="commit__owner">GUSTAVO</span></div>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">BUM Energy CC v0 live</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Tommy on RAW Nutrition + Revive MD + BUM · three more brands live</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Marketing agents <em>autonomous</em> on at least 2 brands</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Doctor / research agent live · Revive MD clinical team using daily</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Compliance agent live for all supplement brands</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 60<br><span class="tl__when-meta">PERSONAS</span></div>
+      <div>
+        <h3 class="tl__title">Brain <em>forms</em>.</h3>
+        <p class="tl__lede">First Atlas personas other than Zen. Configs on the brain runtime.</p>
+        <div class="commit"><span class="commit__lane">PERSONA</span><span class="commit__what">Head of Performance prototype · sits on top of pacing + decision surface</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">PERSONA</span><span class="commit__what">Head of CS prototype · sits on top of all Tommy instances</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 60<br><span class="tl__when-meta">WORKFLOW</span></div>
+      <div>
+        <h3 class="tl__title">Google Workspace <em>integrated</em>.</h3>
+        <p class="tl__lede">Drive, Docs, Sheets, Gmail. Agents read and write.</p>
+        <div class="commit"><span class="commit__lane">DRIVE</span><span class="commit__what">Drive integration · agents read/write across brand folders</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">DECKS</span><span class="commit__what">Pitch deck generator from briefs · output to Drive</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">SOPS</span><span class="commit__what">SOPs system · agent-aware, agent-updateable</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 60<br><span class="tl__when-meta">ATLAS GTM</span></div>
+      <div>
+        <h3 class="tl__title">Customer-ready <em>foundation</em>.</h3>
+        <p class="tl__lede">Multi-tenant boundaries. Pricing. First pilot conversation.</p>
+        <div class="commit"><span class="commit__lane">MEMORY</span><span class="commit__what">Multi-tenant boundaries clean in Memory Mesh · audit, isolation</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">TEMPLATE</span><span class="commit__what">Atlas customer instance template defined</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">PRICING</span><span class="commit__what">Pricing model committed · per-business, per-dept, per-role, hybrid</span><span class="commit__owner">KAEDEN</span></div>
+        <div class="commit"><span class="commit__lane">PILOT</span><span class="commit__what">First pilot customer identified · conversation started</span><span class="commit__owner">MIGUEL</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 12 · DAY 90 =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot dot--gold"></span> 12 · DAY 90</span>
+  <h1>Atlas is <em>sellable</em>.</h1>
+  <p class="lede">By day 90, marketing agents run autonomously on every brand with head-persona oversight. The first external Atlas customer is signed (LOI minimum). Atlas pricing is live on the lander.</p>
+
+  <div class="tl">
+    <div class="tl__phase">
+      <div class="tl__when">DAY 90<br><span class="tl__when-meta">PRODUCTS</span></div>
+      <div>
+        <h3 class="tl__title">Autonomy <em>everywhere</em>.</h3>
+        <p class="tl__lede">Marketing agents autonomous on all brands plus dashboards for oversight plus head personas. Founder-tier persona online.</p>
+        <div class="commit"><span class="commit__lane">AGENT</span><span class="commit__what">Marketing agents <em>autonomous</em> on every brand + per-brand head-persona oversight</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">CTRL CTR</span><span class="commit__what">3D Energy CC live</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">PERSONA</span><span class="commit__what">Founder / CEO persona prototype · best business partner</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">HIVE</span><span class="commit__what">Hive Mind layer formalized · surfaceable to operators</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 90<br><span class="tl__when-meta">ATLAS S4 / S5</span></div>
+      <div>
+        <h3 class="tl__title">Customer Atlas <em>shipping</em>.</h3>
+        <p class="tl__lede">First external customer running Atlas. Real revenue. Real proof.</p>
+        <div class="commit"><span class="commit__lane">ONBOARD</span><span class="commit__what">Atlas customer onboarding flow shipped · runbook + checklist</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">DEPLOY</span><span class="commit__what">Atlas instance template deployable on demand · automation</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">CUSTOMER</span><span class="commit__what">First external pilot customer running Atlas · paying or LOI</span><span class="commit__owner">MIGUEL</span></div>
+        <div class="commit"><span class="commit__lane">PRICING</span><span class="commit__what">Atlas pricing live on the lander · public</span><span class="commit__owner">KAEDEN</span></div>
+        <div class="commit"><span class="commit__lane">SALES</span><span class="commit__what">Sales motion defined · founder-led for first 5 customers</span><span class="commit__owner">MIGUEL</span></div>
+      </div>
+    </div>
+
+    <div class="tl__phase">
+      <div class="tl__when">DAY 90<br><span class="tl__when-meta">INTERNAL</span></div>
+      <div>
+        <h3 class="tl__title">Five brands. <em>One stack</em>.</h3>
+        <p class="tl__lede">Cross-brand customer graph turns on. The moat becomes real.</p>
+        <div class="commit"><span class="commit__lane">PORTFOLIO</span><span class="commit__what">All 5 Disruptive brands on the stack · one CC per brand</span><span class="commit__owner">FLEET</span></div>
+        <div class="commit"><span class="commit__lane">GRAPH</span><span class="commit__what">Cross-brand customer graph active · shared signals</span><span class="commit__owner">ZEN</span></div>
+        <div class="commit"><span class="commit__lane">PROMO</span><span class="commit__what">Cross-promotion engine prototype · RAW customer to BUM</span><span class="commit__owner">ZEN</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================== 13 · WORKFLOW =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot"></span> 13 · WORKFLOW STACK</span>
+  <h1>How the team <em>works</em>.</h1>
+  <p class="lede">The agency runs on Monday, Slack, Google Workspace today. The stack integrates with those, does not replace them. Operators stay where they live. Agents come to them.</p>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">PROJECT TRACKING</div>
+        <div class="archblock__title">Monday <em>+</em> Control Center</div>
+      </div>
+      <span class="archblock__count">DAY 30</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>Monday is the source of truth for tasks and projects.</span></li>
+      <li><b>30d</b><span>Two-way sync · CC Tasks reads from Monday, writes status back.</span></li>
+      <li><b>60d</b><span>Agent-driven status updates · agents mark tasks as they ship.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">DECISIONS · COMMS</div>
+        <div class="archblock__title">Slack <em>+</em> Control Center</div>
+      </div>
+      <span class="archblock__count">DAY 30</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>Slack is where decisions happen.</span></li>
+      <li><b>30d</b><span>Notifications + approvals + decision archive in-channel.</span></li>
+      <li><b>60d</b><span>Slash commands · /atlas decide, /atlas brief, /atlas pulse.</span></li>
+      <li><b>90d</b><span>Slack as Atlas interface · ask any persona anything from a channel.</span></li>
+    </ul>
+  </div>
+
+  <div class="archblock">
+    <div class="archblock__head">
+      <div>
+        <div class="archblock__layer">DOCUMENTS · KNOWLEDGE</div>
+        <div class="archblock__title">Google <em>Workspace</em></div>
+      </div>
+      <span class="archblock__count">DAY 60</span>
+    </div>
+    <ul>
+      <li><b>Today</b><span>Drive holds briefs, decks, SOPs, playbooks. Gmail is admin and ops.</span></li>
+      <li><b>60d</b><span>Brief generator · agent reads context, writes briefs to Drive.</span></li>
+      <li><b>60d</b><span>SOP / playbook agent · Drive-aware, surfaces "how do we do X."</span></li>
+      <li><b>90d</b><span>Pitch deck generator · briefs become decks become customer assets.</span></li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <div class="callout__head"><span class="dot dot--gold"></span> THE PRINCIPLE</div>
+    <div class="callout__title">Operators stay in <em>their tools</em>. Atlas comes to them.</div>
+    <p>Nobody on the team learns a new app to work with the stack. Slack, Monday, Drive, Gmail are the front-end. Atlas runs underneath. Control Center is for visibility and approvals, not daily work.</p>
+  </div>
+</section>
+
+<!-- =================== 14 · ATLAS GTM =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot dot--gold"></span> 14 · ATLAS · GO-TO-MARKET</span>
+  <h1>Atlas is the <em>end-all-be-all</em> growth partner.</h1>
+  <p class="lede">Operating system. Plugged into the customer's business at the orchestration layer as a fully agentic AI. Full Disruptive oversight. Comes back to Hive Mind. Configurable per business, department, or role.</p>
+
+  <h3>The pitch.</h3>
+  <p>We don't sell software. We sell our internal stack, hardened for you. Your Head of Brand gets an Atlas persona with brand-voice fingerprinting. Your CTO gets the same operator brain Disruptive uses. Your CS lead gets Tommy variants tuned to your customers. Your founder gets a Founder-tier persona that thinks across departments. All of it reading and writing a memory mesh you control. All observable through one cream-and-pine cockpit.</p>
+
+  <h3>Configuration vectors.</h3>
+  <p>Atlas configures along three axes. Pick the ones that matter for the customer.</p>
+  <div class="opens" style="margin-top:6pt;">
+    <div class="opens__row"><span class="opens__q">BUSINESS</span><span class="opens__what">Per business · holistic instance, all departments, full agentic stack. Default for founders who want one partner across everything.</span></div>
+    <div class="opens__row"><span class="opens__q">DEPARTMENT</span><span class="opens__what">Per department · marketing-only, CS-only, ops-only. Wedge for larger orgs that want to start small.</span></div>
+    <div class="opens__row"><span class="opens__q">ROLE</span><span class="opens__what">Per role · Head of Brand persona, Head of CS persona, Head of Performance persona. Wedge for individual operators inside larger orgs.</span></div>
+  </div>
+
+  <h3>Hive Mind hookback.</h3>
+  <p>With customer consent, Atlas instances feed anonymized signal back to Disruptive's Hive Mind. The customer's instance gets smarter as the network grows. The network gets smarter as customers grow. The moat compounds.</p>
+
+  <div class="callout">
+    <div class="callout__head"><span class="dot dot--gold"></span> POSITIONING</div>
+    <div class="callout__title">Atlas is the <em>best business partner</em> ever.</div>
+    <p>Not a tool. Not a copilot. A partner. With memory, reasoning, intuition, opinions, and authorization to act inside guardrails the operator sets.</p>
+  </div>
+</section>
+
+<!-- =================== 15 · OPENS =================== -->
+<section class="section">
+  <span class="kicker"><span class="dot dot--rust"></span> 15 · OPEN DECISIONS</span>
+  <h1>What's still <em>undecided</em>.</h1>
+  <p class="lede">Honest list of what is not yet locked. Each item has a deadline by which the decision blocks something downstream.</p>
+
+  <div class="opens">
+    <div class="opens__row"><span class="opens__q">3D ENERGY · OWNERSHIP</span><span class="opens__what">Disruptive-owned or partner-managed? <em>Blocks</em> 3D CC + 3D Tommy work. By day 30.</span></div>
+    <div class="opens__row"><span class="opens__q">FIRST ATLAS CUSTOMER</span><span class="opens__what">Friendly first paying customer? Profile + name. <em>Blocks</em> day-60 pilot conversation. By day 30.</span></div>
+    <div class="opens__row"><span class="opens__q">REVIVE MD · v1 SCOPE</span><span class="opens__what">Greenfield. Modules in v1 vs v2? <em>Blocks</em> Revive CC architecture. By day 30.</span></div>
+    <div class="opens__row"><span class="opens__q">PRICING MODEL</span><span class="opens__what">Per-business · per-department · per-role · hybrid. <em>Blocks</em> Atlas v3 lander. By day 60.</span></div>
+    <div class="opens__row"><span class="opens__q">RAW NUTRITION MODULE ORDER</span><span class="opens__what">Currently dashboard → fulfillment → creative → briefs. Confirm or reorder. <em>Blocks</em> day-30 module 1.</span></div>
+    <div class="opens__row"><span class="opens__q">HEADCOUNT</span><span class="opens__what">Is the agency growing in 90 days? Affects workflow tool scope. By day 30.</span></div>
+    <div class="opens__row"><span class="opens__q">ATLAS LANDER · v3</span><span class="opens__what">Kaeden draft, Miguel approval. Day 30 deliverable.</span></div>
+  </div>
+
+  <h3>What's <em>not</em> changing.</h3>
+  <p>Disruptive as the parent. Atlas as the upsell. The architecture (one bot per EC2, brain separate, operator separate). The maturity path. The brand language. These are settled.</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dashboard. — Disruptive Control Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="primitives.css" />
+  <link rel="stylesheet" href="shell.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__wordmark">
+          <span class="dot"></span>
+          <span class="sidebar__wordmark-text">DISRUPTIVE</span>
+        </div>
+        <div class="sidebar__sub">CONTROL CENTER</div>
+      </div>
+
+      <div class="sidebar__ws-wrap">
+        <button class="sidebar__ws" type="button">
+          <div class="sidebar__ws-row">
+            <span class="sidebar__ws-tile">DB</span>
+            <span class="sidebar__ws-name">Disruptive HQ</span>
+            <span class="sidebar__ws-chev">▾</span>
+          </div>
+          <div class="sidebar__ws-meta">4 BRANDS · 23 AGENTS</div>
+        </button>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="sidebar__group">
+          <div class="sidebar__group-label">OVERVIEW</div>
+          <a class="sidebar__item sidebar__item--active" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Dashboard</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Agents</span>
+            <span class="sidebar__count">23</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Tasks</span>
+            <span class="sidebar__count">14</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Memory Pulse</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Pacing</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Approval Inbox</span>
+            <span class="sidebar__count">6</span>
+          </a>
+        </div>
+
+        <div class="sidebar__group">
+          <div class="sidebar__group-label">BUILD</div>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Intelligence</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Content</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Research</span>
+          </a>
+        </div>
+
+        <div class="sidebar__group">
+          <div class="sidebar__group-label">WORKSPACE</div>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Integrations</span>
+          </a>
+          <a class="sidebar__item" href="#">
+            <span class="sidebar__item-mark"></span>
+            <span class="sidebar__item-label">Settings</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar__spacer"></div>
+
+      <div class="sidebar__kill-wrap">
+        <div class="sidebar__kill">
+          <div class="sidebar__kill-row">
+            <span class="chip chip--pine"><span class="dot"></span>Safety · Active</span>
+            <span class="sidebar__kill-meta">AUDIT 2m</span>
+          </div>
+          <a class="sidebar__kill-link" href="#">Kill switch <span class="sidebar__kill-link-arrow">→</span></a>
+        </div>
+      </div>
+
+      <div class="sidebar__user-wrap">
+        <div class="sidebar__user">
+          <span class="sidebar__user-avatar">MR</span>
+          <div>
+            <div class="sidebar__user-name">Miguel R.</div>
+            <div class="sidebar__user-role"><em>Operator</em> · admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========== CONTENT ========== -->
+    <div class="app__col">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar__title">
+          <div class="topbar__kicker"><span class="dot"></span>DISRUPTIVE HQ</div>
+          <div class="topbar__heading">Dashboard.</div>
+        </div>
+
+        <div class="topbar__search-wrap">
+          <div class="topbar__search">
+            <span class="topbar__search-glyph">⌕</span>
+            <input class="topbar__search-input" type="text" placeholder="Search agents, tasks, runs, brands…" />
+            <span class="topbar__kbd">⌘K</span>
+          </div>
+        </div>
+
+        <div class="topbar__actions">
+          <div class="topbar__segment" role="group" aria-label="Environment">
+            <button class="topbar__segment-btn topbar__segment-btn--active" type="button">LIVE</button>
+            <button class="topbar__segment-btn" type="button">STAGING</button>
+            <button class="topbar__segment-btn" type="button">SANDBOX</button>
+          </div>
+          <span class="chip chip--pine"><span class="dot"></span>Live</span>
+          <button class="btn btn--primary" type="button">+ New run <span class="btn__arrow">→</span></button>
+        </div>
+      </header>
+
+      <!-- PAGE -->
+      <main class="page">
+        <div class="dash">
+
+          <!-- ========== KPI ROW ========== -->
+          <section class="dash__row dash__row--kpi" aria-label="Key metrics">
+
+            <article class="kpi">
+              <div class="kpi__label"><span class="dot"></span>Agents online</div>
+              <div class="kpi__row">
+                <div>
+                  <span class="kpi__value">23</span>
+                  <span class="kpi__suffix">/ 24 fleet</span>
+                </div>
+                <span class="kpi__delta">+1 vs yest.</span>
+              </div>
+              <svg class="kpi__chart" viewBox="0 0 200 36" preserveAspectRatio="none" aria-hidden="true">
+                <polyline fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                  points="0,28 20,26 40,22 60,24 80,18 100,20 120,14 140,16 160,10 180,12 200,8" />
+              </svg>
+              <span class="kpi__provenance" title="OpsClaw heartbeat · 30s window · refreshed 17:32">FLEET HEARTBEAT · 30s · 17:32</span>
+            </article>
+
+            <article class="kpi">
+              <div class="kpi__label"><span class="dot"></span>Today's spend</div>
+              <div class="kpi__row">
+                <div>
+                  <span class="kpi__value">$11.4K</span>
+                  <span class="kpi__suffix">across 4 brands</span>
+                </div>
+                <span class="kpi__delta">+1.8% vs yest.</span>
+              </div>
+              <svg class="kpi__chart" viewBox="0 0 200 36" preserveAspectRatio="none" aria-hidden="true">
+                <polyline fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                  points="0,30 20,28 40,24 60,22 80,26 100,20 120,18 140,14 160,16 180,10 200,12" />
+              </svg>
+              <span class="kpi__provenance" title="Meta + Google + Klaviyo · today · refreshed 17:30">META + GOOGLE + KLAVIYO · TODAY · 17:30</span>
+            </article>
+
+            <article class="kpi">
+              <div class="kpi__label"><span class="dot"></span>Avg CTR lift</div>
+              <div class="kpi__row">
+                <div>
+                  <span class="kpi__value">7.4%</span>
+                  <span class="kpi__suffix">7d rolling</span>
+                </div>
+                <span class="kpi__delta">+0.3 pts</span>
+              </div>
+              <svg class="kpi__chart" viewBox="0 0 200 36" preserveAspectRatio="none" aria-hidden="true">
+                <polyline fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                  points="0,24 20,22 40,26 60,20 80,18 100,22 120,16 140,18 160,12 180,14 200,10" />
+              </svg>
+              <span class="kpi__provenance" title="Meta Ads API · 7d · refreshed 17:25">META ADS · 7d · 17:25</span>
+            </article>
+
+            <article class="kpi">
+              <div class="kpi__label"><span class="dot"></span>Tasks shipped</div>
+              <div class="kpi__row">
+                <div>
+                  <span class="kpi__value">42</span>
+                  <span class="kpi__suffix">today, 16 in queue</span>
+                </div>
+                <span class="kpi__delta kpi__delta--muted">— vs target</span>
+              </div>
+              <svg class="kpi__chart" viewBox="0 0 200 36" preserveAspectRatio="none" aria-hidden="true">
+                <polyline fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"
+                  points="0,18 20,22 40,16 60,20 80,14 100,18 120,12 140,16 160,10 180,14 200,8" />
+              </svg>
+              <span class="kpi__provenance" title="Linear + tasks pipeline · today · refreshed 17:32">LINEAR · TODAY · 17:32</span>
+            </article>
+
+          </section>
+
+          <!-- ========== HERO ROW: DECISION + INBOX ========== -->
+          <section class="dash__row dash__row--hero">
+
+            <!-- DOMINANT — Decision card -->
+            <article class="card decision">
+              <div class="decision__head">
+                <div class="decision__kicker"><span class="dot"></span>NEXT DECISION</div>
+                <div class="decision__confidence">CONFIDENCE 92%</div>
+              </div>
+              <div class="decision__body">
+                Shift $4.2K from variant B to C before <em>noon</em>.
+              </div>
+              <div class="decision__rationale">
+                Variant C ROAS <strong>4.8×</strong> · CTR <strong>8.1%</strong> · margin guardrail clear. Window closes in <strong>2h 14m</strong>.
+              </div>
+              <div class="decision__actions">
+                <button class="btn btn--gold" type="button">Approve &amp; ship <span class="btn__arrow">→</span></button>
+                <button class="btn btn--ghost" type="button">Brief me first</button>
+                <span class="decision__provenance" title="Proposed by analyst-3 · Meta Ads + Klaviyo · 7d window · 17:31">PROPOSED · ANALYST-3 · 17:31</span>
+              </div>
+            </article>
+
+            <!-- Approval inbox preview -->
+            <article class="card inbox">
+              <div class="inbox__head">
+                <div class="inbox__title"><span class="dot dot--gold"></span>APPROVAL INBOX</div>
+                <div class="inbox__count">6</div>
+              </div>
+              <div class="inbox__list">
+                <div class="inbox__item">
+                  <span class="inbox__item-mark">01</span>
+                  <span class="inbox__item-body">Klaviyo flow rewrite for <em>Revive MD</em></span>
+                  <span class="inbox__item-meta">3m</span>
+                </div>
+                <div class="inbox__item">
+                  <span class="inbox__item-mark">02</span>
+                  <span class="inbox__item-body">Spend cap raise · BUM · <em>$1.5K</em></span>
+                  <span class="inbox__item-meta">11m</span>
+                </div>
+                <div class="inbox__item">
+                  <span class="inbox__item-mark">03</span>
+                  <span class="inbox__item-body">Voice tone exception · RAW Athletic</span>
+                  <span class="inbox__item-meta">22m</span>
+                </div>
+                <div class="inbox__item">
+                  <span class="inbox__item-mark">04</span>
+                  <span class="inbox__item-body">Slack OAuth refresh · HQ</span>
+                  <span class="inbox__item-meta">38m</span>
+                </div>
+                <div class="inbox__item">
+                  <span class="inbox__item-mark">05</span>
+                  <span class="inbox__item-body">Founder podcast clip set · <em>10 cuts</em></span>
+                  <span class="inbox__item-meta">1h</span>
+                </div>
+              </div>
+              <div class="inbox__foot">
+                <a href="#">Open inbox →</a>
+              </div>
+            </article>
+
+          </section>
+
+          <!-- ========== TWO-COLUMN: FLEET PULSE + MEMORY PULSE ========== -->
+          <section class="dash__row dash__row--two">
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> FLEET PULSE</span>
+                <span class="card__head-status"><span class="dot"></span> LIVE</span>
+              </div>
+              <div class="fleet__list">
+
+                <div class="fleet__row">
+                  <span class="dot"></span>
+                  <span class="fleet__name">opsclaw-04</span>
+                  <span class="fleet__brand">RAW ATHLETIC</span>
+                  <span class="fleet__task">Refresh Meta creatives · cohort 4</span>
+                  <span class="fleet__cost">$184</span>
+                  <span class="fleet__age">23m</span>
+                </div>
+
+                <div class="fleet__row">
+                  <span class="dot"></span>
+                  <span class="fleet__name">opsclaw-09</span>
+                  <span class="fleet__brand">REVIVE MD</span>
+                  <span class="fleet__task">Pull cohort timeline · E7 to E10</span>
+                  <span class="fleet__cost">$92</span>
+                  <span class="fleet__age">7m</span>
+                </div>
+
+                <div class="fleet__row">
+                  <span class="dot dot--sage"></span>
+                  <span class="fleet__name">opsclaw-12</span>
+                  <span class="fleet__brand">BUM</span>
+                  <span class="fleet__task">Klaviyo flow A/B · abandon scan</span>
+                  <span class="fleet__cost fleet__cost--idle">IDLE</span>
+                  <span class="fleet__age">2m</span>
+                </div>
+
+                <div class="fleet__row">
+                  <span class="dot"></span>
+                  <span class="fleet__name">opsclaw-17</span>
+                  <span class="fleet__brand">DISRUPTIVE HQ</span>
+                  <span class="fleet__task">Slack OAuth refresh</span>
+                  <span class="fleet__cost fleet__cost--idle">—</span>
+                  <span class="fleet__age">3m</span>
+                </div>
+
+                <div class="fleet__row">
+                  <span class="dot"></span>
+                  <span class="fleet__name">researcher-1</span>
+                  <span class="fleet__brand">ALL</span>
+                  <span class="fleet__task">Compile founder podcast clips · 10 cuts</span>
+                  <span class="fleet__cost">$22</span>
+                  <span class="fleet__age">41m</span>
+                </div>
+
+                <div class="fleet__row">
+                  <span class="dot"></span>
+                  <span class="fleet__name">writer-2</span>
+                  <span class="fleet__brand">RAW ATHLETIC</span>
+                  <span class="fleet__task">Draft K landing variants · v3-v6</span>
+                  <span class="fleet__cost">$61</span>
+                  <span class="fleet__age">14m</span>
+                </div>
+
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> MEMORY PULSE</span>
+                <span class="card__head-status"><span class="dot"></span> ATLAS</span>
+              </div>
+
+              <div class="memory__hero">
+                <span class="memory__hero-value">1,847</span>
+                <span class="memory__hero-label">embeddings written today<br/>across 5 schemas</span>
+              </div>
+
+              <div class="memory__schemas">
+                <div class="memory__schema">
+                  <span class="memory__schema-name">disruptive</span>
+                  <div class="memory__schema-bar"><div class="memory__schema-bar-fill" style="width: 92%"></div></div>
+                  <span class="memory__schema-count">612</span>
+                </div>
+                <div class="memory__schema">
+                  <span class="memory__schema-name">tommy</span>
+                  <div class="memory__schema-bar"><div class="memory__schema-bar-fill" style="width: 71%"></div></div>
+                  <span class="memory__schema-count">478</span>
+                </div>
+                <div class="memory__schema">
+                  <span class="memory__schema-name">charles</span>
+                  <div class="memory__schema-bar"><div class="memory__schema-bar-fill" style="width: 54%"></div></div>
+                  <span class="memory__schema-count">361</span>
+                </div>
+                <div class="memory__schema">
+                  <span class="memory__schema-name">hive_mind</span>
+                  <div class="memory__schema-bar"><div class="memory__schema-bar-fill" style="width: 38%"></div></div>
+                  <span class="memory__schema-count">254</span>
+                </div>
+                <div class="memory__schema">
+                  <span class="memory__schema-name">gustavo_memory</span>
+                  <div class="memory__schema-bar"><div class="memory__schema-bar-fill" style="width: 21%"></div></div>
+                  <span class="memory__schema-count">142</span>
+                </div>
+              </div>
+
+              <div class="memory__feed">
+                <div class="memory__feed-row">
+                  <span class="memory__feed-age">12s</span>
+                  <span class="memory__feed-actor">writer-2</span>
+                  <span class="memory__feed-action">wrote 3 to disruptive</span>
+                </div>
+                <div class="memory__feed-row">
+                  <span class="memory__feed-age">41s</span>
+                  <span class="memory__feed-actor">tommy</span>
+                  <span class="memory__feed-action">logged objection pattern · refund</span>
+                </div>
+                <div class="memory__feed-row">
+                  <span class="memory__feed-age">2m</span>
+                  <span class="memory__feed-actor">researcher-1</span>
+                  <span class="memory__feed-action">embedded 14 podcast cuts</span>
+                </div>
+              </div>
+            </article>
+
+          </section>
+
+          <!-- ========== TWO-COLUMN: BRAND PERFORMANCE + PACING ========== -->
+          <section class="dash__row dash__row--two">
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> BRAND PERFORMANCE</span>
+                <span>30d ROAS</span>
+              </div>
+              <div class="brands__list">
+
+                <div class="brands__row">
+                  <span class="brands__name">RAW Athletic</span>
+                  <div class="brands__bar"><div class="brands__bar-fill" style="width: 92%"></div></div>
+                  <span class="brands__metric">4.8×</span>
+                  <span class="brands__spend">$3.4K</span>
+                  <span class="brands__ctr">7.8% CTR</span>
+                </div>
+
+                <div class="brands__row">
+                  <span class="brands__name">BUM</span>
+                  <div class="brands__bar"><div class="brands__bar-fill" style="width: 100%"></div></div>
+                  <span class="brands__metric">5.2×</span>
+                  <span class="brands__spend">$2.9K</span>
+                  <span class="brands__ctr">8.4% CTR</span>
+                </div>
+
+                <div class="brands__row">
+                  <span class="brands__name">Revive MD</span>
+                  <div class="brands__bar"><div class="brands__bar-fill" style="width: 60%"></div></div>
+                  <span class="brands__metric">3.1×</span>
+                  <span class="brands__spend">$2.1K</span>
+                  <span class="brands__ctr">6.3% CTR</span>
+                </div>
+
+                <div class="brands__row">
+                  <span class="brands__name">RAW Nutrition</span>
+                  <div class="brands__bar"><div class="brands__bar-fill" style="width: 72%"></div></div>
+                  <span class="brands__metric">3.7×</span>
+                  <span class="brands__spend">$1.8K</span>
+                  <span class="brands__ctr">6.9% CTR</span>
+                </div>
+
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> PACING · APR</span>
+                <span>vs target</span>
+              </div>
+
+              <div class="pacing__head">
+                <div class="pacing__hero">
+                  <span class="pacing__hero-value">$248K</span>
+                  <span class="pacing__hero-label">spent of $320K · day 25 of 30</span>
+                </div>
+                <div class="pacing__projection">
+                  Projected close <em>$310K</em><br/>
+                  3% under target
+                </div>
+              </div>
+
+              <!-- Hand-rolled SVG: pace vs target -->
+              <svg class="pacing__chart" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+                <!-- target line (dashed) -->
+                <line x1="0" y1="115" x2="400" y2="20" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity="0.4" />
+                <!-- actual burn (solid pine) -->
+                <polyline fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"
+                  points="0,115 13,113 27,108 40,104 53,99 67,93 80,88 93,82 107,77 120,71 133,66 147,60 160,55 173,49 187,44 200,39 213,35 227,33 240,30 253,28 267,28 280,28 293,28 307,28 320,28 333,28" />
+                <!-- terminal dot -->
+                <circle cx="333" cy="28" r="3" fill="currentColor" />
+              </svg>
+
+              <div class="pacing__legend">
+                <span class="pacing__legend-item">
+                  <span class="pacing__legend-swatch"></span>
+                  ACTUAL · MTD
+                </span>
+                <span class="pacing__legend-item">
+                  <span class="pacing__legend-swatch pacing__legend-swatch--target"></span>
+                  TARGET PACE
+                </span>
+              </div>
+            </article>
+
+          </section>
+
+          <!-- ========== STRIP ROW: SAFETY + INTEGRATIONS ========== -->
+          <section class="dash__row dash__row--strip">
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> SAFETY REPORT · TODAY</span>
+                <span>17:32 · live</span>
+              </div>
+              <div class="safety__list">
+                <div class="safety__cell">
+                  <div class="safety__cell-value safety__cell-value--zero">0</div>
+                  <div class="safety__cell-label">Spend cap<br/>breaches</div>
+                </div>
+                <div class="safety__cell">
+                  <div class="safety__cell-value safety__cell-value--zero">0</div>
+                  <div class="safety__cell-label">Policy<br/>violations</div>
+                </div>
+                <div class="safety__cell">
+                  <div class="safety__cell-value">6</div>
+                  <div class="safety__cell-label">Manual<br/>approvals</div>
+                </div>
+                <div class="safety__cell">
+                  <div class="safety__cell-value">3</div>
+                  <div class="safety__cell-label">Auto-<br/>corrections</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__head">
+                <span><span class="dot"></span> INTEGRATIONS · HEALTH</span>
+                <a href="#" style="font-family: var(--mono); font-size: var(--t-mono-label); color: var(--pine); text-decoration: none; letter-spacing: var(--ls-mono-label);">MANAGE →</a>
+              </div>
+              <div class="integ__list">
+                <div class="integ__row"><span class="integ__name"><span class="dot"></span>Slack</span><span class="integ__sync">2m ago</span></div>
+                <div class="integ__row"><span class="integ__name"><span class="dot"></span>Notion</span><span class="integ__sync">4m ago</span></div>
+                <div class="integ__row"><span class="integ__name"><span class="dot"></span>Calendar</span><span class="integ__sync">6m ago</span></div>
+                <div class="integ__row"><span class="integ__name"><span class="dot"></span>Klaviyo</span><span class="integ__sync">3m ago</span></div>
+                <div class="integ__row"><span class="integ__name"><span class="dot"></span>Meta Ads</span><span class="integ__sync">1m ago</span></div>
+                <div class="integ__row"><span class="integ__name"><span class="dot dot--rust"></span>Stripe</span><span class="integ__sync integ__sync--stale">38m · stale</span></div>
+              </div>
+            </article>
+
+          </section>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+</body>
+</html>

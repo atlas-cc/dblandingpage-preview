@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Foundation — primitives</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="base.css" />
+  <link rel="stylesheet" href="primitives.css" />
+  <style>
+    /* page-only layout — not a primitive, lives on this proof page only */
+    .proof {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px var(--gutter) 120px;
+    }
+    .proof__kicker {
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      font-weight: var(--w-medium);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--pine);
+      margin-bottom: var(--s-3);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+    }
+    .proof__title {
+      font-family: var(--serif);
+      font-size: var(--t-screen-title);
+      font-weight: var(--w-regular);
+      line-height: var(--lh-snug);
+      letter-spacing: var(--ls-tight);
+      color: var(--ink);
+      margin-bottom: var(--s-9);
+    }
+    .proof__h {
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      font-weight: var(--w-medium);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: var(--s-5);
+      padding-bottom: var(--s-3);
+      border-bottom: var(--border-hair-soft);
+    }
+    .proof__section { margin-bottom: var(--s-9); }
+
+    /* swatch grid */
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-5);
+    }
+    .swatch__sq {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--r-md);
+      border: var(--border-hair-soft);
+    }
+    .swatch__name {
+      display: block;
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-top: var(--s-2);
+    }
+    .swatch__hex {
+      display: block;
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .swatch__group-label {
+      grid-column: 1 / -1;
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--pine);
+      margin-top: var(--s-5);
+    }
+    .swatch__group-label:first-child { margin-top: 0; }
+
+    /* type specimen */
+    .spec { display: grid; grid-template-columns: 200px 1fr; gap: var(--s-5) var(--s-7); align-items: baseline; }
+    .spec__token {
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--muted);
+      padding-top: 6px;
+    }
+    .spec__sample { color: var(--ink); }
+
+    .ty-screen-title { font-family: var(--serif); font-size: var(--t-screen-title); font-weight: var(--w-regular); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); }
+    .ty-card-title   { font-family: var(--serif); font-size: var(--t-card-title);   font-weight: var(--w-regular); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); }
+    .ty-decision     { font-family: var(--serif); font-size: var(--t-decision);     font-weight: var(--w-regular); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); color: var(--ink); }
+    .ty-decision em  { font-style: italic; color: var(--pine); }
+    .ty-stat         { font-family: var(--serif); font-style: italic; font-size: var(--t-stat); font-weight: var(--w-regular); line-height: 1; letter-spacing: var(--ls-tight); color: var(--pine); }
+    .ty-lede         { font-family: var(--sans); font-size: var(--t-lede); line-height: var(--lh-base); color: var(--ink); }
+    .ty-body         { font-family: var(--sans); font-size: var(--t-body); line-height: var(--lh-base); color: var(--ink); }
+    .ty-mono-label   { font-family: var(--mono); font-size: var(--t-mono-label); font-weight: var(--w-medium); letter-spacing: var(--ls-mono-label); text-transform: uppercase; color: var(--muted); }
+    .ty-mono-meta    { font-family: var(--mono); font-size: var(--t-mono-meta);  font-weight: var(--w-medium); letter-spacing: var(--ls-mono-meta);  text-transform: uppercase; color: var(--muted); }
+
+    .row { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+    .row-wide { gap: var(--s-5); }
+
+    .label-inline {
+      font-family: var(--mono);
+      font-size: var(--t-mono-meta);
+      letter-spacing: var(--ls-mono-meta);
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-left: var(--s-2);
+    }
+  </style>
+</head>
+<body>
+  <main class="proof">
+    <div class="proof__kicker"><span class="dot"></span>UI KIT / FOUNDATION</div>
+    <h1 class="proof__title">Foundation — primitives.</h1>
+
+    <!-- COLORS -->
+    <section class="proof__section">
+      <div class="proof__h">Colors</div>
+      <div class="swatches">
+        <div class="swatch__group-label">Surfaces</div>
+        <div><div class="swatch__sq" style="background:#F5F1E8"></div><span class="swatch__name">--bg</span><span class="swatch__hex">#F5F1E8</span></div>
+        <div><div class="swatch__sq" style="background:#EDE6D3"></div><span class="swatch__name">--bg-alt</span><span class="swatch__hex">#EDE6D3</span></div>
+        <div><div class="swatch__sq" style="background:#F5F1E8"></div><span class="swatch__name">--surface</span><span class="swatch__hex">#F5F1E8</span></div>
+        <div><div class="swatch__sq" style="background:#EDE6D3"></div><span class="swatch__name">--surface-inset</span><span class="swatch__hex">#EDE6D3</span></div>
+
+        <div class="swatch__group-label">Ink</div>
+        <div><div class="swatch__sq" style="background:#0E1A14"></div><span class="swatch__name">--ink</span><span class="swatch__hex">#0E1A14</span></div>
+        <div><div class="swatch__sq" style="background:#5A6B5F"></div><span class="swatch__name">--muted</span><span class="swatch__hex">#5A6B5F</span></div>
+
+        <div class="swatch__group-label">Pine</div>
+        <div><div class="swatch__sq" style="background:#2F6B4A"></div><span class="swatch__name">--pine</span><span class="swatch__hex">#2F6B4A</span></div>
+        <div><div class="swatch__sq" style="background:#4A8F6C"></div><span class="swatch__name">--pine-light</span><span class="swatch__hex">#4A8F6C</span></div>
+        <div><div class="swatch__sq" style="background:#1F3024"></div><span class="swatch__name">--pine-deep</span><span class="swatch__hex">#1F3024</span></div>
+        <div><div class="swatch__sq" style="background:#0F1F18"></div><span class="swatch__name">--pine-darkest</span><span class="swatch__hex">#0F1F18</span></div>
+
+        <div class="swatch__group-label">Gold</div>
+        <div><div class="swatch__sq" style="background:#B8893A"></div><span class="swatch__name">--gold</span><span class="swatch__hex">#B8893A</span></div>
+        <div><div class="swatch__sq" style="background:#D9B26A"></div><span class="swatch__name">--gold-light</span><span class="swatch__hex">#D9B26A</span></div>
+
+        <div class="swatch__group-label">Status</div>
+        <div><div class="swatch__sq" style="background:#B85C3A"></div><span class="swatch__name">--rust</span><span class="swatch__hex">#B85C3A</span></div>
+        <div><div class="swatch__sq" style="background:#5A6B5F"></div><span class="swatch__name">--sage</span><span class="swatch__hex">#5A6B5F</span></div>
+
+        <div class="swatch__group-label">Hairlines</div>
+        <div><div class="swatch__sq" style="background:rgba(14,26,20,0.10)"></div><span class="swatch__name">--line</span><span class="swatch__hex">10% ink</span></div>
+        <div><div class="swatch__sq" style="background:rgba(14,26,20,0.06)"></div><span class="swatch__name">--line-soft</span><span class="swatch__hex">6% ink</span></div>
+        <div><div class="swatch__sq" style="background:rgba(14,26,20,0.18)"></div><span class="swatch__name">--line-strong</span><span class="swatch__hex">18% ink</span></div>
+      </div>
+    </section>
+
+    <!-- TYPE -->
+    <section class="proof__section">
+      <div class="proof__h">Type specimen</div>
+      <div class="spec">
+        <div class="spec__token">--t-screen-title</div>
+        <div class="spec__sample ty-screen-title">Disruptive Control Center.</div>
+
+        <div class="spec__token">--t-card-title</div>
+        <div class="spec__sample ty-card-title">Next decision.</div>
+
+        <div class="spec__token">--t-decision</div>
+        <div class="spec__sample ty-decision"><em>Shift</em> $4.2K from variant B → C before noon.</div>
+
+        <div class="spec__token">--t-stat</div>
+        <div class="spec__sample ty-stat">−42%</div>
+
+        <div class="spec__token">--t-lede</div>
+        <div class="spec__sample ty-lede">Variant C ROAS 4.8× · CTR 8.1% · margin guardrail clear.</div>
+
+        <div class="spec__token">--t-body</div>
+        <div class="spec__sample ty-body">Body copy at 14px / 1.5. Used for table cells, nav links, and dense reading rows.</div>
+
+        <div class="spec__token">--t-mono-label</div>
+        <div class="spec__sample ty-mono-label">FLEET PULSE · LIVE</div>
+
+        <div class="spec__token">--t-mono-meta</div>
+        <div class="spec__sample ty-mono-meta">UI KIT / FOUNDATION</div>
+      </div>
+    </section>
+
+    <!-- DOTS -->
+    <section class="proof__section">
+      <div class="proof__h">.dot</div>
+      <div class="row row-wide">
+        <span><span class="dot"></span><span class="label-inline">.dot</span></span>
+        <span><span class="dot dot--sage"></span><span class="label-inline">.dot--sage</span></span>
+        <span><span class="dot dot--gold"></span><span class="label-inline">.dot--gold</span></span>
+        <span><span class="dot dot--rust"></span><span class="label-inline">.dot--rust</span></span>
+        <span><span class="dot dot--ink"></span><span class="label-inline">.dot--ink</span></span>
+      </div>
+    </section>
+
+    <!-- CHIPS -->
+    <section class="proof__section">
+      <div class="proof__h">.chip</div>
+      <div class="row">
+        <span class="chip chip--pine"><span class="dot"></span>Live</span>
+        <span class="chip chip--sage"><span class="dot dot--sage"></span>Idle</span>
+        <span class="chip chip--gold"><span class="dot dot--gold"></span>Approval</span>
+        <span class="chip chip--rust"><span class="dot dot--rust"></span>Blocked</span>
+        <span class="chip chip--filled"><span class="dot"></span>Armed</span>
+      </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="proof__section">
+      <div class="proof__h">.btn</div>
+      <div class="row">
+        <button class="btn btn--primary">Book a strategy call <span class="btn__arrow">→</span></button>
+        <button class="btn btn--ghost">See the work <span class="btn__arrow">→</span></button>
+        <button class="btn btn--gold">Approve &amp; ship <span class="btn__arrow">→</span></button>
+      </div>
+    </section>
+
+    <!-- CARD -->
+    <section class="proof__section">
+      <div class="proof__h">.card — ATLAS · LIVE proof</div>
+      <article class="card" style="max-width:420px">
+        <div class="card__head">
+          <span>ATLAS · LIVE</span>
+          <span class="card__head-status"><span class="dot"></span>Online</span>
+        </div>
+        <div class="card__row">
+          <span class="card__row-label">Blended CAC</span>
+          <span class="card__row-value">−42%</span>
+        </div>
+        <div class="card__row">
+          <span class="card__row-label">ROAS · 30D</span>
+          <span class="card__row-value">4.8x</span>
+        </div>
+        <div class="card__row">
+          <span class="card__row-label">Creatives shipped</span>
+          <span class="card__row-value">312/mo</span>
+        </div>
+        <div class="card__row">
+          <span class="card__row-label">Brands managed</span>
+          <span class="card__row-value">37</span>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

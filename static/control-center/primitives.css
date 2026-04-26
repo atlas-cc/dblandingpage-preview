@@ -1,0 +1,194 @@
+/* =============================================================
+   PRIMITIVES — .dot, .chip, .btn, .card. Nothing else.
+   Every value references a token from tokens.css.
+   ============================================================= */
+
+/* -------------------------------------------------------------
+   .dot — the brand's secondary mark.
+   6px solid pine circle. Aligns to mono 10–11px labels and to
+   serif 24px card titles. The -1px margin-top compensates for
+   the perceptual weight of mono caps and serif x-height.
+   ------------------------------------------------------------- */
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--pine);
+  vertical-align: middle;
+  margin-top: -1px;
+  flex-shrink: 0;
+}
+.dot--sage { background: var(--sage); }
+.dot--gold { background: var(--gold); }
+.dot--rust { background: var(--rust); }
+.dot--ink  { background: var(--ink); }
+
+/* -------------------------------------------------------------
+   .chip — outlined hairline chip with leading dot.
+   Mono 11px uppercase, 1.76px tracking, pine label.
+   ------------------------------------------------------------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) 10px var(--s-1) var(--s-2);
+  border: var(--border-hair);
+  border-radius: var(--r-pill);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: var(--t-mono-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-mono-chip);
+  text-transform: uppercase;
+  color: var(--pine);
+  line-height: 1;
+}
+.chip .dot { margin-top: 0; }
+
+.chip--pine { color: var(--pine); }
+.chip--pine .dot { background: var(--pine); }
+
+.chip--sage { color: var(--sage); }
+.chip--sage .dot { background: var(--sage); }
+
+.chip--gold { color: var(--gold); }
+.chip--gold .dot { background: var(--gold); }
+
+.chip--rust { color: var(--rust); }
+.chip--rust .dot { background: var(--rust); }
+
+.chip--filled {
+  background: var(--pine);
+  border-color: var(--pine);
+  color: var(--bg);
+}
+.chip--filled .dot { background: var(--bg); }
+
+/* -------------------------------------------------------------
+   .btn — base button geometry. 999px pill, 13/22 padding,
+   Inter 13 / 600 / 0.01em. Trailing arrow span .btn__arrow.
+   ------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 22px;
+  border-radius: var(--r-pill);
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--t-body-sm);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--ls-button);
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    color var(--dur-base) var(--ease-out);
+}
+
+.btn__arrow {
+  display: inline-block;
+  font-size: var(--t-body);
+  line-height: 1;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.btn:hover .btn__arrow { transform: translateX(2px); }
+
+.btn--primary {
+  background: var(--pine-deep);
+  color: var(--bg);
+  border-color: var(--pine-deep);
+}
+.btn--primary:hover {
+  background: var(--pine);
+  border-color: var(--pine);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: rgba(14, 26, 20, 0.28);
+}
+.btn--ghost:hover {
+  border-color: var(--line-strong);
+  background: var(--pine-tint-04);
+}
+
+.btn--gold {
+  background: var(--pine-darkest);
+  color: var(--gold-light);
+  border-color: var(--gold);
+}
+.btn--gold:hover {
+  background: var(--pine-deep);
+}
+
+/* -------------------------------------------------------------
+   .card — cream surface, 1px hairline border, 14px radius,
+   22px padding. No shadow, no glow, no gradient.
+   Internal hairlines use --line-soft.
+   ------------------------------------------------------------- */
+.card {
+  background: var(--surface);
+  border: var(--border-hair);
+  border-radius: var(--r-lg);
+  padding: var(--s-6);
+  color: var(--ink);
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-4);
+  border-bottom: var(--border-hair-soft);
+  font-family: var(--mono);
+  font-size: var(--t-mono-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card__head-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--pine);
+}
+
+.card__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-5);
+  padding: var(--s-4) 0;
+  border-bottom: var(--border-hair-soft);
+}
+.card__row:last-child { border-bottom: 0; padding-bottom: 0; }
+.card__row:first-of-type { padding-top: var(--s-4); }
+
+.card__row-label {
+  font-family: var(--mono);
+  font-size: var(--t-mono-label);
+  font-weight: var(--w-medium);
+  letter-spacing: var(--ls-mono-label);
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.card__row-value {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--t-stat-sm);
+  font-weight: var(--w-regular);
+  letter-spacing: var(--ls-tight);
+  color: var(--pine);
+  line-height: 1;
+}
